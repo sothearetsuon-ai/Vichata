@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="referrer" content="no-referrer" />
     <title>Bakery POS - Full System & Mobile Responsive</title>
-    <meta name="referrer" content="no-referrer">
+
     <!-- PWA Meta Tags -->
     <meta name="theme-color" content="#E07A5F" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -92,25 +93,17 @@
             height: 4px;
         }
 
-        /* ⭐️ កូដលុបបំបាត់សញ្ញា POWERED BY NETLIFY & NETLIFY DRAWER ទាំងស្រុង ⭐️ */
+        /* Hide Netlify Badges */
         #netlify-drawer-container,
-        #netlify-drawer-frame,
-        .netlify-drawer,
         [data-netlify-deploy-preview],
-        iframe[src*="netlify"],
-        a[href*="netlify.com"],
-        div[class*="netlify-"],
-        .netlify-badge {
+        .netlify-drawer,
+        iframe[src*="netlify"] {
             display: none !important;
             visibility: hidden !important;
-            opacity: 0 !important;
             pointer-events: none !important;
-            z-index: -99999 !important;
-            position: absolute !important;
-            left: -9999px !important;
-            top: -9999px !important;
-            width: 0px !important;
-            height: 0px !important;
+            opacity: 0 !important;
+            height: 0 !important;
+            width: 0 !important;
         }
 
         @media print {
@@ -133,7 +126,7 @@
     </style>
 </head>
 
-<body class="min-h-screen flex flex-col bg-bakery-cream select-none pb-24 xl:pb-0">
+<body class="min-h-screen flex flex-col bg-bakery-cream select-none pb-20 xl:pb-0">
 
     <!-- ================= TOP NAVIGATION BAR (កុំព្យូទ័រ & ទូរស័ព្ទ) ================= -->
     <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-orange-200/70 shadow-sm">
@@ -148,22 +141,26 @@
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5 sm:gap-2">
-                            <span class="font-black text-lg sm:text-2xl tracking-tight text-bakery-dark" id="storeNameDisplay">
+                            <span class="font-black text-lg sm:text-2xl tracking-tight text-bakery-dark"
+                                id="storeNameDisplay">
                                 Sweet<span class="text-bakery-caramel">Delight</span>
                             </span>
                             <span
                                 class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-emerald-300 flex items-center gap-1">
-                                <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i> <span class="hidden xs:inline">Sync</span>
+                                <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i> <span
+                                    class="hidden xs:inline">Sync</span>
                             </span>
                         </div>
-                        <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none" id="storeTaglineDisplay">
+                        <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none"
+                            id="storeTaglineDisplay">
                             ហាងនំប៉័ង និង នំខេកពិសេស • ៛
                         </p>
                     </div>
                 </div>
 
-                <!-- DESKTOP NAVIGATION TABS -->
-                <nav class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
+                <!-- DESKTOP NAVIGATION TABS (បង្ហាញលើអេក្រង់កុំព្យូទ័រ) -->
+                <nav
+                    class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
                     <button id="nav-pos" onclick="switchView('pos')"
                         class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
                         <i class="fa-solid fa-cash-register"></i> កន្លែងគិតលុយ (POS)
@@ -190,9 +187,9 @@
                     </button>
                 </nav>
 
-                <!-- RIGHT ACTIONS -->
+                <!-- RIGHT ACTIONS (ដំណើរការបានស្រួលទាំងលើ Mobile & PC) -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5">
-                    <!-- បញ្ចូលការលក់ពីមុន -->
+                    <!-- ប៊ូតុងបញ្ចូលការលក់កន្លងមក -->
                     <button onclick="openManualSalesModal()"
                         class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-amber-300"
                         title="កត់ត្រាការលក់ពីមុន">
@@ -209,15 +206,15 @@
                         <span class="hidden md:inline">KHQR ហាង</span>
                     </button>
 
-                    <!-- ទាញពី Sheet -->
+                    <!-- ទាញទិន្នន័យពី Sheet -->
                     <button onclick="pullProductsFromGoogleSheet()"
                         class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition"
-                        title="ទាញពី Google Sheet">
+                        title="ទាញទិន្នន័យពី Google Sheet">
                         <i class="fa-solid fa-rotate text-xs sm:text-sm" id="syncSpinIcon"></i>
                         <span class="hidden lg:inline">ទាញពី Sheet</span>
                     </button>
 
-                    <!-- Settings -->
+                    <!-- កំណត់ Settings -->
                     <button onclick="openSettingsModal()"
                         class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition"
                         title="ការកំណត់">
@@ -239,7 +236,8 @@
                 <div
                     class="bg-white p-3.5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center">
                     <div class="relative w-full sm:w-80">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
                         <input type="text" id="searchInput" oninput="renderProducts()"
                             placeholder="ស្វែងរកឈ្មោះនំ, ភេសជ្ជៈ, ទៀន..."
                             class="w-full pl-11 pr-4 py-2.5 sm:py-3 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs sm:text-sm font-semibold">
@@ -252,7 +250,7 @@
                 <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-5" id="productGrid"></div>
             </div>
 
-            <!-- Cart Sidebar -->
+            <!-- Cart Sidebar (Desktop view & Auto Mobile integration) -->
             <div class="lg:col-span-4" id="cartSidebar">
                 <div
                     class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 flex flex-col sticky top-24">
@@ -271,12 +269,14 @@
                     </div>
 
                     <!-- Loyalty Points & Customer Name -->
-                    <div class="my-2.5 p-3 bg-amber-50/80 rounded-2xl border border-amber-200 flex flex-col gap-2 shadow-xs">
+                    <div
+                        class="my-2.5 p-3 bg-amber-50/80 rounded-2xl border border-amber-200 flex flex-col gap-2 shadow-xs">
                         <div class="flex items-center justify-between">
                             <span class="text-[11px] font-extrabold text-amber-950 flex items-center gap-1">
                                 <i class="fa-solid fa-gift text-amber-600"></i> សន្សំពិន្ទុភ្ញៀវ (Loyalty)
                             </span>
-                            <span class="text-[11px] font-black text-amber-800 font-en" id="customerPointsDisplay">0 pts</span>
+                            <span class="text-[11px] font-black text-amber-800 font-en" id="customerPointsDisplay">0
+                                pts</span>
                         </div>
                         <div>
                             <input type="text" id="customerNameInput" placeholder="ឈ្មោះអ្នកទិញ (Customer Name)..."
@@ -297,7 +297,8 @@
                     <div
                         class="mb-2.5 p-2.5 sm:p-3 bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 rounded-2xl border border-orange-200 shadow-xs">
                         <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-[10px] sm:text-[11px] font-black text-bakery-dark flex items-center gap-1.5">
+                            <span
+                                class="text-[10px] sm:text-[11px] font-black text-bakery-dark flex items-center gap-1.5">
                                 <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> ឥវ៉ាន់បន្ថែម (Add-ons)
                             </span>
                             <button onclick="filterCategory('accessories')"
@@ -305,7 +306,8 @@
                                 ទាំងអស់ →
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll" id="quickAddonsList"></div>
+                        <div class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll" id="quickAddonsList">
+                        </div>
                     </div>
 
                     <!-- Cart Items List -->
@@ -327,12 +329,14 @@
                         <div class="pt-2 sm:pt-3 border-t border-orange-200 flex justify-between items-baseline">
                             <div>
                                 <div class="font-black text-sm sm:text-base text-bakery-dark">ទឹកប្រាក់ត្រូវបង់</div>
-                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount</div>
+                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount
+                                </div>
                             </div>
                             <div class="text-right">
                                 <div class="text-xl sm:text-3xl font-black text-bakery-caramel tracking-tight font-en"
                                     id="summaryTotalKHR">0 ៛</div>
-                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en" id="summaryTotalUSD">≈ $0.00</div>
+                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en"
+                                    id="summaryTotalUSD">≈ $0.00</div>
                             </div>
                         </div>
                     </div>
@@ -355,41 +359,52 @@
         <!-- ================= VIEW: EXPENSES SYSTEM ================= -->
         <section id="view-expenses" class="hidden space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-money-bill-trend-up"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណូលលក់សរុប</span>
-                        <div class="text-xl sm:text-2xl font-black text-emerald-700 font-en mt-0.5" id="expenseTotalIncomeKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-emerald-700 font-en mt-0.5"
+                            id="expenseTotalIncomeKHR">0 ៛</div>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-hand-holding-dollar"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណាយសរុប</span>
-                        <div class="text-xl sm:text-2xl font-black text-rose-600 font-en mt-0.5" id="expenseTotalSpentKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-rose-600 font-en mt-0.5"
+                            id="expenseTotalSpentKHR">0 ៛</div>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណេញសុទ្ធ</span>
-                        <div class="text-xl sm:text-2xl font-black text-bakery-caramel font-en mt-0.5" id="expenseNetProfitKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-bakery-caramel font-en mt-0.5"
+                            id="expenseNetProfitKHR">0 ៛</div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
+                <div
+                    class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
                     <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
-                        <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
                             <i class="fa-solid fa-plus"></i>
                         </div>
                         <h3 class="font-extrabold text-base text-bakery-dark">កត់ត្រាការចំណាយថ្មី</h3>
@@ -423,7 +438,8 @@
                         </div>
 
                         <div>
-                            <label class="block font-bold text-stone-800 mb-1">ចំនួនទឹកប្រាក់គិតជាប្រាក់រៀល (៛) *</label>
+                            <label class="block font-bold text-stone-800 mb-1">ចំនួនទឹកប្រាក់គិតជាប្រាក់រៀល (៛)
+                                *</label>
                             <input type="number" id="expenseAmountInput" step="500" required placeholder="ឧ. 45000"
                                 class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-black font-en text-rose-600 text-base">
                         </div>
@@ -441,7 +457,8 @@
                     </form>
                 </div>
 
-                <div class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col justify-between">
+                <div
+                    class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                             <h3 class="font-extrabold text-base text-bakery-dark flex items-center gap-2">
@@ -453,7 +470,8 @@
 
                         <div class="overflow-x-auto mt-3 custom-scroll">
                             <table class="w-full text-left text-xs min-w-[500px]">
-                                <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
+                                <thead
+                                    class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                                     <tr>
                                         <th class="p-3 pl-4">កាលបរិច្ឆេទ</th>
                                         <th class="p-3">មុខចំណាយ</th>
@@ -475,7 +493,8 @@
             <div
                 class="bg-gradient-to-r from-bakery-caramel via-amber-500 to-rose-500 rounded-3xl p-5 sm:p-8 text-white shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <span class="bg-white/20 backdrop-blur text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">
+                    <span
+                        class="bg-white/20 backdrop-blur text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">
                         <i class="fa-solid fa-tv mr-1"></i> Customer Display
                     </span>
                     <h2 class="text-xl sm:text-3xl font-black mt-2">ផ្ទាំងរូបភាពនំប្រចាំហាង</h2>
@@ -502,10 +521,12 @@
         <section id="view-custom" class="hidden">
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-5 sm:p-8">
                 <div class="flex justify-between items-center pb-4 sm:pb-6 border-b border-orange-100">
-                    <h2 class="text-xl sm:text-3xl font-extrabold text-bakery-dark">ស្ទូឌីយោកុម្ម៉ង់នំខេកតាមតម្រូវការ</h2>
+                    <h2 class="text-xl sm:text-3xl font-extrabold text-bakery-dark">ស្ទូឌីយោកុម្ម៉ង់នំខេកតាមតម្រូវការ
+                    </h2>
                     <div class="text-right">
                         <div class="text-xs text-stone-500 font-bold">តម្លៃប៉ាន់ស្មាន</div>
-                        <div class="text-2xl sm:text-3xl font-black text-bakery-caramel font-en" id="customCakePriceKHR">95,000 ៛</div>
+                        <div class="text-2xl sm:text-3xl font-black text-bakery-caramel font-en"
+                            id="customCakePriceKHR">95,000 ៛</div>
                     </div>
                 </div>
 
@@ -519,7 +540,8 @@
                             <div id="visualTierTop"
                                 class="w-32 sm:w-36 h-16 sm:h-20 rounded-2xl shadow-md flex items-center justify-center p-2 z-20 border-4 border-white/60"
                                 style="background-color: #F8D7DA;">
-                                <span id="visualTierTopFlavor" class="text-xs font-bold text-stone-700/80">Vanilla Top</span>
+                                <span id="visualTierTopFlavor" class="text-xs font-bold text-stone-700/80">Vanilla
+                                    Top</span>
                             </div>
                             <div id="visualTierBottom"
                                 class="w-48 sm:w-56 h-24 sm:h-28 rounded-3xl shadow-lg flex flex-col items-center justify-center p-4 z-10 border-4 border-white/70 -mt-2"
@@ -537,11 +559,14 @@
                             <label class="block text-sm font-extrabold text-bakery-dark mb-2">១. ទំហំ & ជាន់នំ</label>
                             <div class="grid grid-cols-3 gap-2 sm:gap-3">
                                 <button onclick="updateCakeConfig('tiers', 1, 60000)"
-                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-transparent bg-stone-50 text-left font-bold text-xs">១ ជាន់ (60,000 ៛)</button>
+                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-transparent bg-stone-50 text-left font-bold text-xs">១
+                                    ជាន់ (60,000 ៛)</button>
                                 <button onclick="updateCakeConfig('tiers', 2, 95000)"
-                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-bakery-caramel bg-orange-50/50 text-left font-bold text-xs">២ ជាន់ (95,000 ៛)</button>
+                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-bakery-caramel bg-orange-50/50 text-left font-bold text-xs">២
+                                    ជាន់ (95,000 ៛)</button>
                                 <button onclick="updateCakeConfig('tiers', 'heart', 85000)"
-                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-transparent bg-stone-50 text-left font-bold text-xs">បេះដូង (85,000 ៛)</button>
+                                    class="tier-btn p-2.5 sm:p-3 rounded-2xl border-2 border-transparent bg-stone-50 text-left font-bold text-xs">បេះដូង
+                                    (85,000 ៛)</button>
                             </div>
                         </div>
                         <div>
@@ -581,8 +606,10 @@
             <div
                 class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-extrabold text-bakery-dark">ការគ្រប់គ្រងស្តុកនំ និង គ្រឿងផ្សំ</h2>
-                    <p class="text-xs sm:text-sm text-stone-600 font-medium">តាមដានស្តុកទំនិញលក់ និងគ្រឿងផ្សំដាច់ដោយឡែកពីគ្នា</p>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-bakery-dark">ការគ្រប់គ្រងស្តុកនំ និង គ្រឿងផ្សំ
+                    </h2>
+                    <p class="text-xs sm:text-sm text-stone-600 font-medium">តាមដានស្តុកទំនិញលក់
+                        និងគ្រឿងផ្សំដាច់ដោយឡែកពីគ្នា</p>
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
@@ -605,7 +632,8 @@
                 </button>
                 <button id="subtab-stock-ingredients" onclick="setInventoryTab('ingredients')"
                     class="px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 text-stone-700 hover:text-bakery-dark">
-                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span id="stockIngredientsCount">0</span>)
+                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span
+                        id="stockIngredientsCount">0</span>)
                 </button>
             </div>
 
@@ -631,7 +659,8 @@
         <!-- ================= VIEW 5: ANALYTICS & STATS ================= -->
         <section id="view-analytics" class="hidden space-y-6">
             <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-orange-100">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-orange-100">
                     <div>
                         <h2 class="text-xl font-extrabold text-bakery-dark flex items-center gap-2">
                             <i class="fa-solid fa-chart-pie text-bakery-caramel"></i>
@@ -646,22 +675,29 @@
                             <i class="fa-solid fa-clock-rotate-left"></i> <span>+ បញ្ចូលការលក់កន្លងមក</span>
                         </button>
                         <div class="flex flex-wrap items-center gap-1 text-xs font-bold">
-                            <button onclick="setQuickDateFilter('today')" id="btnDate-today" class="px-2.5 py-1.5 rounded-xl bg-bakery-caramel text-white">ថ្ងៃនេះ</button>
-                            <button onclick="setQuickDateFilter('yesterday')" id="btnDate-yesterday" class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ម្សិលមិញ</button>
-                            <button onclick="setQuickDateFilter('7days')" id="btnDate-7days" class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">៧ថ្ងៃ</button>
-                            <button onclick="setQuickDateFilter('month')" id="btnDate-month" class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ខែនេះ</button>
-                            <button onclick="setQuickDateFilter('all')" id="btnDate-all" class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ទាំងអស់</button>
+                            <button onclick="setQuickDateFilter('today')" id="btnDate-today"
+                                class="px-2.5 py-1.5 rounded-xl bg-bakery-caramel text-white">ថ្ងៃនេះ</button>
+                            <button onclick="setQuickDateFilter('yesterday')" id="btnDate-yesterday"
+                                class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ម្សិលមិញ</button>
+                            <button onclick="setQuickDateFilter('7days')" id="btnDate-7days"
+                                class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">៧ថ្ងៃ</button>
+                            <button onclick="setQuickDateFilter('month')" id="btnDate-month"
+                                class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ខែនេះ</button>
+                            <button onclick="setQuickDateFilter('all')" id="btnDate-all"
+                                class="px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700">ទាំងអស់</button>
                         </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center gap-3 pt-1 text-xs">
-                    <div class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
+                    <div
+                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
                         <span class="font-extrabold text-stone-800 pl-1">ពី:</span>
                         <input type="date" id="analyticsStartDate" onchange="applyCustomDateRange()"
                             class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
                     </div>
-                    <div class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
+                    <div
+                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
                         <span class="font-extrabold text-stone-800 pl-1">ដល់:</span>
                         <input type="date" id="analyticsEndDate" onchange="applyCustomDateRange()"
                             class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
@@ -670,7 +706,8 @@
                         class="w-full sm:w-auto px-4 py-2 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition">
                         ត្រងមើល
                     </button>
-                    <span class="text-xs text-stone-500 font-bold ml-auto" id="reportRangeIndicator">បង្ហាញទិន្នន័យ៖ ថ្ងៃនេះ</span>
+                    <span class="text-xs text-stone-500 font-bold ml-auto" id="reportRangeIndicator">បង្ហាញទិន្នន័យ៖
+                        ថ្ងៃនេះ</span>
                 </div>
             </div>
 
@@ -678,17 +715,21 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">ចំណូលសរុប (KHR)</span>
-                    <div class="text-xl sm:text-2xl font-black text-bakery-caramel mt-1 font-en" id="statTodayRevenueKHR">0 ៛</div>
-                    <div class="text-xs font-extrabold text-stone-600 font-en mt-0.5" id="statTodayRevenueUSD">≈ $0.00</div>
+                    <div class="text-xl sm:text-2xl font-black text-bakery-caramel mt-1 font-en"
+                        id="statTodayRevenueKHR">0 ៛</div>
+                    <div class="text-xs font-extrabold text-stone-600 font-en mt-0.5" id="statTodayRevenueUSD">≈ $0.00
+                    </div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">ចំនួនវិក្កយបត្រ</span>
-                    <div class="text-xl sm:text-2xl font-black text-bakery-dark mt-1 font-en" id="statOrdersCount">0</div>
+                    <div class="text-xl sm:text-2xl font-black text-bakery-dark mt-1 font-en" id="statOrdersCount">0
+                    </div>
                     <div class="text-xs font-bold text-emerald-700 mt-0.5">ជោគជ័យ ១០០%</div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">សាច់ប្រាក់ (Cash)</span>
-                    <div class="text-lg sm:text-xl font-black text-emerald-700 mt-1 font-en" id="statCashSales">0 ៛</div>
+                    <div class="text-lg sm:text-xl font-black text-emerald-700 mt-1 font-en" id="statCashSales">0 ៛
+                    </div>
                     <div class="text-[10px] text-stone-500">ក្រដាសប្រាក់</div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
@@ -729,28 +770,35 @@
     </main>
 
     <!-- ================= ⭐️ MOBILE BOTTOM NAVIGATION BAR (ទូរស័ព្ទដៃ) ⭐️ ================= -->
-    <nav class="xl:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-orange-200/80 z-40 py-2 px-3 shadow-2xl flex items-center justify-around">
-        <button onclick="switchView('pos')" id="mob-nav-pos" class="mob-tab-btn flex flex-col items-center gap-1 text-bakery-caramel font-bold text-[10px]">
+    <nav
+        class="xl:hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-orange-200/80 z-40 py-2 px-3 shadow-2xl flex items-center justify-around">
+        <button onclick="switchView('pos')" id="mob-nav-pos"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-bakery-caramel font-bold text-[10px]">
             <i class="fa-solid fa-cash-register text-lg"></i>
             <span>ផ្ទាំងលក់</span>
         </button>
-        <button onclick="switchView('inventory')" id="mob-nav-inventory" class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+        <button onclick="switchView('inventory')" id="mob-nav-inventory"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-boxes-stacked text-lg"></i>
             <span>ស្តុកនំ</span>
         </button>
-        <button onclick="switchView('expenses')" id="mob-nav-expenses" class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+        <button onclick="switchView('expenses')" id="mob-nav-expenses"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-receipt text-lg"></i>
             <span>ចំណាយ</span>
         </button>
-        <button onclick="switchView('analytics')" id="mob-nav-analytics" class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+        <button onclick="switchView('analytics')" id="mob-nav-analytics"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-chart-pie text-lg"></i>
             <span>របាយការណ៍</span>
         </button>
-        <button onclick="switchView('custom')" id="mob-nav-custom" class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+        <button onclick="switchView('custom')" id="mob-nav-custom"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
             <span>Studio</span>
         </button>
-        <button onclick="switchView('showcase')" id="mob-nav-showcase" class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+        <button onclick="switchView('showcase')" id="mob-nav-showcase"
+            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-images text-lg"></i>
             <span>ភ្ញៀវមើល</span>
         </button>
@@ -758,9 +806,11 @@
 
     <!-- ================= ⭐️ MOBILE FLOATING CART BAR ⭐️ ================= -->
     <div id="mobileFloatingCartBar" class="xl:hidden fixed bottom-16 left-3 right-3 z-30 hidden transition-all">
-        <div class="bg-gradient-to-r from-bakery-dark to-stone-900 text-white rounded-2xl p-3 shadow-2xl flex items-center justify-between border border-amber-500/40">
+        <div
+            class="bg-gradient-to-r from-bakery-dark to-stone-900 text-white rounded-2xl p-3 shadow-2xl flex items-center justify-between border border-amber-500/40">
             <div class="flex items-center gap-2.5" onclick="scrollToCartOnMobile()">
-                <div class="w-9 h-9 rounded-xl bg-bakery-caramel flex items-center justify-center text-white text-base font-bold shadow-xs">
+                <div
+                    class="w-9 h-9 rounded-xl bg-bakery-caramel flex items-center justify-center text-white text-base font-bold shadow-xs">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
                 <div>
@@ -769,10 +819,12 @@
                 </div>
             </div>
             <div class="flex items-center gap-1.5">
-                <button onclick="scrollToCartOnMobile()" class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl">
+                <button onclick="scrollToCartOnMobile()"
+                    class="px-3 py-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-bold rounded-xl">
                     មើលកន្ត្រក
                 </button>
-                <button onclick="openPaymentModal('khqr')" class="px-3.5 py-1.5 bg-gradient-to-r from-red-600 to-rose-600 text-white text-xs font-black rounded-xl shadow">
+                <button onclick="openPaymentModal('khqr')"
+                    class="px-3.5 py-1.5 bg-gradient-to-r from-red-600 to-rose-600 text-white text-xs font-black rounded-xl shadow">
                     ទូទាត់ភ្លាម
                 </button>
             </div>
@@ -786,20 +838,24 @@
             class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-200 max-h-[92vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100 flex-shrink-0">
                 <div class="flex items-center gap-2.5">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-black">
+                    <div
+                        class="w-10 h-10 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-black">
                         <i class="fa-solid fa-clock-rotate-left"></i>
                     </div>
                     <div>
                         <h3 class="font-black text-base text-bakery-dark">បញ្ចូលការលក់កន្លងមក (Backdated Sales)</h3>
-                        <p class="text-[11px] text-stone-500 font-medium">កត់ត្រាការលក់ពីព្រឹក ឬថ្ងៃមុនៗ ដែលមិនទាន់បានបញ្ចូល</p>
+                        <p class="text-[11px] text-stone-500 font-medium">កត់ត្រាការលក់ពីព្រឹក ឬថ្ងៃមុនៗ
+                            ដែលមិនទាន់បានបញ្ចូល</p>
                     </div>
                 </div>
-                <button onclick="closeManualSalesModal()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-base">
+                <button onclick="closeManualSalesModal()"
+                    class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-base">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
-            <form id="manualSalesForm" onsubmit="handleManualSaleSubmit(event)" class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
+            <form id="manualSalesForm" onsubmit="handleManualSaleSubmit(event)"
+                class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
                 <div class="p-3.5 bg-amber-50/80 rounded-2xl border border-amber-200 space-y-2.5">
                     <div class="font-extrabold text-xs text-amber-950 flex items-center gap-1.5">
                         <i class="fa-solid fa-calendar-day text-amber-600"></i>
@@ -865,14 +921,16 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-stone-700 mb-1">ទឹកប្រាក់សរុប (៛) *</label>
-                                <input type="number" id="manualQuickTotalKHR" step="500" placeholder="ឧ. 65000" oninput="updateManualSaleCalculations()"
+                                <input type="number" id="manualQuickTotalKHR" step="500" placeholder="ឧ. 65000"
+                                    oninput="updateManualSaleCalculations()"
                                     class="w-full p-2 rounded-xl bg-stone-50 border border-stone-300 font-en font-black text-bakery-caramel text-sm">
                             </div>
                         </div>
                     </div>
 
                     <div class="flex items-center gap-2 pt-1 border-t border-orange-100">
-                        <input type="checkbox" id="manualDeductStock" checked class="w-4 h-4 rounded text-bakery-caramel">
+                        <input type="checkbox" id="manualDeductStock" checked
+                            class="w-4 h-4 rounded text-bakery-caramel">
                         <label for="manualDeductStock" class="font-bold text-[11px] text-stone-700 cursor-pointer">
                             កាត់បន្ថយចំនួនស្តុកទំនិញក្នុងប្រព័ន្ធដោយស្វ័យប្រវត្តិ
                         </label>
@@ -883,7 +941,8 @@
                     <div class="grid grid-cols-2 gap-3">
                         <div>
                             <label class="block font-bold text-stone-700 mb-1">វិធីទូទាត់</label>
-                            <select id="manualSaleMethod" class="w-full p-2 rounded-xl bg-white border border-stone-300 font-bold text-stone-800">
+                            <select id="manualSaleMethod"
+                                class="w-full p-2 rounded-xl bg-white border border-stone-300 font-bold text-stone-800">
                                 <option value="ប្រាក់សុទ្ធ (៛)">💵 ប្រាក់សុទ្ធ (Cash ៛)</option>
                                 <option value="KHQR (៛)">📱 ស្កេន KHQR (Bank ៛)</option>
                                 <option value="កុងធនាគារ (USD)">💳 ផ្ទេរ USD ($)</option>
@@ -891,7 +950,8 @@
                         </div>
                         <div>
                             <label class="block font-bold text-stone-700 mb-1">ស្ថានភាពទូទាត់</label>
-                            <select id="manualSalePayType" onchange="toggleManualDepositFields()" class="w-full p-2 rounded-xl bg-white border border-stone-300 font-bold text-stone-800">
+                            <select id="manualSalePayType" onchange="toggleManualDepositFields()"
+                                class="w-full p-2 rounded-xl bg-white border border-stone-300 font-bold text-stone-800">
                                 <option value="full">✅ ទូទាត់ពេញ (100%)</option>
                                 <option value="deposit">⚠️ បង់ប្រាក់កក់ (Deposit)</option>
                             </select>
@@ -901,12 +961,15 @@
                     <div id="manualDepositRow" class="hidden grid grid-cols-2 gap-3 pt-1 border-t border-stone-200">
                         <div>
                             <label class="block font-bold text-stone-700 mb-1">ប្រាក់កក់ទទួល (៛)</label>
-                            <input type="number" id="manualDepositAmount" step="500" placeholder="ចំនួនកក់..." oninput="updateManualSaleCalculations()"
+                            <input type="number" id="manualDepositAmount" step="500" placeholder="ចំនួនកក់..."
+                                oninput="updateManualSaleCalculations()"
                                 class="w-full p-2 rounded-xl bg-white border border-amber-300 font-en font-black text-emerald-600 text-xs">
                         </div>
                         <div>
                             <label class="block font-bold text-rose-600 mb-1">លុយនៅខ្វះ (Due)</label>
-                            <div id="manualBalanceDueText" class="p-2 rounded-xl bg-rose-50 border border-rose-200 font-en font-black text-rose-600 text-xs">0 ៛</div>
+                            <div id="manualBalanceDueText"
+                                class="p-2 rounded-xl bg-rose-50 border border-rose-200 font-en font-black text-rose-600 text-xs">
+                                0 ៛</div>
                         </div>
                     </div>
 
@@ -917,7 +980,8 @@
                     </div>
                 </div>
 
-                <div class="p-3 bg-bakery-vanilla/80 rounded-2xl border border-orange-200 flex justify-between items-center">
+                <div
+                    class="p-3 bg-bakery-vanilla/80 rounded-2xl border border-orange-200 flex justify-between items-center">
                     <div>
                         <span class="text-xs font-bold text-stone-600">សរុបទឹកប្រាក់ត្រូវកត់ត្រា:</span>
                         <div class="text-[10px] text-stone-500" id="manualSaleUsdDisplay">≈ $0.00</div>
@@ -944,15 +1008,18 @@
     <!-- ================= MODAL: SETTINGS ================= -->
     <div id="settingsModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
+        <div
+            class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100 flex-shrink-0">
                 <div class="flex items-center gap-2">
-                    <div class="w-9 h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center text-lg font-bold">
+                    <div
+                        class="w-9 h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center text-lg font-bold">
                         <i class="fa-solid fa-gear"></i>
                     </div>
                     <h3 class="font-extrabold text-base text-bakery-dark">ការកំណត់ហាង, Telegram & Backup</h3>
                 </div>
-                <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
@@ -967,22 +1034,26 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
                             <label class="block font-bold text-stone-700 mb-1">ឈ្មោះហាង *</label>
-                            <input type="text" id="settingStoreName" class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-bold text-bakery-dark text-sm">
+                            <input type="text" id="settingStoreName"
+                                class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-bold text-bakery-dark text-sm">
                         </div>
                         <div>
                             <label class="block font-bold text-stone-700 mb-1">លេខទូរស័ព្ទហាង</label>
-                            <input type="text" id="settingStorePhone" class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-en font-bold">
+                            <input type="text" id="settingStorePhone"
+                                class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-en font-bold">
                         </div>
                     </div>
 
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">អាសយដ្ឋាន</label>
-                        <input type="text" id="settingStoreAddress" class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-semibold">
+                        <input type="text" id="settingStoreAddress"
+                            class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-semibold">
                     </div>
 
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ពាក្យស្លោក</label>
-                        <input type="text" id="settingStoreTagline" class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-semibold">
+                        <input type="text" id="settingStoreTagline"
+                            class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-semibold">
                     </div>
                 </div>
 
@@ -992,10 +1063,12 @@
                         <span>រក្សាទុក & ស្រង់ទិន្នន័យ (Backup & Restore)</span>
                     </h4>
                     <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button type="button" onclick="exportBackupData()" class="py-2.5 px-3 bg-emerald-600 text-white rounded-xl text-xs font-bold">
+                        <button type="button" onclick="exportBackupData()"
+                            class="py-2.5 px-3 bg-emerald-600 text-white rounded-xl text-xs font-bold">
                             <i class="fa-solid fa-cloud-arrow-down"></i> 💾 ទាញយក Backup
                         </button>
-                        <label class="py-2.5 px-3 bg-sky-600 text-white rounded-xl text-xs font-bold cursor-pointer text-center">
+                        <label
+                            class="py-2.5 px-3 bg-sky-600 text-white rounded-xl text-xs font-bold cursor-pointer text-center">
                             <i class="fa-solid fa-cloud-arrow-up"></i> 📥 បញ្ចូល Restore
                             <input type="file" accept=".json" onchange="importBackupData(event)" class="hidden" />
                         </label>
@@ -1003,28 +1076,45 @@
                 </div>
 
                 <div class="p-4 bg-emerald-50 rounded-2xl border border-emerald-200 space-y-2">
-                    <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5"><i class="fa-solid fa-table text-emerald-600"></i> Google Sheet Web App URL</h4>
-                    <input type="text" id="googleSheetUrl" class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono font-bold">
+                    <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5"><i
+                            class="fa-solid fa-table text-emerald-600"></i> Google Sheet Web App URL</h4>
+                    <input type="text" id="googleSheetUrl"
+                        class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono font-bold">
                     <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button onclick="testGoogleSheetSync()" class="py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">តេស្តផ្ញើការលក់</button>
-                        <button onclick="pullProductsFromGoogleSheet()" class="py-2 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">ទាញទំនិញពី Sheet</button>
+                        <button onclick="testGoogleSheetSync()"
+                            class="py-2 bg-emerald-600 text-white rounded-xl text-xs font-bold">តេស្តផ្ញើការលក់</button>
+                        <button onclick="pullProductsFromGoogleSheet()"
+                            class="py-2 bg-emerald-100 text-emerald-800 rounded-xl text-xs font-bold">ទាញទំនិញពី
+                            Sheet</button>
                     </div>
-                    <button onclick="syncAllToGoogleSheet()" class="w-full mt-1.5 py-2.5 bg-emerald-700 text-white rounded-xl text-xs font-bold">
+                    <button onclick="syncAllToGoogleSheet()"
+                        class="w-full mt-1.5 py-2.5 bg-emerald-700 text-white rounded-xl text-xs font-bold">
                         Sync ស្តុកនំ, គ្រឿងផ្សំ & ចំណាយ ទាំងអស់ទៅ Sheet
                     </button>
                 </div>
 
                 <div class="p-4 bg-sky-50 rounded-2xl border border-sky-200 space-y-2">
-                    <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5"><i class="fa-brands fa-telegram text-sky-500"></i> Telegram Bot</h4>
-                    <input type="text" id="telegramBotToken" placeholder="Bot Token" class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
-                    <input type="text" id="telegramChatId" placeholder="Chat ID" class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
-                    <button onclick="testTelegramMessageWithPhoto()" class="px-3 py-1.5 bg-sky-500 text-white rounded-xl text-xs font-bold">តេស្តផ្ញើ Telegram</button>
+                    <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5"><i
+                            class="fa-brands fa-telegram text-sky-500"></i> Telegram Bot</h4>
+                    <input type="text" id="telegramBotToken" placeholder="Bot Token"
+                        class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
+                    <input type="text" id="telegramChatId" placeholder="Chat ID"
+                        class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
+                    <button onclick="testTelegramMessageWithPhoto()"
+                        class="px-3 py-1.5 bg-sky-500 text-white rounded-xl text-xs font-bold">តេស្តផ្ញើ
+                        Telegram</button>
                 </div>
             </div>
 
-            <div class="pt-3 border-t border-orange-100 flex-shrink-0">
-                <button onclick="saveIntegrationSettings()" class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-extrabold text-xs">
+            <div class="pt-3 border-t border-orange-100 flex-shrink-0 flex gap-2">
+                <button onclick="saveIntegrationSettings()"
+                    class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-extrabold text-xs">
                     💾 រក្សាទុកព័ត៌មាន & ការកំណត់ទាំងអស់
+                </button>
+                <button onclick="resetDefaultProducts()"
+                    class="px-3 py-3 rounded-2xl bg-stone-100 hover:bg-rose-50 hover:text-rose-600 text-stone-600 font-bold text-xs"
+                    title="កំណត់រូបភាពដើមឡើងវិញ">
+                    <i class="fa-solid fa-arrows-rotate"></i> កំណត់រូបដើម
                 </button>
             </div>
         </div>
@@ -1036,25 +1126,33 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">ដាក់រូបភាព KHQR របស់ហាង</h3>
-                <button onclick="closeKhqrSetupModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeKhqrSetupModal()" class="text-stone-400"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-4 text-xs">
-                <div class="flex flex-col items-center p-4 bg-orange-50/70 rounded-2xl border-2 border-dashed border-red-300">
-                    <div class="relative w-44 h-44 bg-white rounded-2xl border-2 border-red-500 p-2 shadow-inner overflow-hidden mb-3">
+                <div
+                    class="flex flex-col items-center p-4 bg-orange-50/70 rounded-2xl border-2 border-dashed border-red-300">
+                    <div
+                        class="relative w-44 h-44 bg-white rounded-2xl border-2 border-red-500 p-2 shadow-inner overflow-hidden mb-3">
                         <img id="khqrSetupPreviewImg" src="" alt="Store KHQR" class="w-full h-full object-contain">
                     </div>
-                    <input type="file" id="khqrSetupFileInput" accept="image/*" class="hidden" onchange="handleKhqrSetupFile(event)">
-                    <button type="button" onclick="document.getElementById('khqrSetupFileInput').click()" class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl">
+                    <input type="file" id="khqrSetupFileInput" accept="image/*" class="hidden"
+                        onchange="handleKhqrSetupFile(event)">
+                    <button type="button" onclick="document.getElementById('khqrSetupFileInput').click()"
+                        class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl">
                         ជ្រើសរើសរូបភាព QR
                     </button>
                 </div>
                 <div>
                     <label class="block font-bold text-stone-700 mb-1">ឈ្មោះម្ចាស់គណនី</label>
-                    <input type="text" id="khqrMerchantNameInput" class="w-full p-2.5 rounded-xl border border-stone-300 text-xs font-bold text-bakery-dark">
+                    <input type="text" id="khqrMerchantNameInput"
+                        class="w-full p-2.5 rounded-xl border border-stone-300 text-xs font-bold text-bakery-dark">
                 </div>
                 <div class="flex gap-2 pt-2">
-                    <button onclick="saveKhqrSetup()" class="flex-1 py-3 rounded-2xl bg-red-600 text-white font-bold text-xs">រក្សាទុក KHQR</button>
-                    <button onclick="resetDefaultKhqr()" class="px-3 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">កំណត់ឡើងវិញ</button>
+                    <button onclick="saveKhqrSetup()"
+                        class="flex-1 py-3 rounded-2xl bg-red-600 text-white font-bold text-xs">រក្សាទុក KHQR</button>
+                    <button onclick="resetDefaultKhqr()"
+                        class="px-3 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">កំណត់ឡើងវិញ</button>
                 </div>
             </div>
         </div>
@@ -1072,14 +1170,17 @@
                 <div class="flex items-center justify-between text-xs">
                     <span class="font-bold text-stone-700">ប្រភេទការទូទាត់៖</span>
                     <div class="flex gap-1">
-                        <button type="button" onclick="setPaymentType('full')" id="btnPayFull" class="px-3 py-1 rounded-xl text-xs font-bold bg-bakery-caramel text-white">ទូទាត់ពេញ</button>
-                        <button type="button" onclick="setPaymentType('deposit')" id="btnPayDeposit" class="px-3 py-1 rounded-xl text-xs font-bold bg-white text-stone-600 border border-orange-200">បង់ប្រាក់កក់</button>
+                        <button type="button" onclick="setPaymentType('full')" id="btnPayFull"
+                            class="px-3 py-1 rounded-xl text-xs font-bold bg-bakery-caramel text-white">ទូទាត់ពេញ</button>
+                        <button type="button" onclick="setPaymentType('deposit')" id="btnPayDeposit"
+                            class="px-3 py-1 rounded-xl text-xs font-bold bg-white text-stone-600 border border-orange-200">បង់ប្រាក់កក់</button>
                     </div>
                 </div>
                 <div id="depositInputRow" class="hidden pt-2 border-t border-orange-200/80 space-y-2">
                     <div class="flex items-center justify-between text-xs">
                         <span class="font-bold text-stone-700">ប្រាក់កក់ទទួល (៛)៖</span>
-                        <input type="number" id="depositAmountInput" oninput="calculateDepositBalance()" step="500" class="w-32 p-1.5 rounded-xl border border-amber-300 text-right font-black text-emerald-600 text-sm">
+                        <input type="number" id="depositAmountInput" oninput="calculateDepositBalance()" step="500"
+                            class="w-32 p-1.5 rounded-xl border border-amber-300 text-right font-black text-emerald-600 text-sm">
                     </div>
                     <div class="flex justify-between items-center text-xs font-bold">
                         <span class="text-rose-600">លុយនៅខ្វះ (Due)៖</span>
@@ -1096,16 +1197,20 @@
                     </div>
                     <div class="text-2xl font-black text-red-600 font-en" id="khqrTotalKHR">0 ៛</div>
                     <div class="text-xs text-stone-500 font-en font-bold mb-3" id="khqrTotalUSD">≈ $0.00</div>
-                    <button onclick="completeTransaction('KHQR (៛)')" class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
+                    <button onclick="completeTransaction('KHQR (៛)')"
+                        class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
                         <i class="fa-solid fa-check"></i> ទទួលបានប្រាក់រួចរាល់
                     </button>
                 </div>
 
                 <div id="cashContent" class="hidden space-y-3">
                     <div class="text-2xl font-black text-bakery-caramel font-en text-center" id="cashTotalKHR">0 ៛</div>
-                    <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()" placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..." class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
+                    <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()"
+                        placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..."
+                        class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
                     <div class="text-emerald-700 font-black font-en text-lg text-center" id="cashChangeKHR">0 ៛</div>
-                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')" class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
+                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')"
+                        class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
                         គិតលុយ & ចេញវិក្កយបត្រ
                     </button>
                 </div>
@@ -1116,36 +1221,45 @@
     <!-- ================= MODAL: MULTI-IMAGE UPLOAD ================= -->
     <div id="multiUploadModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
+        <div
+            class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
-                <h3 class="font-extrabold text-base text-bakery-dark" id="multiUploadModalTitle">Upload រូបភាពនំច្រើនសន្លឹក</h3>
-                <button onclick="closeMultiUploadModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="font-extrabold text-base text-bakery-dark" id="multiUploadModalTitle">Upload
+                    រូបភាពនំច្រើនសន្លឹក</h3>
+                <button onclick="closeMultiUploadModal()" class="text-stone-400"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form id="multiUploadForm" onsubmit="saveBatchProduct(event)" class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
+            <form id="multiUploadForm" onsubmit="saveBatchProduct(event)"
+                class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
                 <input type="hidden" id="multiUploadProdId">
                 <div class="p-4 bg-orange-50/80 border-2 border-dashed border-orange-300 rounded-2xl text-center">
                     <div class="cursor-pointer" onclick="document.getElementById('batchFileInput').click()">
                         <i class="fa-solid fa-images text-2xl text-bakery-caramel mb-1"></i>
                         <p class="font-extrabold text-stone-800">ចុចទីនេះ ដើម្បីជ្រើសរើសរូបភាពនំច្រើនសន្លឹក</p>
                     </div>
-                    <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden" onchange="handleBatchFileSelect(event)">
-                    <div id="batchPreviewGrid" class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-orange-200 empty:hidden"></div>
+                    <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden"
+                        onchange="handleBatchFileSelect(event)">
+                    <div id="batchPreviewGrid"
+                        class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-orange-200 empty:hidden"></div>
                     <div class="flex justify-between items-center text-[10px] text-stone-500 mt-2 font-bold">
                         <span id="batchImageCountText">មិនទាន់បានជ្រើសរើសរូបនៅឡើយទេ</span>
-                        <button type="button" onclick="clearBatchImages()" class="text-rose-600 font-bold hover:underline">សម្អាតរូប</button>
+                        <button type="button" onclick="clearBatchImages()"
+                            class="text-rose-600 font-bold hover:underline">សម្អាតរូប</button>
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-bold text-stone-700 mb-1">ឈ្មោះនំ ឬ គ្រឿងផ្សំ *</label>
-                    <input type="text" id="batchProdName" required class="w-full p-2.5 rounded-xl border border-stone-300 text-sm font-semibold">
+                    <input type="text" id="batchProdName" required
+                        class="w-full p-2.5 rounded-xl border border-stone-300 text-sm font-semibold">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ប្រភេទ</label>
-                        <select id="batchProdCat" class="w-full p-2.5 rounded-xl border border-stone-300 bg-white font-bold text-stone-800">
+                        <select id="batchProdCat"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 bg-white font-bold text-stone-800">
                             <option value="cakes">🎂 នំខេក</option>
                             <option value="breads">🥖 នំប៉័ង</option>
                             <option value="pastries">🥐 នំផេស្ទ្រី</option>
@@ -1156,24 +1270,30 @@
                     </div>
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ផ្លាកសម្គាល់</label>
-                        <input type="text" id="batchProdBadge" placeholder="ឧ. Hot, ថ្មីៗ" class="w-full p-2.5 rounded-xl border border-stone-300 font-semibold">
+                        <input type="text" id="batchProdBadge" placeholder="ឧ. Hot, ថ្មីៗ"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 font-semibold">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">តម្លៃរៀល (៛) *</label>
-                        <input type="number" id="batchProdPriceKHR" step="500" required class="w-full p-2.5 rounded-xl border border-stone-300 font-black text-bakery-caramel text-sm">
+                        <input type="number" id="batchProdPriceKHR" step="500" required
+                            class="w-full p-2.5 rounded-xl border border-stone-300 font-black text-bakery-caramel text-sm">
                     </div>
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ចំនួនស្តុក</label>
-                        <input type="number" id="batchProdStock" min="0" value="15" class="w-full p-2.5 rounded-xl border border-stone-300 font-bold text-sm">
+                        <input type="number" id="batchProdStock" min="0" value="15"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 font-bold text-sm">
                     </div>
                 </div>
 
                 <div class="pt-2 flex gap-2">
-                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក & Sync ទៅ Sheet</button>
-                    <button type="button" onclick="closeMultiUploadModal()" class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">បោះបង់</button>
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក & Sync
+                        ទៅ Sheet</button>
+                    <button type="button" onclick="closeMultiUploadModal()"
+                        class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">បោះបង់</button>
                 </div>
             </form>
         </div>
@@ -1185,8 +1305,10 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 sm:p-6 border border-orange-100">
             <div id="receiptPrintArea" class="bg-white text-stone-900 font-mono text-xs p-2">
                 <div class="text-center pb-2 border-b border-dashed border-stone-300">
-                    <div class="font-extrabold text-base uppercase font-en" id="receiptStoreName">SWEET DELIGHT BAKERY</div>
-                    <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">រាជធានីភ្នំពេញ • Tel: 012 345 678</div>
+                    <div class="font-extrabold text-base uppercase font-en" id="receiptStoreName">SWEET DELIGHT BAKERY
+                    </div>
+                    <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">រាជធានីភ្នំពេញ • Tel: 012
+                        345 678</div>
                     <div class="mt-1 font-bold text-xs" id="receiptInvoiceNo">INV #BK-8821</div>
                 </div>
                 <div class="py-2 border-b border-dashed border-stone-300 space-y-1" id="receiptItemsList"></div>
@@ -1200,7 +1322,8 @@
                         <span>ប្រាក់កក់:</span>
                         <span id="receiptDepositKHR" class="text-emerald-700 font-extrabold font-en">0 ៛</span>
                     </div>
-                    <div class="flex justify-between text-rose-600 font-extrabold text-xs pt-0.5 border-t border-dotted border-stone-200">
+                    <div
+                        class="flex justify-between text-rose-600 font-extrabold text-xs pt-0.5 border-t border-dotted border-stone-200">
                         <span>លុយនៅខ្វះ:</span>
                         <span id="receiptRemainingKHR" class="font-black font-en text-rose-600">0 ៛</span>
                     </div>
@@ -1210,8 +1333,11 @@
                 <div class="text-center pt-2 text-[10px] text-stone-600 font-medium">សូមអរគុណចំពោះការគាំទ្រ!</div>
             </div>
             <div class="mt-4 flex gap-2">
-                <button onclick="window.print()" class="flex-1 py-2.5 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow"><i class="fa-solid fa-print"></i> បោះពុម្ព</button>
-                <button onclick="closeReceiptModal()" class="py-2.5 px-4 rounded-xl bg-stone-100 text-stone-700 font-bold text-xs">បិទ</button>
+                <button onclick="window.print()"
+                    class="flex-1 py-2.5 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow"><i
+                        class="fa-solid fa-print"></i> បោះពុម្ព</button>
+                <button onclick="closeReceiptModal()"
+                    class="py-2.5 px-4 rounded-xl bg-stone-100 text-stone-700 font-bold text-xs">បិទ</button>
             </div>
         </div>
     </div>
@@ -1219,35 +1345,42 @@
     <!-- ================= LIGHTBOX MODAL ================= -->
     <div id="photoLightboxModal"
         class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
-        <button onclick="closePhotoLightbox()" class="absolute top-5 right-5 text-white/80 text-3xl z-10"><i class="fa-solid fa-xmark"></i></button>
+        <button onclick="closePhotoLightbox()" class="absolute top-5 right-5 text-white/80 text-3xl z-10"><i
+                class="fa-solid fa-xmark"></i></button>
         <div class="max-w-3xl w-full flex flex-col items-center">
-            <div class="relative w-full h-[50vh] sm:h-[65vh] rounded-3xl overflow-hidden shadow-2xl bg-black flex items-center justify-center">
+            <div
+                class="relative w-full h-[50vh] sm:h-[65vh] rounded-3xl overflow-hidden shadow-2xl bg-black flex items-center justify-center">
                 <img id="lightboxMainImage" src="" class="max-w-full max-h-full object-contain">
             </div>
             <div class="mt-4 text-center text-white">
                 <h3 id="lightboxTitle" class="text-xl font-bold"></h3>
                 <p id="lightboxPrice" class="text-base font-black text-amber-400 font-en mt-0.5"></p>
             </div>
-            <div id="lightboxThumbnails" class="flex items-center gap-2 mt-4 overflow-x-auto p-1 max-w-full custom-scroll"></div>
+            <div id="lightboxThumbnails"
+                class="flex items-center gap-2 mt-4 overflow-x-auto p-1 max-w-full custom-scroll"></div>
         </div>
     </div>
 
     <!-- ================= RATE MODAL ================= -->
-    <div id="rateModal" class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div id="rateModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark">ប្តូរអត្រាប្រាក់</h3>
                 <button onclick="closeRateModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3 text-xs">
-                <input type="number" id="inputExchangeRate" value="4100" class="w-full p-3 rounded-2xl border border-stone-300 font-black text-lg text-bakery-caramel text-center">
-                <button onclick="saveExchangeRate()" class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក</button>
+                <input type="number" id="inputExchangeRate" value="4100"
+                    class="w-full p-3 rounded-2xl border border-stone-300 font-black text-lg text-bakery-caramel text-center">
+                <button onclick="saveExchangeRate()"
+                    class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក</button>
             </div>
         </div>
     </div>
 
     <!-- ================= SHIFT MODAL ================= -->
-    <div id="shiftModal" class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div id="shiftModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark">បិទវេនលក់</h3>
@@ -1255,44 +1388,59 @@
             </div>
             <div class="mt-4 space-y-3 text-xs">
                 <div class="p-3 bg-orange-50 rounded-2xl border border-orange-200 space-y-1 font-semibold">
-                    <div class="flex justify-between"><span>លុយដើមក្នុងថត:</span><span class="font-bold">100,000 ៛</span></div>
-                    <div class="flex justify-between"><span>លក់បានសាច់ប្រាក់:</span><span class="font-black text-emerald-700" id="shiftCashSalesKHR">0 ៛</span></div>
-                    <div class="flex justify-between"><span>លក់បាន KHQR:</span><span class="font-black text-rose-600" id="shiftKhqrSalesKHR">0 ៛</span></div>
+                    <div class="flex justify-between"><span>លុយដើមក្នុងថត:</span><span class="font-bold">100,000
+                            ៛</span></div>
+                    <div class="flex justify-between"><span>លក់បានសាច់ប្រាក់:</span><span
+                            class="font-black text-emerald-700" id="shiftCashSalesKHR">0 ៛</span></div>
+                    <div class="flex justify-between"><span>លក់បាន KHQR:</span><span class="font-black text-rose-600"
+                            id="shiftKhqrSalesKHR">0 ៛</span></div>
                     <div class="pt-1 border-t border-orange-200 flex justify-between font-extrabold text-sm">
-                        <span>លុយត្រូវមានក្នុងថត:</span><span class="font-black text-bakery-caramel" id="shiftExpectedCashKHR">100,000 ៛</span>
+                        <span>លុយត្រូវមានក្នុងថត:</span><span class="font-black text-bakery-caramel"
+                            id="shiftExpectedCashKHR">100,000 ៛</span>
                     </div>
                 </div>
-                <input type="number" id="shiftActualCashInput" placeholder="រាប់លុយជាក់ស្តែង..." class="w-full p-3 rounded-xl border border-stone-300 font-black text-base">
-                <button onclick="confirmShiftClose()" class="w-full py-3 rounded-2xl bg-stone-800 text-white font-extrabold text-xs"><i class="fa-solid fa-check"></i> បញ្ជាក់ការបិទវេន</button>
+                <input type="number" id="shiftActualCashInput" placeholder="រាប់លុយជាក់ស្តែង..."
+                    class="w-full p-3 rounded-xl border border-stone-300 font-black text-base">
+                <button onclick="confirmShiftClose()"
+                    class="w-full py-3 rounded-2xl bg-stone-800 text-white font-extrabold text-xs"><i
+                        class="fa-solid fa-check"></i> បញ្ជាក់ការបិទវេន</button>
             </div>
         </div>
     </div>
 
     <!-- Toast Notification -->
-    <div id="toastContainer" class="fixed bottom-24 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed bottom-20 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
+    </div>
 
     <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
     <script>
-        // ⭐️ កូដលុបសញ្ញា NETLIFY DRAWER ស្វ័យប្រវត្តិកុំឱ្យបាំងអេក្រង់ ⭐️
-        function purgeNetlifyBadge() {
-            const selectors = [
-                '#netlify-drawer-container',
-                '#netlify-drawer-frame',
-                '.netlify-drawer',
-                'iframe[src*="netlify"]',
-                'a[href*="netlify.com"]',
-                '[data-netlify-deploy-preview]'
-            ];
-            selectors.forEach(sel => {
-                document.querySelectorAll(sel).forEach(el => {
-                    el.style.display = 'none';
-                    el.remove();
-                });
-            });
+        /* --- 🌟 1. SMART IMAGE FORMATTER & GUARANTEED BASE64 FALLBACK --- */
+        const FALLBACK_BAKERY_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRjVFQiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZFRDdCMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSJ1cmwoI2JnKSIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwMCwgMTM1KSI+PGVsbGlwc2UgY3g9IjAiIGN5PSI1NSIgcng9IjkwIiByeT0iMTgiIGZpbGw9IiNFMkQ0QzkiIG9wYWNpdHk9IjAuNiIvPjxlbGxpcHNlIGN4PSIwIiBjeT0iNTIiIHJ4PSI4NSIgcnk9IjE1IiBmaWxsPSIjRkZGRkZGIi8+PHJlY3QgeD0iLTYwIiB5PSItMTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNTUiIHJ4PSI4IiBmaWxsPSIjRTA3QTVGIi8+PHBhdGggZD0iTS02MCwxNSBRLTQ1LDI1IC0zMCwxNSBRLTE1LDI1IDAsMTUgUTE1LDI1IDMwLDE1IFE0NSwyNSA2MCwxNSBMNjAsLTEwIEwtNjAsLTEwIFoiIGZpbGw9IiNGRkY5RjIiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii0xMCIgcng9IjYwIiByeT0iMTgiIGZpbGw9IiNGNEE2NjEiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii0xNCIgcng9IjU1IiByeT0iMTUiIGZpbGw9IiNGRkY5RjIiLz48cmVjdCB4PSItMyIgeT0iLTQ1IiB3aWR0aD0iNiIgaGVpZ2h0PSIzMiIgcng9IjIiIGZpbGw9IiNFNzZGNTEiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii00OCIgcng9IjUiIHJ5PSI3IiBmaWxsPSIjRkRCQTg4Ii8+PGVsbGlwc2UgY3g9IjAiIGN5PSItNDkiIHJ4PSIzIiByeT0iNSIgZmlsbD0iI0U2Mzk0NiIvPjwvZz48dGV4dCB4PSIyMDAiIHk9IjI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzZFMjYxNCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtc2l6ZT0iMjAiPkJBS0VSWSBERUxJR0hUPC90ZXh0Pjwvc3ZnPg==";
+
+        function formatImgUrl(rawUrl) {
+            if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) return FALLBACK_BAKERY_SVG;
+            rawUrl = rawUrl.trim();
+            if (rawUrl.startsWith('data:image')) return rawUrl;
+
+            // Google Drive Auto-Bypass 403 Forbidden on Desktop
+            const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
+                               rawUrl.match(/id=([a-zA-Z0-9_-]+)/) ||
+                               rawUrl.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
+            if (driveMatch && driveMatch[1]) {
+                return `https://wsrv.nl/?url=drive.google.com/thumbnail?id=${driveMatch[1]}%26sz=w800`;
+            }
+
+            if (rawUrl.includes('googleusercontent.com')) {
+                return `https://wsrv.nl/?url=${encodeURIComponent(rawUrl)}`;
+            }
+
+            // Unsplash proxy to prevent ISP/hotlink blocking on desktop
+            if (rawUrl.includes('unsplash.com')) {
+                return `https://wsrv.nl/?url=${encodeURIComponent(rawUrl)}`;
+            }
+
+            return rawUrl;
         }
-        window.addEventListener('DOMContentLoaded', purgeNetlifyBadge);
-        window.addEventListener('load', purgeNetlifyBadge);
-        setInterval(purgeNetlifyBadge, 1500);
 
         let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
             name: 'SweetDelight Bakery',
@@ -1406,6 +1554,18 @@
         let manualEntryMode = 'items';
         let manualSaleItems = [];
 
+        function resetDefaultProducts() {
+            if (confirm('តើអ្នកចង់កំណត់រូបភាព និងទំនិញទាំងអស់ទៅទម្រង់ដើមវិញមែនទេ?')) {
+                products = initialProducts;
+                saveState();
+                renderProducts();
+                renderInventory();
+                renderShowcase();
+                renderQuickAddons();
+                showToast('🎉 បានកំណត់រូបភាព និងទំនិញឡើងវិញរួចរាល់!', 'success');
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             saveState();
             renderStoreInfo();
@@ -1424,6 +1584,7 @@
             tomorrow.setDate(tomorrow.getDate() + 1);
             document.getElementById('cakeDateInput').value = tomorrow.toISOString().split('T')[0];
             document.getElementById('expenseDateInput').value = new Date().toISOString().split('T')[0];
+            purgeNetlifyBadge();
         });
 
         function renderStoreInfo() {
@@ -1447,31 +1608,36 @@
             const container = document.getElementById('quickAddonsList');
             if (!container) return;
             const accs = products.filter(p => p.cat === 'accessories');
-            container.innerHTML = accs.map(acc => `
-                <button onclick="addToCart('${acc.id}')" 
-                    class="flex items-center gap-1 px-2 py-1 bg-white hover:bg-amber-100/80 border border-orange-200 rounded-xl whitespace-nowrap shadow-2xs hover:scale-105 transition text-left group">
-                    <img src="${acc.img}" class="w-5 h-5 rounded-lg object-cover bg-stone-100">
-                    <div>
-                        <div class="text-[9px] font-bold text-bakery-dark line-clamp-1">${acc.name.split('(')[0]}</div>
-                        <div class="text-[8px] font-black text-bakery-caramel font-en">${acc.priceKHR.toLocaleString()}៛</div>
-                    </div>
-                    <i class="fa-solid fa-plus text-[8px] text-amber-500 pl-0.5"></i>
-                </button>
-            `).join('');
+            container.innerHTML = accs.map(acc => {
+                const img = formatImgUrl(acc.img);
+                return `
+                    <button onclick="addToCart('${acc.id}')" 
+                        class="flex items-center gap-1 px-2 py-1 bg-white hover:bg-amber-100/80 border border-orange-200 rounded-xl whitespace-nowrap shadow-2xs hover:scale-105 transition text-left group">
+                        <img src="${img}" class="w-5 h-5 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                        <div>
+                            <div class="text-[9px] font-bold text-bakery-dark line-clamp-1">${acc.name.split('(')[0]}</div>
+                            <div class="text-[8px] font-black text-bakery-caramel font-en">${acc.priceKHR.toLocaleString()}៛</div>
+                        </div>
+                        <i class="fa-solid fa-plus text-[8px] text-amber-500 pl-0.5"></i>
+                    </button>
+                `;
+            }).join('');
         }
 
-        // ================= SWITCH VIEW =================
+        // ================= SWITCH VIEW (ដំណើរការលើ PC និង Mobile 100%) =================
         function switchView(viewName) {
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
                 if (sec) sec.classList.add('hidden');
-                
+
+                // Desktop nav buttons
                 const navBtn = document.getElementById(`nav-${v}`);
                 if (navBtn) {
                     navBtn.classList.remove('bg-white', 'text-bakery-caramel', 'shadow-sm');
                     navBtn.classList.add('text-stone-700');
                 }
 
+                // Mobile bottom nav buttons
                 const mobNavBtn = document.getElementById(`mob-nav-${v}`);
                 if (mobNavBtn) {
                     mobNavBtn.classList.remove('text-bakery-caramel');
@@ -1666,7 +1832,6 @@
             let itemsSummaryArr = [];
             let cakeFlavorsArr = [];
             let totalQty = 0;
-            let primaryImg = null;
 
             if (manualEntryMode === 'items') {
                 totalKHR = manualSaleItems.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0);
@@ -1675,8 +1840,6 @@
                     const pName = p ? p.name : 'ទំនិញ';
                     itemsSummaryArr.push(`${pName} (x${item.qty})`);
                     totalQty += item.qty;
-
-                    if (index === 0 && p && p.img) primaryImg = p.img;
                     if (p && p.cat === 'cakes') cakeFlavorsArr.push(`${pName}: រសជាតិទូទៅ`);
                     if (deductStock && p) p.stock = Math.max(0, p.stock - item.qty);
                 });
@@ -1724,7 +1887,7 @@
             transactions.unshift(newTx);
             saveState();
 
-            // Sync ទៅ Sheet sales
+            // Sync ទៅ Sheet sales (15 columns mapping)
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: {
@@ -1785,11 +1948,6 @@
                 ingredients: products.filter(p => p.cat === 'ingredients'),
                 allProducts: products
             }, true);
-            confetti({ particleCount: 40, spread: 60 });
-        }
-
-        function syncAllExpensesToSheet() {
-            sendGoogleSheetPayload({ action: 'sync_expenses', expenses: expenses }, true);
             confetti({ particleCount: 40, spread: 60 });
         }
 
@@ -1933,7 +2091,7 @@
             try {
                 const backupPayload = {
                     appName: storeInfo.name,
-                    backupVersion: "2.8",
+                    backupVersion: "2.7",
                     exportDate: new Date().toISOString(),
                     storeInfo, KHR_RATE, customKhqrImage, customMerchantName,
                     integrationSettings, products, transactions, expenses, customerLoyalty
@@ -2081,7 +2239,7 @@
         }
 
         function deleteInvoice(invId) {
-            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} នេះចេញពីរបាយការណ៍មែនទេ?`)) {
+            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} នេះមែនទេ?`)) {
                 transactions = transactions.filter(t => t.id !== invId);
                 saveState();
                 renderAnalytics();
@@ -2271,23 +2429,26 @@
                 return;
             }
 
-            tbody.innerHTML = displayList.map(p => `
-                <tr class="hover:bg-orange-50/40 transition">
-                    <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
-                        <img src="${p.img || (p.images && p.images[0])}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm">
-                        <span class="font-extrabold text-stone-800">${p.name}</span>
-                    </td>
-                    <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
-                    <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
-                    <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
-                    <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
-                    <td class="p-3.5 text-center">
-                        <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
-                        <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
-                        <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
-                    </td>
-                </tr>
-            `).join('');
+            tbody.innerHTML = displayList.map(p => {
+                const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                return `
+                    <tr class="hover:bg-orange-50/40 transition">
+                        <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
+                            <img src="${img}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                            <span class="font-extrabold text-stone-800">${p.name}</span>
+                        </td>
+                        <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
+                        <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
+                        <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
+                        <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
+                        <td class="p-3.5 text-center">
+                            <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
+                            <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
         }
 
         // ================= POS & CART =================
@@ -2315,24 +2476,27 @@
                 p.name.toLowerCase().includes(query)
             );
 
-            grid.innerHTML = filtered.map(p => `
-                <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
-                    <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                        <img src="${p.img || (p.images && p.images[0])}" alt="${p.name}" class="w-full h-full object-cover">
-                        ${p.badge ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-bakery-caramel text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
-                        <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-white/95 text-stone-800 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
-                    </div>
-                    <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
-                        <div>
-                            <h4 class="font-bold text-xs sm:text-sm text-bakery-dark line-clamp-1">${p.name}</h4>
-                            <div class="text-sm sm:text-base font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
+            grid.innerHTML = filtered.map(p => {
+                const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
+                        <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                            <img src="${img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
+                            ${p.badge ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-bakery-caramel text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
+                            <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-white/95 text-stone-800 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
                         </div>
-                        <button onclick="addToCart('${p.id}')" class="mt-2.5 sm:mt-3 w-full py-2 sm:py-2.5 rounded-xl bg-bakery-vanilla text-bakery-dark font-extrabold text-xs hover:bg-bakery-caramel hover:text-white transition flex items-center justify-center gap-1.5 border border-orange-200 ${p.stock <= 0 ? 'opacity-50' : ''}" ${p.stock <= 0 ? 'disabled' : ''}>
-                            <i class="fa-solid fa-plus text-[10px]"></i> ${p.stock <= 0 ? 'អស់ស្តុក' : 'ទិញ'}
-                        </button>
+                        <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+                            <div>
+                                <h4 class="font-bold text-xs sm:text-sm text-bakery-dark line-clamp-1">${p.name}</h4>
+                                <div class="text-sm sm:text-base font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
+                            </div>
+                            <button onclick="addToCart('${p.id}')" class="mt-2.5 sm:mt-3 w-full py-2 sm:py-2.5 rounded-xl bg-bakery-vanilla text-bakery-dark font-extrabold text-xs hover:bg-bakery-caramel hover:text-white transition flex items-center justify-center gap-1.5 border border-orange-200 ${p.stock <= 0 ? 'opacity-50' : ''}" ${p.stock <= 0 ? 'disabled' : ''}>
+                                <i class="fa-solid fa-plus text-[10px]"></i> ${p.stock <= 0 ? 'អស់ស្តុក' : 'ទិញ'}
+                            </button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function addToCart(id) {
@@ -2391,32 +2555,35 @@
                 container.innerHTML = `<div class="py-10 text-center text-stone-400 font-bold text-xs">កន្ត្រកទំនិញនៅទំនេរ</div>`;
                 if (mobileBar) mobileBar.classList.add('hidden');
             } else {
-                container.innerHTML = cart.map((item, idx) => `
-                    <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
-                        <div class="flex items-center justify-between gap-2">
-                            <div class="flex items-center gap-2">
-                                <img src="${item.img}" class="w-8 h-8 rounded-lg object-cover bg-stone-100">
-                                <div>
-                                    <div class="text-xs font-bold text-bakery-dark line-clamp-1">${item.name}</div>
-                                    <div class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</div>
+                container.innerHTML = cart.map((item, idx) => {
+                    const img = formatImgUrl(item.img);
+                    return `
+                        <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
+                            <div class="flex items-center justify-between gap-2">
+                                <div class="flex items-center gap-2">
+                                    <img src="${img}" class="w-8 h-8 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                                    <div>
+                                        <div class="text-xs font-bold text-bakery-dark line-clamp-1">${item.name}</div>
+                                        <div class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</div>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
+                                    <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
+                                    <span class="text-xs font-black font-en px-1">${item.qty}</span>
+                                    <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-plus"></i></button>
                                 </div>
                             </div>
-                            <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
-                                <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
-                                <span class="text-xs font-black font-en px-1">${item.qty}</span>
-                                <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-plus"></i></button>
-                            </div>
+                            ${(item.cat === 'cakes' || item.isCustom) ? `
+                                <div class="flex items-center gap-1.5 pl-10 pr-1">
+                                    <span class="text-[10px] font-bold text-amber-900 whitespace-nowrap">រសជាតិ:</span>
+                                    <select onchange="updateCartItemFlavor(${idx}, this.value)" class="w-full text-[10px] font-bold bg-white border border-amber-300 rounded-lg px-1.5 py-0.5">
+                                        ${cakeFlavors.map(f => `<option value="${f.name}" ${item.flavor === f.name ? 'selected' : ''}>${f.name}</option>`).join('')}
+                                    </select>
+                                </div>
+                            ` : ''}
                         </div>
-                        ${(item.cat === 'cakes' || item.isCustom) ? `
-                            <div class="flex items-center gap-1.5 pl-10 pr-1">
-                                <span class="text-[10px] font-bold text-amber-900 whitespace-nowrap">រសជាតិ:</span>
-                                <select onchange="updateCartItemFlavor(${idx}, this.value)" class="w-full text-[10px] font-bold bg-white border border-amber-300 rounded-lg px-1.5 py-0.5">
-                                    ${cakeFlavors.map(f => `<option value="${f.name}" ${item.flavor === f.name ? 'selected' : ''}>${f.name}</option>`).join('')}
-                                </select>
-                            </div>
-                        ` : ''}
-                    </div>
-                `).join('');
+                    `;
+                }).join('');
 
                 if (mobileBar) mobileBar.classList.remove('hidden');
             }
@@ -2539,12 +2706,10 @@
 
             let itemsSummaryArr = [];
             let totalQty = 0;
-            let primaryImg = null;
 
-            cart.forEach((item, index) => {
+            cart.forEach((item) => {
                 totalQty += item.qty;
                 itemsSummaryArr.push(`${item.name}${item.flavor ? ` (${item.flavor})` : ''} x${item.qty}`);
-                if (index === 0 && item.img) primaryImg = item.img;
                 if (!item.isCustom) {
                     const prod = products.find(p => p.id == item.id);
                     if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
@@ -2628,9 +2793,9 @@
             const imgs = p.images ? p.images : [p.img];
             document.getElementById('lightboxTitle').innerText = p.name;
             document.getElementById('lightboxPrice').innerText = `${p.priceKHR.toLocaleString()} ៛`;
-            document.getElementById('lightboxMainImage').src = imgs[0];
+            document.getElementById('lightboxMainImage').src = formatImgUrl(imgs[0]);
             document.getElementById('lightboxThumbnails').innerHTML = imgs.map(src => `
-                <img src="${src}" onclick="document.getElementById('lightboxMainImage').src='${src}'" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer">
+                <img src="${formatImgUrl(src)}" onclick="document.getElementById('lightboxMainImage').src=formatImgUrl('${src}')" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
             `).join('');
             document.getElementById('photoLightboxModal').classList.remove('hidden');
         }
@@ -2680,24 +2845,27 @@
 
             const grid = document.getElementById('showcaseGrid');
             const filtered = products.filter(p => p.cat !== 'ingredients' && (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory));
-            grid.innerHTML = filtered.map(p => `
-                <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
-                    <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                        <img src="${p.img || (p.images && p.images[0])}" class="w-full h-full object-cover">
-                    </div>
-                    <div class="p-4 flex items-center justify-between">
-                        <div>
-                            <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
-                            <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
+            grid.innerHTML = filtered.map(p => {
+                const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
+                        <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                            <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
                         </div>
-                        <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
+                        <div class="p-4 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
+                                <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
+                            </div>
+                            <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function toggleFullscreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { });
             else document.exitFullscreen();
         }
 
@@ -2764,6 +2932,20 @@
             container.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
+
+        /* --- 🌟 2. AUTO-PURGE NETLIFY BADGES --- */
+        function purgeNetlifyBadge() {
+            const selectors = [
+                '#netlify-drawer-container',
+                '[data-netlify-deploy-preview]',
+                '.netlify-drawer',
+                'iframe[src*="netlify"]'
+            ];
+            selectors.forEach(sel => {
+                document.querySelectorAll(sel).forEach(el => el.remove());
+            });
+        }
+        setInterval(purgeNetlifyBadge, 500);
     </script>
 </body>
 
