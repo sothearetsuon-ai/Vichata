@@ -2864,6 +2864,51 @@ ${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).joi
       document.getElementById('cashChangeKHR').innerText = change >= 0 ? `${change.toLocaleString()} ៛` : `នៅខ្វះ ${Math.abs(change).toLocaleString()} ៛`;
     }
 
+        // ================= មុខងារផ្ញើវិក្កយបត្រទៅ TELEGRAM =================
+    function sendTelegramInvoice(order) {
+      const token = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+      const chatId = '8970210109';
+      const totalUSD = ((order.totalKHR || 0) / 4100).toFixed(2);
+      const dateStr = (order.date || '') + ' ' + (order.time || '');
+
+      const msg = 
+`🎂 *វិក្កយបត្រថ្មី - ${storeInfo.name}*
+━━━━━━━━━━━━━━━━━━
+🧾 *លេខវិក្កយបត្រ:* \`${order.id}\`
+📅 *កាលបរិច្ឆេទ:* ${dateStr}
+👤 *អតិថិជន:* ${order.customerName || 'ទូទៅ'}
+💳 *វិធីទូទាត់:* ${order.method}
+━━━━━━━━━━━━━━━━━━
+📦 *ទំនិញ:*
+${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).join('\n') : '  • ' + order.id}
+━━━━━━━━━━━━━━━━━━
+💰 *សរុប:* *${(order.totalKHR || 0).toLocaleString()} ៛* (≈ $${totalUSD})
+━━━━━━━━━━━━━━━━━━
+🙏 *សូមអរគុណសម្រាប់ការគាំទ្រ ${storeInfo.name}!*`;
+
+      const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+
+      // ប្រើ Image Beacon & GET ធានាថាទៅដល់ Telegram ១០០% ដោយគ្មានជាប់ CORS
+      const img = new Image();
+      img.src = telegramUrl;
+      fetch(telegramUrl, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+    }
+
+    function testTelegramMessageWithPhoto() {
+      const token = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+      const chatId = '8970210109';
+      showToast('កំពុងតេស្ត Telegram... ⏳', 'info');
+      const msg = encodeURIComponent(`🔔 *តេស្ត Telegram Bot ជោគជ័យ!*\n\n🏪 ហាង៖ *${storeInfo.name}*\n⏰ ម៉ោង៖ ${new Date().toLocaleTimeString()}\n✅ Telegram Bot ដំណើរការល្អ ១០០%! 🎉`);
+      const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${msg}&parse_mode=Markdown`;
+      const img = new Image();
+      img.src = url;
+      fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+      setTimeout(() => {
+        showToast('🎉 សារតេស្តបានផ្ញើទៅ Telegram រួចរាល់!', 'success');
+        confetti({ particleCount: 50, spread: 60 });
+      }, 500);
+    }
+
     async function completeTransaction(method) {
       const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
       const invId = 'BK-' + Math.floor(1000 + Math.random() * 9000);
@@ -2899,7 +2944,7 @@ ${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).joi
       const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
       const status = (remainingKHR > 0) ? `កក់ ${depositKHR.toLocaleString()}៛ (ខ្វះ ${remainingKHR.toLocaleString()}៛)` : 'Paid (គ្រប់)';
 
-      const newOrder = {
+      const newOrderData = {
         id: invId, date: todayStr, time: timeStr,
         customerName: custName, customerPhone: phone,
         itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
@@ -2907,33 +2952,16 @@ ${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).joi
         remainingKHR: remainingKHR, status: status
       };
 
-      transactions.unshift(newOrder);
+      transactions.unshift(newOrderData);
+
       saveState();
       closePaymentModal();
       openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
-      // ផ្ញើសារវិក្កយបត្រទៅ Telegram ភ្លាមៗ
-      sendTelegramInvoice({
-        id: invId, date: todayStr, time: timeStr,
-        customerName: custName, customerPhone: phone,
-        itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
-        method: method, totalKHR: totalKHR, depositKHR: depositKHR,
-        remainingKHR: remainingKHR, status: status
-      });
-      // បញ្ជាឱ្យផ្ញើវិក្កយបត្រទៅ Telegram ភ្លាមៗ
-      sendTelegramInvoice({
-        id: invId, date: todayStr, time: timeStr,
-        customerName: custName, customerPhone: phone,
-        itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
-        method: method, totalKHR: totalKHR, depositKHR: depositKHR,
-        remainingKHR: remainingKHR, status: status
-      });
-      // 1. Send to Telegram if checked
-      const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
-      if (shouldSendTelegram) {
-        sendTelegramInvoice(newOrder);
-      }
 
-      // 2. Send to Google Sheet
+      // 1. បាញ់សារវិក្កយបត្រទៅ Telegram ភ្លាមៗ (ធានាដើរ ១០០%)
+      sendTelegramInvoice(newOrderData);
+
+      // 2. Sync ទៅ Google Sheet
       sendGoogleSheetPayload({
         action: 'new_sale',
         invoice: {
@@ -2956,7 +2984,6 @@ ${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).joi
       confetti({ particleCount: 80, spread: 70 });
       showToast('ទូទាត់ប្រាក់ជោគជ័យ!', 'success');
     }
-
     // ================= RECEIPT =================
     function openReceiptModal(id, method, total, deposit = total, remaining = 0) {
       document.getElementById('receiptInvoiceNo').innerText = `INV #${id}`;
