@@ -2882,7 +2882,14 @@
       saveState();
       closePaymentModal();
       openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
-
+      // បញ្ជាឱ្យផ្ញើវិក្កយបត្រទៅ Telegram ភ្លាមៗ
+      sendTelegramInvoice({
+        id: invId, date: todayStr, time: timeStr,
+        customerName: custName, customerPhone: phone,
+        itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
+        method: method, totalKHR: totalKHR, depositKHR: depositKHR,
+        remainingKHR: remainingKHR, status: status
+      });
       // 1. Send to Telegram if checked
       const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
       if (shouldSendTelegram) {
