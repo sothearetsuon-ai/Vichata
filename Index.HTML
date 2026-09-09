@@ -2911,6 +2911,14 @@ ${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).joi
       saveState();
       closePaymentModal();
       openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
+      // ផ្ញើសារវិក្កយបត្រទៅ Telegram ភ្លាមៗ
+      sendTelegramInvoice({
+        id: invId, date: todayStr, time: timeStr,
+        customerName: custName, customerPhone: phone,
+        itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
+        method: method, totalKHR: totalKHR, depositKHR: depositKHR,
+        remainingKHR: remainingKHR, status: status
+      });
       // បញ្ជាឱ្យផ្ញើវិក្កយបត្រទៅ Telegram ភ្លាមៗ
       sendTelegramInvoice({
         id: invId, date: todayStr, time: timeStr,
