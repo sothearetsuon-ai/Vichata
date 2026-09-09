@@ -644,7 +644,7 @@
                     <!-- Push Stock to Sheet Button -->
                     <button onclick="syncStockToGoogleSheet()"
                         class="px-4 py-2.5 rounded-2xl bg-amber-50 text-bakery-crust hover:bg-amber-100 font-bold text-xs border border-amber-200 shadow-sm transition flex items-center gap-1.5"
-                        title="បញ្ជូនស្តុកទាំងអស់ចូល Google Sheet">
+                        title="បញ្ជូនស្តុកទាំងអស់ (ទាំងនំ និងគ្រឿងផ្សំ) ចូល Google Sheet">
                         <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i>
                         <span>Sync ស្តុកទៅ Sheet</span>
                     </button>
@@ -667,13 +667,11 @@
             <div class="flex items-center gap-2 p-1.5 bg-bakery-vanilla rounded-2xl w-fit border border-orange-200/60">
                 <button id="subtab-stock-products" onclick="setInventoryTab('products')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
-                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span
-                        id="stockProductsCount">0</span>)
+                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span id="stockProductsCount">0</span>)
                 </button>
                 <button id="subtab-stock-ingredients" onclick="setInventoryTab('ingredients')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-stone-600 hover:text-bakery-dark">
-                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span
-                        id="stockIngredientsCount">0</span>)
+                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span id="stockIngredientsCount">0</span>)
                 </button>
             </div>
 
@@ -891,9 +889,8 @@
                         <h4 class="font-bold text-xs text-stone-800 flex items-center gap-1.5"><i
                                 class="fa-solid fa-table text-emerald-600"></i> Google Sheet Web App URL</h4>
                         <span
-                            class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-bold">Sheet:
-                            sales
-                            (Two-Way)</span>
+                            class="text-[10px] bg-emerald-200 text-emerald-800 px-2 py-0.5 rounded-md font-bold">Two-Way
+                            Multi-Sheet Sync</span>
                     </div>
                     <input type="text" id="googleSheetUrl" placeholder="https://script.google.com/macros/s/.../exec"
                         class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
@@ -910,7 +907,7 @@
                     <!-- Master Push Button -->
                     <button onclick="syncAllToGoogleSheet()"
                         class="w-full mt-1.5 py-2.5 bg-emerald-700 hover:bg-emerald-800 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-arrows-rotate"></i> Sync ស្តុក & ចំណាយ ទាំងអស់ទៅ Sheet (Push All)
+                        <i class="fa-solid fa-arrows-rotate"></i> Sync ស្តុកនំ, គ្រឿងផ្សំ & ចំណាយ ទាំងអស់ទៅ Sheet
                     </button>
                 </div>
 
@@ -995,7 +992,7 @@
         </div>
     </div>
 
-    <!-- ================= PAYMENT MODAL (គាំទ្រប្រាក់កក់ & លុយនៅខ្វះ) ================= -->
+    <!-- ================= PAYMENT MODAL ================= -->
     <div id="paymentModal"
         class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-orange-100">
@@ -1092,8 +1089,7 @@
                 <div class="flex items-center gap-2">
                     <div
                         class="w-9 h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
+                        <i class="fa-solid fa-cloud-arrow-up"></i></div>
                     <div>
                         <h3 class="font-bold text-base text-bakery-dark" id="multiUploadModalTitle">Upload
                             រូបភាពនំច្រើនសន្លឹក</h3>
@@ -1250,7 +1246,7 @@
         </div>
     </div>
 
-    <!-- ================= THERMAL RECEIPT MODAL (មាន ប្រាក់កក់ & លុយនៅខ្វះ) ================= -->
+    <!-- ================= THERMAL RECEIPT MODAL ================= -->
     <div id="receiptModal"
         class="fixed inset-0 bg-stone-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-orange-100">
@@ -1263,7 +1259,7 @@
                 </div>
                 <div class="py-2 border-b border-dashed border-stone-300 space-y-1" id="receiptItemsList"></div>
 
-                <!-- ⭐️ សរុប, ប្រាក់កក់, និង លុយនៅខ្វះ ⭐️ -->
+                <!-- សរុប, ប្រាក់កក់, និង លុយនៅខ្វះ -->
                 <div class="py-2 border-b border-dashed border-stone-300 text-right space-y-1">
                     <div class="flex justify-between font-bold text-sm">
                         <span>សរុបត្រូវបង់:</span>
@@ -1371,7 +1367,7 @@
             }
         });
 
-        // ⭐️ បញ្ជីរសជាតិនំថ្មីៗសម្បូរបែប តាមការស្នើសុំ ⭐️
+        // ⭐️ បញ្ជីរសជាតិនំ ⭐️
         let cakeFlavors = [
             { id: 'pandan_coconut', name: 'តយដូង (Pandan Coconut)' },
             { id: 'strawberry', name: 'ស្ត្រប៊ឺរី (Strawberry Fresh)' },
@@ -1396,11 +1392,11 @@
         let currentDiscountKHR = 0;
         let batchUploadedImages = [];
 
-        // ⭐️ State សម្រាប់បំបែក Sub-tab ក្នុង Stock ('products' ឬ 'ingredients') ⭐️
+        // ⭐️ State សម្រាប់បំបែក Sub-tab ក្នុង Stock ⭐️
         let activeInventoryTab = 'products';
 
         // Payment & Deposit State
-        let currentPaymentType = 'full'; // 'full' or 'deposit'
+        let currentPaymentType = 'full';
         let currentDepositKHR = 0;
 
         let customCake = {
@@ -1420,7 +1416,6 @@
             googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec'
         };
 
-        // Categories List
         const categories = [
             { id: 'all', label: 'ទាំងអស់' },
             { id: 'cakes', label: '🎂 នំខេក' },
@@ -1452,7 +1447,6 @@
             document.getElementById('expenseDateInput').value = new Date().toISOString().split('T')[0];
         });
 
-        // បង្ហាញព័ត៌មានឈ្មោះហាង
         function renderStoreInfo() {
             const nameEl = document.getElementById('storeNameDisplay');
             const taglineEl = document.getElementById('storeTaglineDisplay');
@@ -1477,7 +1471,6 @@
             localStorage.setItem('BAKERY_EXPENSES', JSON.stringify(expenses));
         }
 
-        // បង្ហាញផ្ទាំងជ្រើសរើសឥវ៉ាន់បន្ថែមរហ័ស
         function renderQuickAddons() {
             const container = document.getElementById('quickAddonsList');
             if (!container) return;
@@ -1496,7 +1489,7 @@
       `).join('');
         }
 
-        // ================= GOOGLE SHEET SYNC (ចូល Sheet sales) =================
+        // ================= GOOGLE SHEET SYNC LOGIC =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             if (!integrationSettings.googleSheetUrl) return;
 
@@ -1512,7 +1505,7 @@
                 });
 
                 if (showToastNotice) {
-                    showToast('☁️ បាន Sync ទៅ Google Sheet (Sheet: sales) ជោគជ័យ!', 'success');
+                    showToast('☁️ បាន Sync ទិន្នន័យ (នំ, គ្រឿងផ្សំ) ទៅ Google Sheet ជោគជ័យ!', 'success');
                 }
             } catch (err) {
                 console.error('Google Sheet Sync Error:', err);
@@ -1524,12 +1517,18 @@
             }
         }
 
-        function sendGoogleSheetRow(payload) {
-            sendGoogleSheetPayload(payload);
-        }
-
+        // ⭐️ SYNC ស្តុកនំ & ស្តុកគ្រឿងផ្សំ ចូល GOOGLE SHEET ដាច់ដោយឡែកពីគ្នា ⭐️
         function syncStockToGoogleSheet() {
-            sendGoogleSheetPayload({ action: 'sync_stock', products: products }, true);
+            const prodList = products.filter(p => p.cat !== 'ingredients');
+            const ingList = products.filter(p => p.cat === 'ingredients');
+
+            sendGoogleSheetPayload({
+                action: 'sync_stock',
+                products: prodList,
+                ingredients: ingList,
+                allProducts: products
+            }, true);
+
             confetti({ particleCount: 40, spread: 60 });
         }
 
@@ -1544,10 +1543,13 @@
                 alert('សូមបញ្ចូល Google Apps Script Web App URL ជាមុនសិន!');
                 return;
             }
+            const prodList = products.filter(p => p.cat !== 'ingredients');
+            const ingList = products.filter(p => p.cat === 'ingredients');
+
             sendGoogleSheetPayload({
                 action: 'sync_all',
-                sheetName: 'sales',
-                products: products,
+                products: prodList,
+                ingredients: ingList,
                 expenses: expenses,
                 transactions: transactions
             }, true);
@@ -1725,7 +1727,6 @@
             event.target.value = '';
         }
 
-        // ================= SWITCH VIEW =================
         function switchView(viewName) {
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
@@ -1752,7 +1753,6 @@
             if (viewName === 'inventory') renderInventory();
         }
 
-        // ================= TWO-WAY SHEET PULL =================
         async function pullProductsFromGoogleSheet() {
             if (!integrationSettings.googleSheetUrl) {
                 alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
@@ -1776,7 +1776,7 @@
                     renderShowcase();
                     renderQuickAddons();
                     confetti({ particleCount: 60, spread: 70 });
-                    showToast(`🎉 បានទាញ ${remoteProducts.length} មុខទំនិញពី Google Sheet ជោគជ័យ!`, 'success');
+                    showToast(`🎉 បានទាញ ${remoteProducts.length} មុខទំនិញ & គ្រឿងផ្សំពី Google Sheet ជោគជ័យ!`, 'success');
                 } else {
                     showToast('Google Sheet មិនទាន់មានទិន្នន័យទំនិញនៅឡើយទេ!', 'warning');
                 }
@@ -2009,7 +2009,6 @@
                 batchUploadedImages = prod.images && prod.images.length > 0 ? [...prod.images] : (prod.img ? [prod.img] : []);
             } else {
                 document.getElementById('multiUploadModalTitle').innerText = activeInventoryTab === 'ingredients' ? 'បន្ថែមគ្រឿងផ្សំថ្មី' : 'Upload រូបភាពនំច្រើនសន្លឹកក្នុងពេលតែមួយ';
-                // Auto-select category based on current tab
                 if (activeInventoryTab === 'ingredients') {
                     document.getElementById('batchProdCat').value = 'ingredients';
                 }
@@ -2103,7 +2102,8 @@
             renderShowcase();
             renderQuickAddons();
 
-            sendGoogleSheetPayload({ action: 'sync_stock', products: products });
+            // ⭐️ Sync ទៅ Sheet ទាំងនំ និងគ្រឿងផ្សំភ្លាមៗ
+            syncStockToGoogleSheet();
 
             closeMultiUploadModal();
             confetti({ particleCount: 50, spread: 60 });
@@ -2118,7 +2118,7 @@
                 renderInventory();
                 renderProducts();
 
-                sendGoogleSheetPayload({ action: 'sync_stock', products: products });
+                syncStockToGoogleSheet();
                 showToast(`បានបន្ថែមស្តុក ${p.name} ចំនួន ${delta}`, 'info');
             }
         }
@@ -2132,7 +2132,7 @@
                 renderShowcase();
                 renderQuickAddons();
 
-                sendGoogleSheetPayload({ action: 'sync_stock', products: products });
+                syncStockToGoogleSheet();
                 showToast('បានលុបទំនិញរួចរាល់', 'info');
             }
         }
@@ -2254,17 +2254,15 @@
             }, true);
         }
 
-        // ================= TRANSACTION CHECKOUT (គាំទ្រប្រាក់កក់ & លុយនៅខ្វះ) =================
+        // ================= TRANSACTION CHECKOUT =================
         async function completeTransaction(method) {
             const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
             const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
             const invId = 'BK-' + Math.floor(1000 + Math.random() * 9000);
 
-            // ឈ្មោះអ្នកទិញ និង លេខទូរស័ព្ទ
             const customerName = document.getElementById('customerNameInput') ? (document.getElementById('customerNameInput').value.trim() || 'អតិថិជនទូទៅ') : 'អតិថិជនទូទៅ';
             const phone = document.getElementById('customerPhoneInput').value.trim() || 'គ្មាន';
 
-            // គណនាប្រាក់កក់ និងលុយនៅខ្វះ
             let depositKHR = totalKHR;
             let remainingKHR = 0;
 
@@ -2284,12 +2282,10 @@
                 const flavorText = item.flavor ? ` (រសជាតិ: ${item.flavor})` : '';
                 itemsSummaryArr.push(`${item.name}${flavorText} x${item.qty}`);
 
-                // រសជាតិនំ
                 if (item.cat === 'cakes' || item.isCustom) {
                     cakeFlavorsArr.push(`${item.name}: ${item.flavor || 'ធម្មតា'} (x${item.qty})`);
                 }
 
-                // ឥវ៉ាន់បន្ថែម
                 if (item.cat === 'accessories') {
                     addOnsArr.push(`${item.name} x${item.qty}`);
                 }
@@ -2341,7 +2337,6 @@
             // Auto-Sync ទៅ Google Sheet (Sheet: sales)
             sendGoogleSheetPayload({
                 action: 'new_sale',
-                sheetName: 'sales',
                 invoice: {
                     id: invId,
                     date: todayStr,
@@ -2358,8 +2353,7 @@
                     totalUSD: parseFloat(totalUSD),
                     method: method,
                     status: status
-                },
-                products: products
+                }
             });
 
             // Telegram notification
@@ -2506,7 +2500,6 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
             showToast(`បានបញ្ចូល ${p.name}`, 'success');
         }
 
-        // ⭐️ មុខងារប្តូររសជាតិនំក្នុងកន្ត្រក ⭐️
         function updateCartItemFlavor(idx, newFlavor) {
             if (cart[idx]) {
                 if (newFlavor === 'ផ្សេងទៀត... (Other)') {
@@ -2810,13 +2803,12 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
             showToast('🎉 បានរក្សាទុកឈ្មោះហាង និងការកំណត់ជោគជ័យ!', 'success');
         }
 
-        // ================= PAYMENT MODAL LOGIC (ទូទាត់ពេញ & បង់ប្រាក់កក់) =================
+        // ================= PAYMENT MODAL LOGIC =================
         function openPaymentModal(method) {
             if (cart.length === 0) { showToast('សូមបញ្ចូលមុខទំនិញជាមុនសិន!', 'warning'); return; }
             const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
             const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
 
-            // កំណត់ទូទាត់ពេញតាមលំនាំដើម
             setPaymentType('full');
 
             document.getElementById('paymentModal').classList.remove('hidden');
@@ -2855,7 +2847,6 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
                 btnFull.className = "px-3 py-1 rounded-xl text-xs font-bold bg-white text-stone-600 border border-orange-200 hover:bg-orange-100 transition";
                 depositRow.classList.remove('hidden');
 
-                // លំនាំដើមប្រាក់កក់ 50%
                 const defDeposit = Math.round((totalKHR * 0.5) / 500) * 500;
                 document.getElementById('depositAmountInput').value = defDeposit;
                 currentDepositKHR = defDeposit;
@@ -2896,13 +2887,12 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
             document.getElementById('cashChangeKHR').innerText = change >= 0 ? `${change.toLocaleString()} ៛` : `នៅខ្វះ ${Math.abs(change).toLocaleString()} ៛`;
         }
 
-        // ================= RECEIPT PREVIEW (មាន ប្រាក់កក់ & លុយនៅខ្វះ) =================
+        // ================= RECEIPT PREVIEW =================
         function openReceiptModal(id, method, total, deposit = total, remaining = 0) {
             document.getElementById('receiptInvoiceNo').innerText = `INV #${id}`;
             document.getElementById('receiptTotalKHR').innerText = `${total.toLocaleString()} ៛`;
             document.getElementById('receiptTotalUSD').innerText = `≈ $${(total / KHR_RATE).toFixed(2)}`;
 
-            // ប្រាក់កក់ & លុយនៅខ្វះ
             const depositEl = document.getElementById('receiptDepositKHR');
             const remainingEl = document.getElementById('receiptRemainingKHR');
             if (depositEl) {
@@ -2912,7 +2902,6 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
                 remainingEl.innerText = `${remaining.toLocaleString()} ៛`;
             }
 
-            // ឈ្មោះអ្នកទិញ & លេខទូរស័ព្ទ
             const custName = document.getElementById('customerNameInput') ? (document.getElementById('customerNameInput').value.trim() || 'អតិថិជនទូទៅ') : 'អតិថិជនទូទៅ';
             const phone = document.getElementById('customerPhoneInput').value.trim() || '-';
 
