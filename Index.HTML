@@ -1541,7 +1541,36 @@
     if (!integrationSettings.telegramBotToken) integrationSettings.telegramBotToken = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
     if (!integrationSettings.googleSheetUrl) integrationSettings.googleSheetUrl = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
     localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
+    // ================= មុខងារផ្ញើវិក្កយបត្រទៅ TELEGRAM =================
+    function sendTelegramInvoice(order) {
+      const token = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+      const chatId = '8970210109';
 
+      const totalUSD = ((order.totalKHR || 0) / 4100).toFixed(2);
+      const dateStr = (order.date || '') + ' ' + (order.time || '');
+
+      const msg = 
+`🎂 *វិក្កយបត្រថ្មី - ${storeInfo.name}*
+━━━━━━━━━━━━━━━━━━
+🧾 *លេខវិក្កយបត្រ:* \`${order.id}\`
+📅 *កាលបរិច្ឆេទ:* ${dateStr}
+👤 *អតិថិជន:* ${order.customerName || 'ទូទៅ'}
+💳 *វិធីទូទាត់:* ${order.method}
+━━━━━━━━━━━━━━━━━━
+📦 *ទំនិញ:*
+${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).join('\n') : '  • ' + order.id}
+━━━━━━━━━━━━━━━━━━
+💰 *សរុប:* *${(order.totalKHR || 0).toLocaleString()} ៛* (≈ $${totalUSD})
+━━━━━━━━━━━━━━━━━━
+🙏 *សូមអរគុណសម្រាប់ការគាំទ្រ ${storeInfo.name}!*`;
+
+      const telegramUrl = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`;
+
+      // ប្រើ Image Beacon & Fetch GET ធានាថាទៅដល់ Telegram ១០០% ដោយគ្មានជាប់ CORS លើទូរសព្ទ័
+      const img = new Image();
+      img.src = telegramUrl;
+      fetch(telegramUrl, { method: 'GET', mode: 'no-cors' }).catch(() => {});
+    }
     const categories = [
       { id: 'all', label: 'ទាំងអស់' },
       { id: 'cakes', label: '🎂 នំខេក' },
