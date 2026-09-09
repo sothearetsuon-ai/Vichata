@@ -1199,7 +1199,7 @@
     </div>
   </div>
 
-  <!-- ================= MODAL: MULTI-IMAGE UPLOAD (UPDATED: MOBILE CAMERA & AUTO-COMPRESS) ================= -->
+  <!-- ================= MODAL: MULTI-IMAGE UPLOAD ================= -->
   <div id="multiUploadModal"
     class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
     <div
@@ -1215,7 +1215,6 @@
         <input type="hidden" id="multiUploadProdId">
         <div class="p-4 bg-orange-50/80 border-2 border-dashed border-orange-300 rounded-2xl text-center">
           
-          <!-- NATIVE LABEL TRIGGER (NO TOUCH-BLOCKING ON MOBILE) -->
           <label for="batchFileInput" class="cursor-pointer block py-2">
             <i class="fa-solid fa-camera text-3xl text-bakery-caramel mb-2"></i>
             <p class="font-extrabold text-stone-800 text-sm">ចុចទីនេះ ដើម្បីជ្រើសរើសរូប ឬ ថតរូប</p>
@@ -1408,7 +1407,6 @@
       rawUrl = rawUrl.trim();
       if (rawUrl.startsWith('data:image')) return rawUrl;
 
-      // Google Drive Auto-Bypass
       const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
         rawUrl.match(/id=([a-zA-Z0-9_-]+)/) ||
         rawUrl.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
@@ -1449,6 +1447,23 @@
         reader.onerror = () => resolve(FALLBACK_BAKERY_SVG);
         reader.readAsDataURL(file);
       });
+    }
+
+    /* --- 🌟 បម្លែងរូបភាព Base64 ឱ្យទៅជា Blob File សម្រាប់ផ្ញើ Telegram --- */
+    function base64ToBlob(base64Data) {
+      try {
+        const parts = base64Data.split(';base64,');
+        const contentType = parts[0].split(':')[1] || 'image/jpeg';
+        const raw = window.atob(parts[1]);
+        const rawLength = raw.length;
+        const uInt8Array = new Uint8Array(rawLength);
+        for (let i = 0; i < rawLength; ++i) {
+          uInt8Array[i] = raw.charCodeAt(i);
+        }
+        return new Blob([uInt8Array], { type: contentType });
+      } catch (e) {
+        return null;
+      }
     }
 
     // Default Store Profile (ឈ្មោះហាង «ហាងនំខេកវិជ្ជដា» ទីតាំង «កោះរ៉ុងសន្លឹម» ទូរស័ព្ទ «0978707000»)
@@ -1652,8 +1667,148 @@
       }).join('');
     }
 
-    // ================= TELEGRAM BOT NOTIFICATIONS =================
-   TELEGRAM BOT NOTIFICATIONS    // ================= SWITCH VIEW =================
+    // ================= TELEGRAM BOT NOTIFICATIONS (WITH CAKE PHOTO) =================
+    async function sendTelegramInvoice(order) {
+      const token = integrationSettings.telegramBotToken;
+      const chatId = integrationSettings.telegramChatId;
+      if (!token || !chatId) {
+        console.warn('Telegram token or chat ID is missing');
+        return;
+      }
+
+      try {
+        const totalUSD = (order.totalKHR / KHR_RATE).toFixed(2);
+        const dateStr = (order.date || '') + ' ' + (order.time || '');
+        const itemsList = order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).join('\n') : '  • ' + order.id;
+
+        let caption = `🎂 <b>វិក្កយបត្រថ្មី - ${storeInfo.name}</b>\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `🧾 <b>លេខវិក្កយបត្រ:</b> <code>${order.id}</code>\n` +
+          `📅 <b>កាលបរិច្ឆេទ:</b> ${dateStr}\n` +
+          `👤 <b>អតិថិជន:</b> ${order.customerName || 'ទូទៅ'}${order.customerPhone && order.customerPhone !== 'គ្មាន' ? ' (' + order.customerPhone + ')' : ''}\n` +
+          `💳 <b>វិធីទូទាត់:</b> ${order.method}\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `📦 <b>ទំនិញ (${order.itemsCount || order.totalQty || 1}):</b>\n` +
+          `${itemsList}\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `💰 <b>សរុប:</b> <b>${(order.totalKHR || 0).toLocaleString()} ៛</b> (≈ $${totalUSD})\n`;
+
+        if (order.depositKHR && order.depositKHR < order.totalKHR) {
+          caption += `💵 <b>បានកក់:</b> ${order.depositKHR.toLocaleString()} ៛\n` +
+            `⚠️ <b>នៅខ្វះ:</b> ${order.remainingKHR.toLocaleString()} ៛\n`;
+        }
+
+        caption += `━━━━━━━━━━━━━━━━━━\n` +
+          `🙏 <b>សូមអរគុណសម្រាប់ការគាំទ្រ ${storeInfo.name}!</b>`;
+
+        const photo = order.firstImage || (products[0] ? products[0].img : null);
+        let photoSent = false;
+
+        if (photo && !photo.includes('data:image/svg+xml')) {
+          try {
+            if (photo.startsWith('data:image')) {
+              const blob = base64ToBlob(photo);
+              if (blob) {
+                const fd = new FormData();
+                fd.append('chat_id', chatId);
+                fd.append('photo', blob, 'cake_order.jpg');
+                fd.append('caption', caption);
+                fd.append('parse_mode', 'HTML');
+                const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.ok) photoSent = true;
+              }
+            } else if (photo.startsWith('http')) {
+              const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  chat_id: chatId,
+                  photo: photo,
+                  caption: caption,
+                  parse_mode: 'HTML'
+                })
+              });
+              const data = await res.json();
+              if (data.ok) photoSent = true;
+            }
+          } catch (e) {
+            console.warn('sendPhoto failed:', e);
+          }
+        }
+
+        if (!photoSent) {
+          await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              text: caption,
+              parse_mode: 'HTML'
+            })
+          });
+        }
+
+        showToast('✈️ បានផ្ញើរូបភាព និងវិក្កយបត្រទៅ Telegram រួចរាល់!', 'success');
+      } catch (err) {
+        console.error('Failed to send Telegram invoice:', err);
+      }
+    }
+
+    async function testTelegramMessageWithPhoto() {
+      const token = document.getElementById('telegramBotToken').value.trim() || integrationSettings.telegramBotToken;
+      const chatId = document.getElementById('telegramChatId').value.trim() || integrationSettings.telegramChatId;
+
+      if (!token || !chatId) {
+        showToast('សូមបញ្ចូល Bot Token និង Chat ID ជាមុនសិន!', 'warning');
+        return;
+      }
+
+      showToast('កំពុងតេស្តផ្ញើសារ និងរូបភាពទៅ Telegram... ⏳', 'info');
+      try {
+        const caption = `🔔 <b>តេស្ត Telegram Bot ជាមួយរូបភាពជោគជ័យ!</b>\n\n🏪 ហាង៖ <b>${storeInfo.name}</b>\n⏰ ម៉ោង៖ ${new Date().toLocaleTimeString()}\n✅ Telegram Bot ដំណើរការផ្ញើទាំងសារ និងរូបភាពនំល្អ ១០០% 🎉`;
+        const testImg = (products[0] && products[0].img) ? products[0].img : 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800';
+
+        let res;
+        if (testImg.startsWith('data:image')) {
+          const blob = base64ToBlob(testImg);
+          const fd = new FormData();
+          fd.append('chat_id', chatId);
+          fd.append('photo', blob, 'test_cake.jpg');
+          fd.append('caption', caption);
+          fd.append('parse_mode', 'HTML');
+          res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+        } else {
+          res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              chat_id: chatId,
+              photo: testImg,
+              caption: caption,
+              parse_mode: 'HTML'
+            })
+          });
+        }
+
+        const result = await res.json();
+        if (result.ok) {
+          showToast('🎉 សារ និងរូបភាពបានផ្ញើទៅ Telegram រួចរាល់!', 'success');
+          confetti({ particleCount: 50, spread: 60 });
+        } else {
+          await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ chat_id: chatId, text: caption, parse_mode: 'HTML' })
+          });
+          showToast('បានផ្ញើសារអក្សរទៅ Telegram!', 'info');
+        }
+      } catch (err) {
+        showToast('មិនអាចភ្ជាប់ទៅ Telegram API បានទេ', 'error');
+      }
+    }
+
+    // ================= SWITCH VIEW =================
     function switchView(viewName) {
       ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
         const sec = document.getElementById(`view-${v}`);
@@ -1859,14 +2014,16 @@
       let itemsSummaryArr = [];
       let cakeFlavorsArr = [];
       let totalQty = 0;
+      let firstImg = null;
 
       if (manualEntryMode === 'items') {
         totalKHR = manualSaleItems.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0);
-        manualSaleItems.forEach((item) => {
+        manualSaleItems.forEach((item, idx) => {
           const p = products.find(prod => prod.id == item.prodId);
           const pName = p ? p.name : 'ទំនិញ';
           itemsSummaryArr.push(`${pName} (x${item.qty})`);
           totalQty += item.qty;
+          if (idx === 0 && p) firstImg = p.img || (p.images && p.images[0]);
           if (p && p.cat === 'cakes') cakeFlavorsArr.push(`${pName}: រសជាតិទូទៅ`);
           if (deductStock && p) p.stock = Math.max(0, p.stock - item.qty);
         });
@@ -1875,6 +2032,7 @@
         totalQty = parseInt(document.getElementById('manualQuickQty').value) || 1;
         totalKHR = parseInt(document.getElementById('manualQuickTotalKHR').value) || 0;
         itemsSummaryArr.push(`${desc} (x${totalQty})`);
+        firstImg = products[0] ? products[0].img : null;
       }
 
       if (totalKHR <= 0) {
@@ -1908,7 +2066,8 @@
         depositKHR: depositKHR,
         remainingKHR: remainingKHR,
         status: status,
-        note: note ? `[កត់ត្រាពីមុន] ${note}` : '[កត់ត្រាពីមុន]'
+        note: note ? `[កត់ត្រាពីមុន] ${note}` : '[កត់ត្រាពីមុន]',
+        firstImage: firstImg
       };
 
       transactions.unshift(newTx);
@@ -2362,7 +2521,7 @@
       }
     }
 
-    // ================= MULTI-UPLOAD & STOCK (UPDATED FOR SMARTPHONES) =================
+    // ================= MULTI-UPLOAD & STOCK =================
     function openMultiUploadModal(id = null) {
       batchUploadedImages = [];
       document.getElementById('multiUploadForm').reset();
@@ -2785,6 +2944,9 @@
       let itemsSummaryArr = [];
       let totalQty = 0;
 
+      // ចាប់យករូបភាពនំដំបូងដែលភ្ញៀវបានទិញ
+      const firstCakePhoto = (cart[0] && cart[0].img) ? cart[0].img : (products[0] ? products[0].img : null);
+
       cart.forEach((item) => {
         totalQty += item.qty;
         itemsSummaryArr.push(`${item.name}${item.flavor ? ` (${item.flavor})` : ''} x${item.qty}`);
@@ -2809,7 +2971,8 @@
         customerName: custName, customerPhone: phone,
         itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
         method: method, totalKHR: totalKHR, depositKHR: depositKHR,
-        remainingKHR: remainingKHR, status: status
+        remainingKHR: remainingKHR, status: status,
+        firstImage: firstCakePhoto
       };
 
       transactions.unshift(newOrder);
@@ -2817,11 +2980,13 @@
       closePaymentModal();
       openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
 
+      // 1. Send to Telegram with cake photo
       const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
       if (shouldSendTelegram) {
         sendTelegramInvoice(newOrder);
       }
 
+      // 2. Send to Google Sheet
       sendGoogleSheetPayload({
         action: 'new_sale',
         invoice: {
