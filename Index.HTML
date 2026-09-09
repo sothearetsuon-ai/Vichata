@@ -236,21 +236,21 @@
         <!-- ================= VIEW 1: POS SYSTEM ================= -->
         <section id="view-pos" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-8 flex flex-col gap-6">
-                <!-- Search & Filter Category Chips -->
+                <!-- Search & Filter Category Chips (បង្ហាញតែប្រភេទនំសម្រាប់លក់ មិនមានគ្រឿងផ្សំទេ) -->
                 <div
                     class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row gap-4 justify-between items-center">
                     <div class="relative w-full sm:w-80">
                         <i
                             class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
                         <input type="text" id="searchInput" oninput="renderProducts()"
-                            placeholder="ស្វែងរកឈ្មោះនំ, គ្រឿងផ្សំ, ទៀន..."
+                            placeholder="ស្វែងរកឈ្មោះនំ, ភេសជ្ជៈ, ទៀន..."
                             class="w-full pl-11 pr-4 py-3 rounded-2xl bg-bakery-vanilla/60 border border-orange-200/80 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-sm">
                     </div>
                     <div class="flex items-center gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0"
                         id="categoryChips"></div>
                 </div>
 
-                <!-- Products Grid -->
+                <!-- Products Grid (បង្ហាញតែទំនិញលក់ មិនបង្ហាញគ្រឿងផ្សំទេ) -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5" id="productGrid"></div>
             </div>
 
@@ -667,11 +667,13 @@
             <div class="flex items-center gap-2 p-1.5 bg-bakery-vanilla rounded-2xl w-fit border border-orange-200/60">
                 <button id="subtab-stock-products" onclick="setInventoryTab('products')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
-                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span id="stockProductsCount">0</span>)
+                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span
+                        id="stockProductsCount">0</span>)
                 </button>
                 <button id="subtab-stock-ingredients" onclick="setInventoryTab('ingredients')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-stone-600 hover:text-bakery-dark">
-                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span id="stockIngredientsCount">0</span>)
+                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span
+                        id="stockIngredientsCount">0</span>)
                 </button>
             </div>
 
@@ -1001,7 +1003,6 @@
                 <button onclick="closePaymentModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <!-- ⭐️ ផ្នែកជ្រើសរើស «ទូទាត់ពេញ» ឬ «បង់ប្រាក់កក់» ⭐️ -->
             <div class="mt-4 p-3 bg-orange-50/80 rounded-2xl border border-orange-200 space-y-2">
                 <div class="flex items-center justify-between text-xs">
                     <span class="font-bold text-stone-700">ប្រភេទការទូទាត់៖</span>
@@ -1017,7 +1018,6 @@
                     </div>
                 </div>
 
-                <!-- បញ្ចូលចំនួនប្រាក់កក់ & បង្ហាញលុយនៅខ្វះ -->
                 <div id="depositInputRow" class="hidden pt-2 border-t border-orange-200/80 space-y-2">
                     <div class="flex items-center justify-between text-xs">
                         <span class="font-bold text-stone-700">ចំនួនប្រាក់កក់ទទួល (៛)៖</span>
@@ -1089,7 +1089,8 @@
                 <div class="flex items-center gap-2">
                     <div
                         class="w-9 h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud-arrow-up"></i></div>
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
                     <div>
                         <h3 class="font-bold text-base text-bakery-dark" id="multiUploadModalTitle">Upload
                             រូបភាពនំច្រើនសន្លឹក</h3>
@@ -1416,14 +1417,14 @@
             googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec'
         };
 
+        // ⭐️ បញ្ជី Categories សម្រាប់ POS & Showcase (មិនដាក់ គ្រឿងផ្សំ ទេ ដើម្បីកុំឱ្យច្រឡំ) ⭐️
         const categories = [
             { id: 'all', label: 'ទាំងអស់' },
             { id: 'cakes', label: '🎂 នំខេក' },
             { id: 'breads', label: '🥖 នំប៉័ង' },
             { id: 'pastries', label: '🥐 នំផេស្ទ្រី' },
             { id: 'drinks', label: '☕ ភេសជ្ជៈ' },
-            { id: 'accessories', label: '🎉 គ្រឿងបន្ថែម (Add-ons)' },
-            { id: 'ingredients', label: '🌾 វត្ថុធាតុដើម & គ្រឿងផ្សំ' },
+            { id: 'accessories', label: '🎉 គ្រឿងបន្ថែម (Add-ons)' }
         ];
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1517,7 +1518,6 @@
             }
         }
 
-        // ⭐️ SYNC ស្តុកនំ & ស្តុកគ្រឿងផ្សំ ចូល GOOGLE SHEET ដាច់ដោយឡែកពីគ្នា ⭐️
         function syncStockToGoogleSheet() {
             const prodList = products.filter(p => p.cat !== 'ingredients');
             const ingList = products.filter(p => p.cat === 'ingredients');
@@ -2102,7 +2102,7 @@
             renderShowcase();
             renderQuickAddons();
 
-            // ⭐️ Sync ទៅ Sheet ទាំងនំ និងគ្រឿងផ្សំភ្លាមៗ
+            // Sync ទៅ Sheet ទាំងនំ និងគ្រឿងផ្សំភ្លាមៗ
             syncStockToGoogleSheet();
 
             closeMultiUploadModal();
@@ -2441,10 +2441,17 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
             renderProducts();
         }
 
+        // ⭐️ POS RENDER: លាក់គ្រឿងផ្សំទាំងអស់ចេញពីផ្ទាំងលក់ (បង្ហាញតែទំនិញលក់) ⭐️
         function renderProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const grid = document.getElementById('productGrid');
-            const filtered = products.filter(p => (activeCategory === 'all' || p.cat === activeCategory) && p.name.toLowerCase().includes(query));
+
+            // ត្រងយកតែទំនិញដែលមិនមែនជាគ្រឿងផ្សំ (p.cat !== 'ingredients')
+            const filtered = products.filter(p =>
+                p.cat !== 'ingredients' &&
+                (activeCategory === 'all' || p.cat === activeCategory) &&
+                p.name.toLowerCase().includes(query)
+            );
 
             grid.innerHTML = filtered.map(p => {
                 const imgCount = p.images ? p.images.length : 1;
@@ -2624,6 +2631,7 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
             document.getElementById('visualMessage').innerText = customCake.message;
         }
 
+        // ⭐️ SHOWCASE: បង្ហាញតែនំ និងទំនិញលក់ មិនបង្ហាញគ្រឿងផ្សំទេ ⭐️
         function renderShowcase() {
             const chips = document.getElementById('showcaseCategoryChips');
             chips.innerHTML = categories.map(c => `
@@ -2631,7 +2639,7 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
       `).join('');
 
             const grid = document.getElementById('showcaseGrid');
-            const filtered = products.filter(p => activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory);
+            const filtered = products.filter(p => p.cat !== 'ingredients' && (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory));
             grid.innerHTML = filtered.map(p => {
                 const imgs = p.images && p.images.length > 0 ? p.images : [p.img];
                 return `
