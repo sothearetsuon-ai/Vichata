@@ -1800,76 +1800,70 @@
       confetti({ particleCount: 60, spread: 70 });
     }
 
-    async function pullProductsFromGoogleSheet() {
-      if (!integrationSettings.googleSheetUrl) {
-        alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
-        openSettingsModal();
-        return;
-      }
-      const spinIcon = document.getElementById('syncSpinIcon');
-      if (spinIcon) spinIcon.classList.add('fa-spin');
-      showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
-
-      try {
-        // ទាញយកទិន្នន័យទាំងអស់ (Products, Sales, Expenses)
-        const response = await fetch(`${integrationSettings.googleSheetUrl}?action=sync_all`);
-        const result = await response.json();
-
-        let remoteProducts = [];
-        let remoteSales = [];
-        let remoteExpenses = [];
-
-        if (result && result.status === 'success') {
-          remoteProducts = result.products || [];
-          remoteSales = result.sales || [];
-          remoteExpenses = result.expenses || [];
-        } else if (Array.isArray(result)) {
-          remoteProducts = result;
-        }
-
-        // ១. រៀបចំផលិតផល (ការពារកុំឱ្យបាត់រូបភាពដែលធ្លាប់ Upload លើម៉ាស៊ីន)
-        if (remoteProducts.length > 0) {
-          remoteProducts.forEach(remoteItem => {
-            const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
-            if (localItem && localItem.img && !remoteItem.img) {
-              remoteItem.img = localItem.img; // រក្សារូបនំចាស់ទុក បើក្នុង Sheet គ្មានរូប
+            async function pullProductsFromGoogleSheet() {
+            if (!integrationSettings.googleSheetUrl) {
+                alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
+                openSettingsModal();
+                return;
             }
-          });
-          products = remoteProducts;
+            const spinIcon = document.getElementById('syncSpinIcon');
+            if (spinIcon) spinIcon.classList.add('fa-spin');
+            showToast('កំពុងទាញទិន្នន័យពី Google Sheet...', 'info');
+
+            try {
+                const response = await fetch(`${integrationSettings.googleSheetUrl}?action=sync_all`);
+                const result = await response.json();
+
+                let remoteProducts = [];
+                let remoteSales = [];
+                let remoteExpenses = [];
+
+                if (result && result.status === 'success') {
+                    remoteProducts = result.products || [];
+                    remoteSales = result.sales || [];
+                    remoteExpenses = result.expenses || [];
+                } else if (Array.isArray(result)) {
+                    remoteProducts = result;
+                }
+
+                if (remoteProducts.length > 0) {
+                    remoteProducts.forEach(remoteItem => {
+                        const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
+                        if (localItem && localItem.img && !remoteItem.img) {
+                            remoteItem.img = localItem.img;
+                        }
+                    });
+                    products = remoteProducts;
+                }
+
+                if (remoteSales.length > 0) {
+                    transactions = remoteSales;
+                }
+
+                if (remoteExpenses.length > 0) {
+                    expenses = remoteExpenses;
+                }
+
+                saveState();
+                if (typeof renderProducts === 'function') renderProducts();
+                if (typeof renderInventory === 'function') renderInventory();
+                if (typeof renderShowcase === 'function') renderShowcase();
+                if (typeof renderQuickAddons === 'function') renderQuickAddons();
+                if (typeof renderExpenses === 'function') renderExpenses();
+                if (typeof renderTransactions === 'function') renderTransactions();
+                if (typeof renderAnalytics === 'function') renderAnalytics();
+                if (typeof renderReports === 'function') renderReports();
+
+                confetti({ particleCount: 60, spread: 70 });
+                showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
+
+            } catch (err) {
+                console.error(err);
+                showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
+            } finally {
+                if (spinIcon) spinIcon.classList.remove('fa-spin');
+            }
         }
-
-        // ២. ទាញប្រវត្តិលក់ (Sales) ចូលក្នុង Transactions
-        if (remoteSales.length > 0) {
-          transactions = remoteSales;
-        }
-
-        // ៣. ទាញប្រវត្តិចំណាយ (Expenses) ចូលក្នុង Expenses
-        if (remoteExpenses.length > 0) {
-          expenses = remoteExpenses;
-        }
-
-        // រក្សាទុកទិន្នន័យក្នុងម៉ាស៊ីន និង Render ឡើងវិញគ្រប់ផ្ទាំង
-        saveState();
-        if (typeof renderProducts === 'function') renderProducts();
-        if (typeof renderInventory === 'function') renderInventory();
-        if (typeof renderShowcase === 'function') renderShowcase();
-        if (typeof renderQuickAddons === 'function') renderQuickAddons();
-        if (typeof renderExpenses === 'function') renderExpenses();
-        if (typeof renderTransactions === 'function') renderTransactions();
-        if (typeof renderAnalytics === 'function') renderAnalytics();
-        if (typeof renderReports === 'function') renderReports();
-
-        confetti({ particleCount: 60, spread: 70 });
-        showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
-
-      } catch (err) {
-        console.error(err);
-        showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
-      } finally {
-        if (spinIcon) spinIcon.classList.remove('fa-spin');
-      }
-    }
-
     // ================= EXPENSES =================
     function handleNewExpense(e) {
       e.preventDefault();
