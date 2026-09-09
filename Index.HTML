@@ -5,17 +5,17 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="referrer" content="no-referrer" />
-  <title>Bakery POS - Full System & Mobile Responsive</title>
+  <title>ហាងនំខេកវិជ្ជដា - Bakery POS & Management System</title>
 
   <!-- PWA Meta Tags -->
   <meta name="theme-color" content="#E07A5F" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="BakeryPOS" />
+  <meta name="apple-mobile-web-app-title" content="ហាងនំខេកវិជ្ជដា" />
   <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/992/992714.png" />
 
   <link rel="manifest"
-    href='data:application/manifest+json,{"name":"Bakery POS","short_name":"BakeryPOS","start_url":".","display":"standalone","background_color":"#FFF9F2","theme_color":"#E07A5F","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/992/992714.png","sizes":"192x192","type":"image/png"},{"src":"https://cdn-icons-png.flaticon.com/512/992/992714.png","sizes":"512x512","type":"image/png"}]}' />
+    href='data:application/manifest+json,{"name":"ហាងនំខេកវិជ្ជដា","short_name":"BakeryPOS","start_url":".","display":"standalone","background_color":"#FFF9F2","theme_color":"#E07A5F","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/992/992714.png","sizes":"192x192","type":"image/png"},{"src":"https://cdn-icons-png.flaticon.com/512/992/992714.png","sizes":"512x512","type":"image/png"}]}' />
 
   <!-- Google Fonts: Kantumruy Pro & Plus Jakarta Sans (ដិត ច្បាស់ ស្រស់ស្អាត) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -142,7 +142,7 @@
           <div>
             <div class="flex items-center gap-1.5 sm:gap-2">
               <span class="font-black text-lg sm:text-2xl tracking-tight text-bakery-dark" id="storeNameDisplay">
-                Sweet<span class="text-bakery-caramel">Delight</span>
+                ហាងនំខេក<span class="text-bakery-caramel">វិជ្ជដា</span>
               </span>
               <span
                 class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-emerald-300 flex items-center gap-1">
@@ -1081,8 +1081,9 @@
           <input type="text" id="telegramChatId" placeholder="Chat ID"
             class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
           <button onclick="testTelegramMessageWithPhoto()"
-            class="px-3 py-1.5 bg-sky-500 text-white rounded-xl text-xs font-bold">តេស្តផ្ញើ
-            Telegram</button>
+            class="px-3 py-1.5 bg-sky-500 text-white rounded-xl text-xs font-bold">
+            <i class="fa-solid fa-paper-plane mr-1"></i> តេស្តផ្ញើ Telegram
+          </button>
         </div>
       </div>
 
@@ -1167,9 +1168,20 @@
         </div>
       </div>
 
+      <!-- Telegram Checkbox Option -->
+      <div class="mt-3 p-2.5 bg-sky-50 rounded-xl border border-sky-200 flex items-center justify-between text-xs text-stone-700">
+        <label class="flex items-center gap-2 cursor-pointer font-bold select-none">
+          <input type="checkbox" id="paySendTelegramCheck" checked class="w-4 h-4 rounded text-sky-600 focus:ring-sky-500">
+          <span class="flex items-center gap-1.5 text-sky-800">
+            <i class="fa-brands fa-telegram text-sky-500 text-base"></i> ផ្ញើវិក្កយបត្រទៅ Telegram ស្វ័យប្រវត្តិ
+          </span>
+        </label>
+        <span class="text-[10px] text-emerald-700 font-extrabold bg-emerald-100 px-2 py-0.5 rounded-md">បើក</span>
+      </div>
+
       <div class="mt-4">
         <div id="khqrContent" class="flex flex-col items-center text-center">
-          <div class="text-sm font-bold text-stone-700" id="khqrMerchantDisplay">ហាងនំខេកវិជ្ជតា</div>
+          <div class="text-sm font-bold text-stone-700" id="khqrMerchantDisplay">ហាងនំខេកវិជ្ជដា</div>
           <div class="relative group p-2 border-2 border-red-500 rounded-2xl bg-white shadow-inner my-2">
             <img id="khqrDisplayImg" src="" class="w-44 h-44 object-contain rounded-lg">
           </div>
@@ -1282,10 +1294,8 @@
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 sm:p-6 border border-orange-100">
       <div id="receiptPrintArea" class="bg-white text-stone-900 font-mono text-xs p-2">
         <div class="text-center pb-2 border-b border-dashed border-stone-300">
-          <div class="font-extrabold text-base uppercase font-en" id="receiptStoreName">SWEET DELIGHT BAKERY
-          </div>
-          <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">រាជធានីភ្នំពេញ • Tel: 012
-            345 678</div>
+          <div class="font-extrabold text-base uppercase font-en" id="receiptStoreName">ហាងនំខេកវិជ្ជដា</div>
+          <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">រាជធានីភ្នំពេញ • Tel: 012 345 678</div>
           <div class="mt-1 font-bold text-xs" id="receiptInvoiceNo">INV #BK-8821</div>
         </div>
         <div class="py-2 border-b border-dashed border-stone-300 space-y-1" id="receiptItemsList"></div>
@@ -1307,7 +1317,7 @@
           <div class="text-[11px] text-stone-500 pt-0.5 font-en font-bold" id="receiptTotalUSD">≈ $0.00</div>
         </div>
 
-        <div class="text-center pt-2 text-[10px] text-stone-600 font-medium">សូមអរគុណចំពោះការគាំទ្រ!</div>
+        <div class="text-center pt-2 text-[10px] text-stone-600 font-medium">សូមអរគុណចំពោះការគាំទ្រ ហាងនំខេកវិជ្ជដា!</div>
       </div>
       <div class="mt-4 flex gap-2">
         <button onclick="window.print()"
@@ -1411,7 +1421,6 @@
         return `https://wsrv.nl/?url=${encodeURIComponent(rawUrl)}`;
       }
 
-      // Unsplash proxy to prevent ISP/hotlink blocking on desktop
       if (rawUrl.includes('unsplash.com')) {
         return `https://wsrv.nl/?url=${encodeURIComponent(rawUrl)}`;
       }
@@ -1419,12 +1428,19 @@
       return rawUrl;
     }
 
+    // Default Store Profile (ឈ្មោះហាង «ហាងនំខេកវិជ្ជដា» ជាស្រេច)
     let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
-      name: 'SweetDelight Bakery',
+      name: 'ហាងនំខេកវិជ្ជដា',
       tagline: 'ហាងនំប៉័ង និង នំខេកពិសេស • គិតជាប្រាក់រៀល ៛',
       phone: '012 345 678',
       address: 'រាជធានីភ្នំពេញ'
     };
+
+    // Auto-update to ហាងនំខេកវិជ្ជដា if it was SweetDelight Bakery
+    if (!storeInfo.name || storeInfo.name.includes('SweetDelight')) {
+      storeInfo.name = 'ហាងនំខេកវិជ្ជដា';
+      localStorage.setItem('BAKERY_STORE_INFO', JSON.stringify(storeInfo));
+    }
 
     let expenses = JSON.parse(localStorage.getItem('BAKERY_EXPENSES')) || [];
     let KHR_RATE = parseInt(localStorage.getItem('BAKERY_EXCHANGE_RATE')) || 4100;
@@ -1513,33 +1529,41 @@
     let transactions = JSON.parse(localStorage.getItem('BAKERY_TRANSACTIONS')) || [];
     let customerLoyalty = JSON.parse(localStorage.getItem('BAKERY_LOYALTY')) || {};
 
+    // Pre-filled with your confirmed Telegram Bot & Google Apps Script URL
     let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
       telegramBotToken: '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4',
       telegramChatId: '8970210109',
-      googleSheetUrl: https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec
+      googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec'
+    };
 
-      const categories = [
-        { id: 'all', label: 'ទាំងអស់' },
-        { id: 'cakes', label: '🎂 នំខេក' },
-        { id: 'breads', label: '🥖 នំប៉័ង' },
-        { id: 'pastries', label: '🥐 នំផេស្ទ្រី' },
-        { id: 'drinks', label: '☕ ភេសជ្ជៈ' },
-        { id: 'accessories', label: '🎉 គ្រឿងបន្ថែម' }
-      ];
+    // Guarantee Chat ID & Token are always populated
+    if (!integrationSettings.telegramChatId) integrationSettings.telegramChatId = '8970210109';
+    if (!integrationSettings.telegramBotToken) integrationSettings.telegramBotToken = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+    if (!integrationSettings.googleSheetUrl) integrationSettings.googleSheetUrl = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
+    localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
 
-      let manualEntryMode = 'items';
-      let manualSaleItems =[];
+    const categories = [
+      { id: 'all', label: 'ទាំងអស់' },
+      { id: 'cakes', label: '🎂 នំខេក' },
+      { id: 'breads', label: '🥖 នំប៉័ង' },
+      { id: 'pastries', label: '🥐 នំផេស្ទ្រី' },
+      { id: 'drinks', label: '☕ ភេសជ្ជៈ' },
+      { id: 'accessories', label: '🎉 គ្រឿងបន្ថែម' }
+    ];
 
-      function resetDefaultProducts() {
-        if (confirm('តើអ្នកចង់កំណត់រូបភាព និងទំនិញទាំងអស់ទៅទម្រង់ដើមវិញមែនទេ?')) {
-      products = initialProducts;
-      saveState();
-      renderProducts();
-      renderInventory();
-      renderShowcase();
-      renderQuickAddons();
-      showToast('🎉 បានកំណត់រូបភាព និងទំនិញឡើងវិញរួចរាល់!', 'success');
-    }
+    let manualEntryMode = 'items';
+    let manualSaleItems = [];
+
+    function resetDefaultProducts() {
+      if (confirm('តើអ្នកចង់កំណត់រូបភាព និងទំនិញទាំងអស់ទៅទម្រង់ដើមវិញមែនទេ?')) {
+        products = initialProducts;
+        saveState();
+        renderProducts();
+        renderInventory();
+        renderShowcase();
+        renderQuickAddons();
+        showToast('🎉 បានកំណត់រូបភាព និងទំនិញឡើងវិញរួចរាល់!', 'success');
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -1564,12 +1588,13 @@
     });
 
     function renderStoreInfo() {
-      document.getElementById('storeNameDisplay').innerText = storeInfo.name;
+      const name = storeInfo.name || 'ហាងនំខេកវិជ្ជដា';
+      document.getElementById('storeNameDisplay').innerHTML = `ហាងនំខេក<span class="text-bakery-caramel">វិជ្ជដា</span>`;
       document.getElementById('storeTaglineDisplay').innerText = storeInfo.tagline;
-      document.getElementById('receiptStoreName').innerText = storeInfo.name.toUpperCase();
+      document.getElementById('receiptStoreName').innerText = name.toUpperCase();
       document.getElementById('receiptStoreInfo').innerText = `${storeInfo.address} • Tel: ${storeInfo.phone}`;
-      document.getElementById('khqrMerchantDisplay').innerText = storeInfo.name;
-      document.title = `${storeInfo.name} - Bakery POS`;
+      document.getElementById('khqrMerchantDisplay').innerText = name;
+      document.title = `${name} - Bakery POS`;
     }
 
     function saveState() {
@@ -1578,6 +1603,7 @@
       localStorage.setItem('BAKERY_TRANSACTIONS', JSON.stringify(transactions));
       localStorage.setItem('BAKERY_LOYALTY', JSON.stringify(customerLoyalty));
       localStorage.setItem('BAKERY_EXPENSES', JSON.stringify(expenses));
+      localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
     }
 
     function renderQuickAddons() {
@@ -1587,33 +1613,118 @@
       container.innerHTML = accs.map(acc => {
         const img = formatImgUrl(acc.img);
         return `
-                    <button onclick="addToCart('${acc.id}')" 
-                        class="flex items-center gap-1 px-2 py-1 bg-white hover:bg-amber-100/80 border border-orange-200 rounded-xl whitespace-nowrap shadow-2xs hover:scale-105 transition text-left group">
-                        <img src="${img}" class="w-5 h-5 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-                        <div>
-                            <div class="text-[9px] font-bold text-bakery-dark line-clamp-1">${acc.name.split('(')[0]}</div>
-                            <div class="text-[8px] font-black text-bakery-caramel font-en">${acc.priceKHR.toLocaleString()}៛</div>
-                        </div>
-                        <i class="fa-solid fa-plus text-[8px] text-amber-500 pl-0.5"></i>
-                    </button>
-                `;
+          <button onclick="addToCart('${acc.id}')" 
+              class="flex items-center gap-1 px-2 py-1 bg-white hover:bg-amber-100/80 border border-orange-200 rounded-xl whitespace-nowrap shadow-2xs hover:scale-105 transition text-left group">
+              <img src="${img}" class="w-5 h-5 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+              <div>
+                  <div class="text-[9px] font-bold text-bakery-dark line-clamp-1">${acc.name.split('(')[0]}</div>
+                  <div class="text-[8px] font-black text-bakery-caramel font-en">${acc.priceKHR.toLocaleString()}៛</div>
+              </div>
+              <i class="fa-solid fa-plus text-[8px] text-amber-500 pl-0.5"></i>
+          </button>
+        `;
       }).join('');
     }
 
-    // ================= SWITCH VIEW (ដំណើរការលើ PC និង Mobile 100%) =================
+    // ================= TELEGRAM BOT NOTIFICATIONS =================
+    async function sendTelegramInvoice(order) {
+      const token = integrationSettings.telegramBotToken;
+      const chatId = integrationSettings.telegramChatId;
+      if (!token || !chatId) {
+        console.warn('Telegram token or chat ID is missing');
+        return;
+      }
+
+      try {
+        const totalUSD = (order.totalKHR / KHR_RATE).toFixed(2);
+        const dateStr = (order.date || '') + ' ' + (order.time || '');
+
+        let message = `🎂 *វិក្កយបត្រថ្មី - ${storeInfo.name}*\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `🧾 *លេខវិក្កយបត្រ:* \`${order.id}\`\n` +
+          `📅 *កាលបរិច្ឆេទ:* ${dateStr}\n` +
+          `👤 *អតិថិជន:* ${order.customerName || 'ទូទៅ'}${order.customerPhone && order.customerPhone !== 'គ្មាន' ? ' (' + order.customerPhone + ')' : ''}\n` +
+          `💳 *វិធីទូទាត់:* ${order.method}\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `📦 *ទំនិញ (${order.itemsCount || order.totalQty || 1}):*\n` +
+          `${order.itemsSummary ? order.itemsSummary.split(', ').map(s => '  • ' + s).join('\n') : '  • ' + order.id}\n` +
+          `━━━━━━━━━━━━━━━━━━\n` +
+          `💰 *សរុប:* *${(order.totalKHR || 0).toLocaleString()} ៛* (≈ $${totalUSD})\n`;
+
+        if (order.depositKHR && order.depositKHR < order.totalKHR) {
+          message += `💵 *បានកក់:* ${order.depositKHR.toLocaleString()} ៛\n` +
+                     `⚠️ *នៅខ្វះ:* ${order.remainingKHR.toLocaleString()} ៛\n`;
+        }
+
+        message += `━━━━━━━━━━━━━━━━━━\n` +
+          `🙏 *សូមអរគុណសម្រាប់ការគាំទ្រ ${storeInfo.name}!*`;
+
+        const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: message,
+            parse_mode: 'Markdown'
+          })
+        });
+        const result = await res.json();
+        if (result.ok) {
+          showToast('✈️ បានផ្ញើវិក្កយបត្រទៅ Telegram រួចរាល់!', 'success');
+        } else {
+          console.warn('Telegram API notice:', result);
+          showToast('Telegram: ' + (result.description || 'បញ្ហាផ្ញើសារ'), 'warning');
+        }
+      } catch (err) {
+        console.error('Failed to send Telegram invoice:', err);
+      }
+    }
+
+    async function testTelegramMessageWithPhoto() {
+      const token = document.getElementById('telegramBotToken').value.trim() || integrationSettings.telegramBotToken;
+      const chatId = document.getElementById('telegramChatId').value.trim() || integrationSettings.telegramChatId;
+
+      if (!token || !chatId) {
+        showToast('សូមបញ្ចូល Bot Token និង Chat ID ជាមុនសិន!', 'warning');
+        return;
+      }
+
+      showToast('កំពុងតេស្តផ្ញើសារទៅ Telegram... ⏳', 'info');
+      try {
+        const text = `🔔 *តេស្ត Telegram Bot ជោគជ័យ!*\n\n🏪 ហាង៖ *${storeInfo.name}*\n⏰ ម៉ោង៖ ${new Date().toLocaleTimeString()}\n✅ Telegram Bot ដំណើរការល្អ ១០០% លើទូរសព្ទ័បង! 🎉`;
+        const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text: text,
+            parse_mode: 'Markdown'
+          })
+        });
+        const result = await res.json();
+        if (result.ok) {
+          showToast('🎉 សារតេស្តបានផ្ញើទៅដល់ Telegram រួចរាល់!', 'success');
+          confetti({ particleCount: 50, spread: 60 });
+        } else {
+          showToast('បរាជ័យ: ' + (result.description || 'ពិនិត្យមើល Chat ID'), 'error');
+        }
+      } catch (err) {
+        showToast('មិនអាចភ្ជាប់ទៅ Telegram API បានទេ', 'error');
+      }
+    }
+
+    // ================= SWITCH VIEW =================
     function switchView(viewName) {
       ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
         const sec = document.getElementById(`view-${v}`);
         if (sec) sec.classList.add('hidden');
 
-        // Desktop nav buttons
         const navBtn = document.getElementById(`nav-${v}`);
         if (navBtn) {
           navBtn.classList.remove('bg-white', 'text-bakery-caramel', 'shadow-sm');
           navBtn.classList.add('text-stone-700');
         }
 
-        // Mobile bottom nav buttons
         const mobNavBtn = document.getElementById(`mob-nav-${v}`);
         if (mobNavBtn) {
           mobNavBtn.classList.remove('text-bakery-caramel');
@@ -1741,28 +1852,28 @@
       const sellable = products.filter(p => p.cat !== 'ingredients');
 
       container.innerHTML = manualSaleItems.map((item, idx) => `
-                <div class="p-2 bg-stone-50 rounded-xl border border-stone-200 flex flex-col sm:flex-row items-center gap-2 text-xs">
-                    <div class="flex-1 w-full sm:w-auto">
-                        <select onchange="onManualItemProdChange(${idx}, this.value)" 
-                            class="w-full p-2 rounded-lg bg-white border border-stone-300 font-bold text-bakery-dark">
-                            ${sellable.map(p => `
-                                <option value="${p.id}" ${p.id == item.prodId ? 'selected' : ''}>
-                                    ${p.name} - ${p.priceKHR.toLocaleString()}៛
-                                </option>
-                            `).join('')}
-                        </select>
-                    </div>
-                    <div class="flex items-center gap-2 w-full sm:w-auto">
-                        <input type="number" min="1" value="${item.qty}" oninput="onManualItemQtyChange(${idx}, this.value)"
-                            placeholder="ចំនួន" class="w-16 p-2 rounded-lg bg-white border border-stone-300 font-black text-center text-xs">
-                        <input type="number" step="500" value="${item.unitPrice}" oninput="onManualItemPriceChange(${idx}, this.value)"
-                            placeholder="តម្លៃ" class="w-24 p-2 rounded-lg bg-white border border-stone-300 font-black text-bakery-caramel text-right text-xs">
-                        <button type="button" onclick="removeManualSaleItemRow(${idx})" class="p-2 text-rose-500 hover:text-rose-700">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
+        <div class="p-2 bg-stone-50 rounded-xl border border-stone-200 flex flex-col sm:flex-row items-center gap-2 text-xs">
+            <div class="flex-1 w-full sm:w-auto">
+                <select onchange="onManualItemProdChange(${idx}, this.value)" 
+                    class="w-full p-2 rounded-lg bg-white border border-stone-300 font-bold text-bakery-dark">
+                    ${sellable.map(p => `
+                        <option value="${p.id}" ${p.id == item.prodId ? 'selected' : ''}>
+                            ${p.name} - ${p.priceKHR.toLocaleString()}៛
+                        </option>
+                    `).join('')}
+                </select>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+                <input type="number" min="1" value="${item.qty}" oninput="onManualItemQtyChange(${idx}, this.value)"
+                    placeholder="ចំនួន" class="w-16 p-2 rounded-lg bg-white border border-stone-300 font-black text-center text-xs">
+                <input type="number" step="500" value="${item.unitPrice}" oninput="onManualItemPriceChange(${idx}, this.value)"
+                    placeholder="តម្លៃ" class="w-24 p-2 rounded-lg bg-white border border-stone-300 font-black text-bakery-caramel text-right text-xs">
+                <button type="button" onclick="removeManualSaleItemRow(${idx})" class="p-2 text-rose-500 hover:text-rose-700">
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+        </div>
+      `).join('');
     }
 
     function toggleManualDepositFields() {
@@ -1811,7 +1922,7 @@
 
       if (manualEntryMode === 'items') {
         totalKHR = manualSaleItems.reduce((sum, item) => sum + (item.qty * item.unitPrice), 0);
-        manualSaleItems.forEach((item, index) => {
+        manualSaleItems.forEach((item) => {
           const p = products.find(prod => prod.id == item.prodId);
           const pName = p ? p.name : 'ទំនិញ';
           itemsSummaryArr.push(`${pName} (x${item.qty})`);
@@ -1863,7 +1974,10 @@
       transactions.unshift(newTx);
       saveState();
 
-      // Sync ទៅ Sheet sales (15 columns mapping)
+      // 1. Sync to Telegram
+      sendTelegramInvoice(newTx);
+
+      // 2. Sync to Sheet
       sendGoogleSheetPayload({
         action: 'new_sale',
         invoice: {
@@ -1943,6 +2057,27 @@
       confetti({ particleCount: 60, spread: 70 });
     }
 
+    function testGoogleSheetSync() {
+      const testSale = {
+        id: 'TEST-' + Math.floor(1000 + Math.random() * 9000),
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        customerName: 'តេស្តសាកល្បង',
+        customerPhone: '012345678',
+        itemsSummary: 'នំខេកតេស្ត x1',
+        cakeFlavors: 'វ៉ានីឡា',
+        addOns: 'ទៀន',
+        totalQty: 1,
+        totalKHR: 10000,
+        depositKHR: 10000,
+        remainingKHR: 0,
+        totalUSD: 2.44,
+        method: 'KHQR (៛)',
+        status: 'Paid (តេស្ត)'
+      };
+      sendGoogleSheetPayload({ action: 'new_sale', invoice: testSale }, true);
+    }
+
     async function pullProductsFromGoogleSheet() {
       if (!integrationSettings.googleSheetUrl) {
         alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
@@ -1954,7 +2089,6 @@
       showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
 
       try {
-        // ទាញយកទិន្នន័យទាំងអស់ (Products, Sales, Expenses)
         const response = await fetch(`${integrationSettings.googleSheetUrl}?action=sync_all`);
         const result = await response.json();
 
@@ -1964,43 +2098,40 @@
 
         if (result && result.status === 'success') {
           remoteProducts = result.products || [];
-          remoteSales = result.sales || [];
+          remoteSales = result.sales || result.transactions || [];
           remoteExpenses = result.expenses || [];
         } else if (Array.isArray(result)) {
           remoteProducts = result;
         }
 
-        // ១. រៀបចំផលិតផល (ការពារកុំឱ្យបាត់រូបភាពដែលធ្លាប់ Upload លើម៉ាស៊ីន)
+        // 1. Merge Products
         if (remoteProducts.length > 0) {
           remoteProducts.forEach(remoteItem => {
             const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
             if (localItem && localItem.img && !remoteItem.img) {
-              remoteItem.img = localItem.img; // រក្សារូបនំចាស់ទុក បើក្នុង Sheet គ្មានរូប
+              remoteItem.img = localItem.img;
             }
           });
           products = remoteProducts;
         }
 
-        // ២. ទាញប្រវត្តិលក់ (Sales) ចូលក្នុង Transactions
+        // 2. Merge Sales
         if (remoteSales.length > 0) {
           transactions = remoteSales;
         }
 
-        // ៣. ទាញប្រវត្តិចំណាយ (Expenses) ចូលក្នុង Expenses
+        // 3. Merge Expenses
         if (remoteExpenses.length > 0) {
           expenses = remoteExpenses;
         }
 
-        // រក្សាទុកទិន្នន័យក្នុងម៉ាស៊ីន និង Render ឡើងវិញគ្រប់ផ្ទាំង
         saveState();
         if (typeof renderProducts === 'function') renderProducts();
         if (typeof renderInventory === 'function') renderInventory();
         if (typeof renderShowcase === 'function') renderShowcase();
         if (typeof renderQuickAddons === 'function') renderQuickAddons();
         if (typeof renderExpenses === 'function') renderExpenses();
-        if (typeof renderTransactions === 'function') renderTransactions();
         if (typeof renderAnalytics === 'function') renderAnalytics();
-        if (typeof renderReports === 'function') renderReports();
 
         confetti({ particleCount: 60, spread: 70 });
         showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
@@ -2072,21 +2203,21 @@
       };
 
       tbody.innerHTML = expenses.map(exp => `
-                <tr class="hover:bg-orange-50/40 transition">
-                    <td class="p-3 pl-4 font-extrabold text-stone-600">${exp.date}</td>
-                    <td class="p-3 font-extrabold text-bakery-dark">
-                        <div>${exp.title}</div>
-                        ${exp.note ? `<div class="text-[10px] text-stone-500 font-medium font-khmer">${exp.note}</div>` : ''}
-                    </td>
-                    <td class="p-3 font-khmer font-bold text-stone-700">${catIcons[exp.cat] || exp.cat}</td>
-                    <td class="p-3 font-black text-rose-600 font-en">-${exp.amount.toLocaleString()} ៛</td>
-                    <td class="p-3 text-center">
-                        <button onclick="deleteExpense('${exp.id}')" class="p-1 text-stone-400 hover:text-rose-600 rounded-lg">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+        <tr class="hover:bg-orange-50/40 transition">
+            <td class="p-3 pl-4 font-extrabold text-stone-600">${exp.date}</td>
+            <td class="p-3 font-extrabold text-bakery-dark">
+                <div>${exp.title}</div>
+                ${exp.note ? `<div class="text-[10px] text-stone-500 font-medium font-khmer">${exp.note}</div>` : ''}
+            </td>
+            <td class="p-3 font-khmer font-bold text-stone-700">${catIcons[exp.cat] || exp.cat}</td>
+            <td class="p-3 font-black text-rose-600 font-en">-${exp.amount.toLocaleString()} ៛</td>
+            <td class="p-3 text-center">
+                <button onclick="deleteExpense('${exp.id}')" class="p-1 text-stone-400 hover:text-rose-600 rounded-lg">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+      `).join('');
     }
 
     function deleteExpense(id) {
@@ -2220,30 +2351,30 @@
       }
 
       tbody.innerHTML = filtered.map(t => `
-                <tr class="hover:bg-orange-50/40 transition">
-                    <td class="p-3 pl-4 font-black text-bakery-dark">
-                        ${t.id}
-                        ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer">${t.note}</div>` : ''}
-                    </td>
-                    <td class="p-3 text-stone-700 font-extrabold">${t.date}</td>
-                    <td class="p-3 text-stone-500 text-xs font-semibold">${t.time}</td>
-                    <td class="p-3 font-bold">${t.itemsCount} មុខ</td>
-                    <td class="p-3">
-                        <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${t.method.includes('KHQR') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">
-                            ${t.method}
-                        </span>
-                    </td>
-                    <td class="p-3 font-black text-bakery-caramel">${t.totalKHR.toLocaleString()} ៛</td>
-                    <td class="p-3 text-center">
-                        <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel">
-                            <i class="fa-solid fa-print"></i>
-                        </button>
-                        <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `).join('');
+        <tr class="hover:bg-orange-50/40 transition">
+            <td class="p-3 pl-4 font-black text-bakery-dark">
+                ${t.id}
+                ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer">${t.note}</div>` : ''}
+            </td>
+            <td class="p-3 text-stone-700 font-extrabold">${t.date}</td>
+            <td class="p-3 text-stone-500 text-xs font-semibold">${t.time}</td>
+            <td class="p-3 font-bold">${t.itemsCount} មុខ</td>
+            <td class="p-3">
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${t.method.includes('KHQR') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">
+                    ${t.method}
+                </span>
+            </td>
+            <td class="p-3 font-black text-bakery-caramel">${t.totalKHR.toLocaleString()} ៛</td>
+            <td class="p-3 text-center">
+                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel">
+                    <i class="fa-solid fa-print"></i>
+                </button>
+                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </td>
+        </tr>
+      `).join('');
     }
 
     function reprintInvoice(invId) {
@@ -2344,13 +2475,13 @@
     function renderBatchPreviews() {
       const container = document.getElementById('batchPreviewGrid');
       container.innerHTML = batchUploadedImages.map((src, idx) => `
-                <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-stone-300">
-                    <img src="${src}" class="w-full h-full object-cover">
-                    <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px]">
-                        <i class="fa-solid fa-xmark"></i>
-                    </button>
-                </div>
-            `).join('');
+        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-stone-300">
+            <img src="${src}" class="w-full h-full object-cover">
+            <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px]">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+      `).join('');
     }
 
     function clearBatchImages() { batchUploadedImages = []; renderBatchPreviews(); }
@@ -2445,22 +2576,22 @@
       tbody.innerHTML = displayList.map(p => {
         const img = formatImgUrl(p.img || (p.images && p.images[0]));
         return `
-                    <tr class="hover:bg-orange-50/40 transition">
-                        <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
-                            <img src="${img}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-                            <span class="font-extrabold text-stone-800">${p.name}</span>
-                        </td>
-                        <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
-                        <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
-                        <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
-                        <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
-                        <td class="p-3.5 text-center">
-                            <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
-                            <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
-                            <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
-                        </td>
-                    </tr>
-                `;
+          <tr class="hover:bg-orange-50/40 transition">
+              <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
+                  <img src="${img}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                  <span class="font-extrabold text-stone-800">${p.name}</span>
+              </td>
+              <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
+              <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
+              <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
+              <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
+              <td class="p-3.5 text-center">
+                  <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
+                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
+              </td>
+          </tr>
+        `;
       }).join('');
     }
 
@@ -2468,10 +2599,10 @@
     function renderCategories() {
       const container = document.getElementById('categoryChips');
       container.innerHTML = categories.map(c => `
-                <button onclick="filterCategory('${c.id}')" class="px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${activeCategory === c.id ? 'bg-bakery-caramel text-white shadow-sm' : 'bg-bakery-vanilla text-stone-700 hover:bg-orange-100'}">
-                    ${c.label}
-                </button>
-            `).join('');
+        <button onclick="filterCategory('${c.id}')" class="px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${activeCategory === c.id ? 'bg-bakery-caramel text-white shadow-sm' : 'bg-bakery-vanilla text-stone-700 hover:bg-orange-100'}">
+            ${c.label}
+        </button>
+      `).join('');
     }
 
     function filterCategory(catId) {
@@ -2492,23 +2623,23 @@
       grid.innerHTML = filtered.map(p => {
         const img = formatImgUrl(p.img || (p.images && p.images[0]));
         return `
-                    <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
-                        <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                            <img src="${img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
-                            ${p.badge ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-bakery-caramel text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
-                            <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-white/95 text-stone-800 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
-                        </div>
-                        <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
-                            <div>
-                                <h4 class="font-bold text-xs sm:text-sm text-bakery-dark line-clamp-1">${p.name}</h4>
-                                <div class="text-sm sm:text-base font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
-                            </div>
-                            <button onclick="addToCart('${p.id}')" class="mt-2.5 sm:mt-3 w-full py-2 sm:py-2.5 rounded-xl bg-bakery-vanilla text-bakery-dark font-extrabold text-xs hover:bg-bakery-caramel hover:text-white transition flex items-center justify-center gap-1.5 border border-orange-200 ${p.stock <= 0 ? 'opacity-50' : ''}" ${p.stock <= 0 ? 'disabled' : ''}>
-                                <i class="fa-solid fa-plus text-[10px]"></i> ${p.stock <= 0 ? 'អស់ស្តុក' : 'ទិញ'}
-                            </button>
-                        </div>
-                    </div>
-                `;
+          <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
+              <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                  <img src="${img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
+                  ${p.badge ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-bakery-caramel text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
+                  <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-white/95 text-stone-800 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
+              </div>
+              <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
+                  <div>
+                      <h4 class="font-bold text-xs sm:text-sm text-bakery-dark line-clamp-1">${p.name}</h4>
+                      <div class="text-sm sm:text-base font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
+                  </div>
+                  <button onclick="addToCart('${p.id}')" class="mt-2.5 sm:mt-3 w-full py-2 sm:py-2.5 rounded-xl bg-bakery-vanilla text-bakery-dark font-extrabold text-xs hover:bg-bakery-caramel hover:text-white transition flex items-center justify-center gap-1.5 border border-orange-200 ${p.stock <= 0 ? 'opacity-50' : ''}" ${p.stock <= 0 ? 'disabled' : ''}>
+                      <i class="fa-solid fa-plus text-[10px]"></i> ${p.stock <= 0 ? 'អស់ស្តុក' : 'ទិញ'}
+                  </button>
+              </div>
+          </div>
+        `;
       }).join('');
     }
 
@@ -2571,31 +2702,31 @@
         container.innerHTML = cart.map((item, idx) => {
           const img = formatImgUrl(item.img);
           return `
-                        <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
-                            <div class="flex items-center justify-between gap-2">
-                                <div class="flex items-center gap-2">
-                                    <img src="${img}" class="w-8 h-8 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-                                    <div>
-                                        <div class="text-xs font-bold text-bakery-dark line-clamp-1">${item.name}</div>
-                                        <div class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</div>
-                                    </div>
-                                </div>
-                                <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
-                                    <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
-                                    <span class="text-xs font-black font-en px-1">${item.qty}</span>
-                                    <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-plus"></i></button>
-                                </div>
-                            </div>
-                            ${(item.cat === 'cakes' || item.isCustom) ? `
-                                <div class="flex items-center gap-1.5 pl-10 pr-1">
-                                    <span class="text-[10px] font-bold text-amber-900 whitespace-nowrap">រសជាតិ:</span>
-                                    <select onchange="updateCartItemFlavor(${idx}, this.value)" class="w-full text-[10px] font-bold bg-white border border-amber-300 rounded-lg px-1.5 py-0.5">
-                                        ${cakeFlavors.map(f => `<option value="${f.name}" ${item.flavor === f.name ? 'selected' : ''}>${f.name}</option>`).join('')}
-                                    </select>
-                                </div>
-                            ` : ''}
+            <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-2">
+                        <img src="${img}" class="w-8 h-8 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                        <div>
+                            <div class="text-xs font-bold text-bakery-dark line-clamp-1">${item.name}</div>
+                            <div class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</div>
                         </div>
-                    `;
+                    </div>
+                    <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
+                        <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
+                        <span class="text-xs font-black font-en px-1">${item.qty}</span>
+                        <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+                ${(item.cat === 'cakes' || item.isCustom) ? `
+                    <div class="flex items-center gap-1.5 pl-10 pr-1">
+                        <span class="text-[10px] font-bold text-amber-900 whitespace-nowrap">រសជាតិ:</span>
+                        <select onchange="updateCartItemFlavor(${idx}, this.value)" class="w-full text-[10px] font-bold bg-white border border-amber-300 rounded-lg px-1.5 py-0.5">
+                            ${cakeFlavors.map(f => `<option value="${f.name}" ${item.flavor === f.name ? 'selected' : ''}>${f.name}</option>`).join('')}
+                        </select>
+                    </div>
+                ` : ''}
+            </div>
+          `;
         }).join('');
 
         if (mobileBar) mobileBar.classList.remove('hidden');
@@ -2739,18 +2870,26 @@
       const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
       const status = (remainingKHR > 0) ? `កក់ ${depositKHR.toLocaleString()}៛ (ខ្វះ ${remainingKHR.toLocaleString()}៛)` : 'Paid (គ្រប់)';
 
-      transactions.unshift({
+      const newOrder = {
         id: invId, date: todayStr, time: timeStr,
         customerName: custName, customerPhone: phone,
         itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
         method: method, totalKHR: totalKHR, depositKHR: depositKHR,
         remainingKHR: remainingKHR, status: status
-      });
+      };
 
+      transactions.unshift(newOrder);
       saveState();
       closePaymentModal();
       openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
 
+      // 1. Send to Telegram if checked
+      const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
+      if (shouldSendTelegram) {
+        sendTelegramInvoice(newOrder);
+      }
+
+      // 2. Send to Google Sheet
       sendGoogleSheetPayload({
         action: 'new_sale',
         invoice: {
@@ -2784,16 +2923,16 @@
 
       const recItemsList = document.getElementById('receiptItemsList');
       recItemsList.innerHTML = `
-                <div class="text-[10px] pb-1 border-b border-dashed border-stone-200">
-                    <div>វិធីទូទាត់: <b>${method}</b></div>
-                </div>
-                ${cart.map(i => `
-                    <div class="flex justify-between items-start text-[10px] py-0.5 font-semibold">
-                        <div>${i.name}</div>
-                        <div>x${i.qty} = <b>${(i.priceKHR * i.qty).toLocaleString()}៛</b></div>
-                    </div>
-                `).join('')}
-            `;
+        <div class="text-[10px] pb-1 border-b border-dashed border-stone-200">
+            <div>វិធីទូទាត់: <b>${method}</b></div>
+        </div>
+        ${cart.map(i => `
+            <div class="flex justify-between items-start text-[10px] py-0.5 font-semibold">
+                <div>${i.name}</div>
+                <div>x${i.qty} = <b>${(i.priceKHR * i.qty).toLocaleString()}៛</b></div>
+            </div>
+        `).join('')}
+      `;
       document.getElementById('receiptModal').classList.remove('hidden');
     }
 
@@ -2808,8 +2947,8 @@
       document.getElementById('lightboxPrice').innerText = `${p.priceKHR.toLocaleString()} ៛`;
       document.getElementById('lightboxMainImage').src = formatImgUrl(imgs[0]);
       document.getElementById('lightboxThumbnails').innerHTML = imgs.map(src => `
-                <img src="${formatImgUrl(src)}" onclick="document.getElementById('lightboxMainImage').src=formatImgUrl('${src}')" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-            `).join('');
+        <img src="${formatImgUrl(src)}" onclick="document.getElementById('lightboxMainImage').src=formatImgUrl('${src}')" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+      `).join('');
       document.getElementById('photoLightboxModal').classList.remove('hidden');
     }
 
@@ -2853,27 +2992,27 @@
 
     function renderShowcase() {
       document.getElementById('showcaseCategoryChips').innerHTML = categories.map(c => `
-                <button onclick="activeShowcaseCategory='${c.id}'; renderShowcase();" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white' : 'bg-white text-stone-700'}">${c.label}</button>
-            `).join('');
+        <button onclick="activeShowcaseCategory='${c.id}'; renderShowcase();" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white' : 'bg-white text-stone-700'}">${c.label}</button>
+      `).join('');
 
       const grid = document.getElementById('showcaseGrid');
       const filtered = products.filter(p => p.cat !== 'ingredients' && (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory));
       grid.innerHTML = filtered.map(p => {
         const img = formatImgUrl(p.img || (p.images && p.images[0]));
         return `
-                    <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
-                        <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                            <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
-                        </div>
-                        <div class="p-4 flex items-center justify-between">
-                            <div>
-                                <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
-                                <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
-                            </div>
-                            <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
-                        </div>
-                    </div>
-                `;
+          <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
+              <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                  <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
+              </div>
+              <div class="p-4 flex items-center justify-between">
+                  <div>
+                      <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
+                      <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
+                  </div>
+                  <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
+              </div>
+          </div>
+        `;
       }).join('');
     }
 
@@ -2896,7 +3035,7 @@
     function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
 
     function saveIntegrationSettings() {
-      storeInfo.name = document.getElementById('settingStoreName').value.trim() || 'SweetDelight Bakery';
+      storeInfo.name = document.getElementById('settingStoreName').value.trim() || 'ហាងនំខេកវិជ្ជដា';
       storeInfo.phone = document.getElementById('settingStorePhone').value.trim();
       storeInfo.address = document.getElementById('settingStoreAddress').value.trim();
       storeInfo.tagline = document.getElementById('settingStoreTagline').value.trim();
