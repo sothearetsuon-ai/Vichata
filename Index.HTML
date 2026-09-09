@@ -667,13 +667,11 @@
             <div class="flex items-center gap-2 p-1.5 bg-bakery-vanilla rounded-2xl w-fit border border-orange-200/60">
                 <button id="subtab-stock-products" onclick="setInventoryTab('products')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
-                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span
-                        id="stockProductsCount">0</span>)
+                    <i class="fa-solid fa-cake-candles"></i> 🎂 ស្តុកនំ & ទំនិញលក់ (<span id="stockProductsCount">0</span>)
                 </button>
                 <button id="subtab-stock-ingredients" onclick="setInventoryTab('ingredients')"
                     class="px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 text-stone-600 hover:text-bakery-dark">
-                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span
-                        id="stockIngredientsCount">0</span>)
+                    <i class="fa-solid fa-seedling text-emerald-600"></i> 🌾 ស្តុកគ្រឿងផ្សំ (<span id="stockIngredientsCount">0</span>)
                 </button>
             </div>
 
@@ -1089,8 +1087,7 @@
                 <div class="flex items-center gap-2">
                     <div
                         class="w-9 h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-cloud-arrow-up"></i>
-                    </div>
+                        <i class="fa-solid fa-cloud-arrow-up"></i></div>
                     <div>
                         <h3 class="font-bold text-base text-bakery-dark" id="multiUploadModalTitle">Upload
                             រូបភាពនំច្រើនសន្លឹក</h3>
@@ -2445,11 +2442,11 @@ ${itemsSummaryArr.map(i => `• ${i}`).join('\n')}
         function renderProducts() {
             const query = document.getElementById('searchInput').value.toLowerCase();
             const grid = document.getElementById('productGrid');
-
+            
             // ត្រងយកតែទំនិញដែលមិនមែនជាគ្រឿងផ្សំ (p.cat !== 'ingredients')
-            const filtered = products.filter(p =>
-                p.cat !== 'ingredients' &&
-                (activeCategory === 'all' || p.cat === activeCategory) &&
+            const filtered = products.filter(p => 
+                p.cat !== 'ingredients' && 
+                (activeCategory === 'all' || p.cat === activeCategory) && 
                 p.name.toLowerCase().includes(query)
             );
 
