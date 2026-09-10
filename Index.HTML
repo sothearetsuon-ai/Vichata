@@ -3010,113 +3010,92 @@
             if (event) event.preventDefault();
 
             try {
-                const nameInput = document.getElementById('batchProdName');
-                const catInput = document.getElementById('batchProdCat');
-                const priceInput = document.getElementById('batchProdPrice');
-                const stockInput = document.getElementById('batchProdStock');
-                const badgeInput = document.getElementById('batchProdBadge');
-                const editIdInput = document.getElementById('batchEditId');
-
-                const name = nameInput ? nameInput.value.trim() : '';
-                const cat = catInput ? catInput.value : 'cakes';
-                const price = priceInput ? (parseInt(priceInput.value) || 0) : 0;
-                const stock = stockInput ? (parseInt(stockInput.value) || 0) : 0;
-                const badge = badgeInput ? badgeInput.value.trim() : '';
-                const editId = editIdInput ? editIdInput.value.trim() : '';
+                const idEl = document.getElementById('multiUploadProdId');
+                const id = idEl ? idEl.value.trim() : '';
+                const nameEl = document.getElementById('batchProdName');
+                const name = nameEl ? nameEl.value.trim() : '';
+                const catEl = document.getElementById('batchProdCat');
+                const cat = catEl ? catEl.value : 'cakes';
+                const badgeEl = document.getElementById('batchProdBadge');
+                const badge = badgeEl ? badgeEl.value.trim() : '';
+                const priceEl = document.getElementById('batchProdPriceKHR');
+                const priceKHR = priceEl ? (parseInt(priceEl.value) || 0) : 0;
+                const stockEl = document.getElementById('batchProdStock');
+                const stock = stockEl ? (parseInt(stockEl.value) || 0) : 0;
 
                 if (!name) {
                     alert('សូមបញ្ចូលឈ្មោះទំនិញ!');
-                    if (nameInput) nameInput.focus();
+                    if (nameEl) nameEl.focus();
                     return;
                 }
 
-                // ពិនិត្យយករូបភាព (បើរើសរូបថ្មីយករូបថ្មី បើអត់ទេយករូបចាស់ ឬរូប Default)
-                let mainImg = '';
-                if (typeof batchUploadedImages !== 'undefined' && Array.isArray(batchUploadedImages) && batchUploadedImages.length > 0) {
-                    mainImg = batchUploadedImages[0];
-                }
+                const fallbackImg = 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+                const images = (typeof batchUploadedImages !== 'undefined' && batchUploadedImages.length > 0)
+                    ? [...batchUploadedImages]
+                    : [fallbackImg];
 
-                const defaultImg = 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500&auto=format&fit=crop&q=60';
-
-                if (editId) {
-                    // កែសម្រួលទំនិញដែលមានស្រាប់
-                    const idx = products.findIndex(p => String(p.id) === String(editId));
+                if (id) {
+                    const idx = products.findIndex(p => String(p.id) === String(id));
                     if (idx !== -1) {
-                        products[idx].name = name;
-                        products[idx].cat = cat;
-                        products[idx].priceKHR = price;
-                        products[idx].stock = stock;
-                        products[idx].badge = badge;
-                        if (mainImg) {
-                            products[idx].img = mainImg;
-                            products[idx].images = [...batchUploadedImages];
-                        } else if (!products[idx].images || !Array.isArray(products[idx].images)) {
-                            products[idx].images = [products[idx].img || defaultImg];
-                        }
-                        products[idx].status = stock > 0 ? 'in_stock' : 'out_of_stock';
+                        products[idx] = {
+                            ...products[idx],
+                            name,
+                            cat,
+                            badge,
+                            priceKHR,
+                            stock,
+                            img: images[0],
+                            images,
+                            status: stock > 0 ? 'in_stock' : 'out_of_stock'
+                        };
                     }
                 } else {
-                    // បង្កើតទំនិញថ្មី
-                    const newProduct = {
-                        id: 'PROD_' + Date.now(),
-                        name: name,
-                        cat: cat,
-                        priceKHR: price,
-                        stock: stock,
+                    products.unshift({
+                        id: Date.now(),
+                        name,
+                        cat,
                         badge: badge || (cat === 'cakes' ? 'នំថ្មី' : ''),
-                        img: mainImg || defaultImg,
-                        images: (mainImg && batchUploadedImages.length > 0) ? [...batchUploadedImages] : [mainImg || defaultImg],
+                        priceKHR,
+                        stock,
+                        img: images[0],
+                        images,
                         status: stock > 0 ? 'in_stock' : 'out_of_stock'
-                    };
-                    products.unshift(newProduct);
+                    });
                 }
 
-                // រក្សាទុកក្នុង LocalStorage ដោយសុវត្ថិភាព
-                try {
-                    saveState();
-                } catch (quotaErr) {
-                    console.warn("Storage Quota Warning:", quotaErr);
-                }
+                // ១. រក្សាទុកក្នុង LocalStorage
+                saveState();
 
-                // បិទ Modal ភ្លាមៗ (មិនឱ្យគាំងឡើយ)
+                // ២. បិទផ្ទាំង Modal ភ្លាមៗ (ធានាមិនឱ្យគាំង)
                 closeMultiUploadModal();
 
-                // សម្អាត Form បន្ទាប់ពី Save រួច
-                if (nameInput) nameInput.value = '';
-                if (priceInput) priceInput.value = '';
-                if (stockInput) stockInput.value = '10';
-                if (badgeInput) badgeInput.value = '';
-                if (editIdInput) editIdInput.value = '';
+                // ៣. សម្អាត Form
+                const form = document.getElementById('multiUploadForm');
+                if (form) form.reset();
+                if (idEl) idEl.value = '';
                 batchUploadedImages = [];
-                const previewContainer = document.getElementById('batchPreviewContainer');
-                if (previewContainer) previewContainer.innerHTML = '';
+                renderBatchPreviews();
 
-                // Render ទិន្នន័យឡើងវិញនៅលើអេក្រង់
-                try { if (typeof renderProducts === 'function') renderProducts(); } catch (e) { console.error(e); }
-                try { if (typeof renderInventory === 'function') renderInventory(); } catch (e) { console.error(e); }
-                try { if (typeof renderShowcase === 'function') renderShowcase(); } catch (e) { console.error(e); }
-                try { if (typeof renderQuickAddons === 'function') renderQuickAddons(); } catch (e) { console.error(e); }
+                // ៤. Render អេក្រង់ឡើងវិញ
+                try { renderProducts(); } catch (e) { }
+                try { renderInventory(); } catch (e) { }
+                try { renderShowcase(); } catch (e) { }
+                try { renderQuickAddons(); } catch (e) { }
 
-                // បង្ហាញសារជោគជ័យ
-                if (typeof showToast === 'function') {
-                    showToast('បានរក្សាទុកទំនិញជោគជ័យ! កំពុង Sync ទៅ Google Sheet...', 'success');
-                } else {
-                    alert('បានរក្សាទុកទំនិញជោគជ័យ!');
-                }
+                // ៥. បង្ហាញការជូនដំណឹងជោគជ័យ
+                alert(`✅ បានរក្សាទុក "${name}" ដោយជោគជ័យ!`);
+                showToast(`🎉 បានរក្សាទុក "${name}" ជោគជ័យ!`, 'success');
 
-                // បាញ់កាំជ្រួចអបអរ (បើមានបណ្ណាល័យ confetti)
                 try {
-                    if (typeof confetti === 'function') confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+                    if (typeof confetti === 'function') confetti({ particleCount: 50, spread: 60 });
                 } catch (e) { }
 
-                // បញ្ជូនទៅកាន់ Google Sheet នៅខាងក្រោយ (Background Sync)
-                if (typeof syncStockToGoogleSheet === 'function') {
-                    syncStockToGoogleSheet();
-                }
+                // ៦. បញ្ជូនទៅកាន់ Google Sheet
+                syncStockToGoogleSheet();
 
-            } catch (criticalErr) {
-                console.error("Critical error in saveBatchProduct:", criticalErr);
-                alert('មានបញ្ហាក្នុងការរក្សាទុក: ' + criticalErr.message);
+            } catch (err) {
+                console.error("Save error:", err);
+                alert("មានបញ្ហាក្នុងការរក្សាទុក: " + err.message);
                 closeMultiUploadModal();
             }
         }
