@@ -677,14 +677,13 @@
 
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 overflow-hidden">
                 <div class="overflow-x-auto custom-scroll">
-                    <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
+                    <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
                         <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                             <tr>
-                                <th class="p-3 pl-4">វិក្កយបត្រ</th>
+                                <th class="p-3 pl-4">វិក្កយបត្រ & អតិថិជន</th>
                                 <th class="p-3">កាលបរិច្ឆេទ</th>
-                                <th class="p-3">ម៉ោង</th>
                                 <th class="p-3">មុខទំនិញ</th>
-                                <th class="p-3">វិធីទូទាត់</th>
+                                <th class="p-3">ការទូទាត់ & ស្ថានភាព</th>
                                 <th class="p-3">សរុប (KHR)</th>
                                 <th class="p-3 text-center">សកម្មភាព</th>
                             </tr>
@@ -809,59 +808,191 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: PAYMENT ================= -->
+    <!-- ================= MODAL: PAYMENT (មានឈ្មោះ លេខទូរស័ព្ទ & ជម្រើសប្រាក់កក់) ================= -->
     <div id="paymentModal"
         class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[92vh] overflow-y-auto custom-scroll">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
-                <h3 class="font-bold text-base text-bakery-dark">ទូទាត់ប្រាក់</h3>
-                <button onclick="closePaymentModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="font-bold text-base text-bakery-dark flex items-center gap-2">
+                    <i class="fa-solid fa-cash-register text-bakery-caramel"></i>
+                    <span>ទូទាត់ប្រាក់ & ចេញវិក្កយបត្រ</span>
+                </h3>
+                <button onclick="closePaymentModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <div class="mt-4">
-                <div id="khqrContent" class="flex flex-col items-center text-center">
+            <div class="mt-3 space-y-3">
+                <!-- 👤 ព័ត៌មានអតិថិជន (Customer Name & Phone) -->
+                <div class="p-3 bg-orange-50/70 rounded-2xl border border-orange-200/80 space-y-2 text-xs">
+                    <div class="font-extrabold text-bakery-dark flex items-center gap-1.5">
+                        <i class="fa-solid fa-user text-bakery-caramel"></i>
+                        <span>ព័ត៌មានអតិថិជន (Customer)</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-700 mb-0.5">ឈ្មោះអ្នកទិញ</label>
+                            <input type="text" id="custNameInput" placeholder="ឧ. សុខា..."
+                                class="w-full p-2 rounded-xl bg-white border border-stone-300 font-semibold text-xs focus:ring-2 focus:ring-bakery-caramel">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-bold text-stone-700 mb-0.5">លេខទូរស័ព្ទ</label>
+                            <input type="tel" id="custPhoneInput" placeholder="ឧ. 012 345 678..."
+                                class="w-full p-2 rounded-xl bg-white border border-stone-300 font-semibold font-en text-xs focus:ring-2 focus:ring-bakery-caramel">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 💰 ជម្រើសការបង់ប្រាក់៖ ប្រាក់ទាំងអស់ VS ប្រាក់កក់ -->
+                <div class="p-3 bg-bakery-vanilla/80 rounded-2xl border border-orange-200 space-y-2 text-xs">
+                    <div class="flex items-center justify-between font-extrabold text-bakery-dark">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-coins text-amber-600"></i>
+                            <span>ជម្រើសការបង់ប្រាក់:</span>
+                        </span>
+                        <span class="text-xs font-black font-en text-bakery-caramel" id="payModalTotalDisplay">0 ៛</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="setPaymentType('full')" id="btnPayFull"
+                            class="py-2 px-3 rounded-xl border-2 border-bakery-caramel bg-white font-extrabold text-bakery-caramel shadow-xs text-center transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-circle-check"></i> បង់ទាំងអស់ (100%)
+                        </button>
+                        <button type="button" onclick="setPaymentType('deposit')" id="btnPayDeposit"
+                            class="py-2 px-3 rounded-xl border border-stone-300 bg-stone-50 font-bold text-stone-700 text-center transition flex items-center justify-center gap-1">
+                            <i class="fa-solid fa-clock"></i> បង់ប្រាក់កក់ (Deposit)
+                        </button>
+                    </div>
+
+                    <!-- ប្រអប់បញ្ចូលប្រាក់កក់ (បង្ហាញពេលជ្រើសប្រាក់កក់) -->
+                    <div id="depositInputContainer" class="hidden space-y-1.5 pt-1.5 border-t border-orange-200/70">
+                        <div class="flex justify-between items-center text-[11px] font-bold text-stone-700">
+                            <span>ចំនួនប្រាក់កក់ (៛):</span>
+                            <span>នៅខ្វះ: <strong id="depositRemainingText" class="text-rose-600 font-en font-black">0 ៛</strong></span>
+                        </div>
+                        <input type="number" id="depositAmountInput" step="500" oninput="calculateDepositRemaining()"
+                            placeholder="បញ្ចូលចំនួនប្រាក់កក់..."
+                            class="w-full p-2.5 rounded-xl bg-white border border-stone-300 font-en font-black text-sm text-bakery-caramel focus:ring-2 focus:ring-bakery-caramel">
+                    </div>
+                </div>
+
+                <!-- 💳 វិធីសាស្ត្រទូទាត់ (KHQR & Cash) -->
+                <div id="khqrContent" class="flex flex-col items-center text-center pt-1">
                     <div class="text-sm font-bold text-stone-700" id="khqrMerchantDisplay">ហាងនំខេកវិជ្ជដា</div>
                     <div class="p-2 border-2 border-red-500 rounded-2xl bg-white shadow-inner my-2">
-                        <img id="khqrDisplayImg" src="" class="w-44 h-44 object-contain rounded-lg">
+                        <img id="khqrDisplayImg" src="" class="w-40 h-40 object-contain rounded-lg">
                     </div>
                     <div class="text-2xl font-black text-red-600 font-en" id="khqrTotalKHR">0 ៛</div>
                     <div class="text-xs text-stone-500 font-en font-bold mb-3" id="khqrTotalUSD">≈ $0.00</div>
                     <button onclick="completeTransaction('KHQR (៛)')"
-                        class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
+                        class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow hover:bg-red-700 transition flex items-center justify-center gap-1.5">
                         <i class="fa-solid fa-check"></i> ទទួលបានប្រាក់រួចរាល់
                     </button>
                 </div>
 
-                <div id="cashContent" class="hidden space-y-3">
+                <div id="cashContent" class="hidden space-y-2.5 pt-1">
                     <div class="text-2xl font-black text-bakery-caramel font-en text-center" id="cashTotalKHR">0 ៛</div>
                     <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()"
                         placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..."
                         class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
                     <div class="text-emerald-700 font-black font-en text-lg text-center" id="cashChangeKHR">0 ៛</div>
                     <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')"
-                        class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
-                        គិតលុយ & ចេញវិក្កយបត្រ
+                        class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow hover:bg-black transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-check"></i> គិតលុយ & ចេញវិក្កយបត្រ
                     </button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- ================= MODAL: EDIT TRANSACTION (កែប្រែឈ្មោះ លេខទូរស័ព្ទ ឬ ប្រាក់កក់) ================= -->
+    <div id="editTxModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] overflow-y-auto custom-scroll">
+            <div class="flex justify-between items-center pb-3 border-b border-orange-100">
+                <h3 class="font-extrabold text-base text-bakery-dark flex items-center gap-2">
+                    <i class="fa-solid fa-pen-to-square text-bakery-caramel"></i>
+                    <span>កែប្រែព័ត៌មានវិក្កយបត្រ</span>
+                </h3>
+                <button onclick="closeEditTxModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <form id="editTxForm" onsubmit="saveEditedTx(event)" class="mt-4 space-y-3.5 text-xs">
+                <input type="hidden" id="editTxId">
+
+                <div class="p-2.5 bg-orange-50 rounded-2xl border border-orange-200 flex justify-between items-center">
+                    <span class="font-bold text-stone-700" id="editTxIdDisplay">INV #BK-0000</span>
+                    <span class="font-black text-bakery-caramel font-en text-sm" id="editTxTotalDisplay">0 ៛</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1">ឈ្មោះអតិថិជន *</label>
+                    <input type="text" id="editTxCustName" required placeholder="ឈ្មោះអ្នកទិញ..."
+                        class="w-full p-2.5 rounded-xl border border-stone-300 font-bold text-sm focus:ring-2 focus:ring-bakery-caramel">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1">លេខទូរស័ព្ទអតិថិជន</label>
+                    <input type="text" id="editTxCustPhone" placeholder="012 345 678..."
+                        class="w-full p-2.5 rounded-xl border border-stone-300 font-bold font-en text-sm focus:ring-2 focus:ring-bakery-caramel">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block font-bold text-stone-700 mb-1">ប្រាក់បានបង់ (៛)</label>
+                        <input type="number" id="editTxDeposit" step="500" oninput="updateEditTxRemaining()"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 font-black font-en text-emerald-700 text-sm focus:ring-2 focus:ring-bakery-caramel">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-stone-700 mb-1">ប្រាក់នៅខ្វះ (៛)</label>
+                        <input type="number" id="editTxRemaining" readonly
+                            class="w-full p-2.5 rounded-xl bg-stone-100 border border-stone-300 font-black font-en text-rose-600 text-sm">
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <button type="button" onclick="markTxAsFullyPaid()"
+                        class="px-3 py-1.5 bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-xl font-extrabold text-[11px] flex items-center gap-1 transition">
+                        <i class="fa-solid fa-check"></i> កត់ត្រាថា "បានបង់បង្គ្រប់ 100%"
+                    </button>
+                </div>
+
+                <div class="pt-2 flex gap-2">
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs shadow transition">
+                        💾 រក្សាទុកការកែប្រែ
+                    </button>
+                    <button type="button" onclick="closeEditTxModal()"
+                        class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">
+                        បោះបង់
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- ================= MODAL: RECEIPT PRINT ================= -->
     <div id="receiptModal"
         class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 border border-orange-100">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 border border-orange-100 max-h-[92vh] overflow-y-auto custom-scroll">
             <div id="receiptPrintArea" class="bg-white text-stone-900 font-mono text-xs p-2">
                 <div class="text-center pb-2 border-b border-dashed border-stone-300">
                     <div class="font-extrabold text-base uppercase font-en">ហាងនំខេកវិជ្ជដា</div>
                     <div class="text-[10px] text-stone-600">កោះរ៉ុងសន្លឹម • Tel: 0978707000</div>
                     <div class="mt-1 font-bold text-xs" id="receiptInvoiceNo">INV #BK-8821</div>
+                    <div class="text-[11px] font-bold text-stone-700 mt-1" id="receiptCustomerInfo">អតិថិជន: ទូទៅ</div>
                 </div>
                 <div class="py-2 border-b border-dashed border-stone-300 space-y-1" id="receiptItemsList"></div>
                 <div class="py-2 border-b border-dashed border-stone-300 text-right space-y-1 font-semibold">
                     <div class="flex justify-between font-extrabold text-sm">
                         <span>សរុបត្រូវបង់:</span>
                         <span id="receiptTotalKHR" class="font-en text-bakery-caramel">0 ៛</span>
+                    </div>
+                    <div class="flex justify-between text-xs" id="receiptDepositRow" style="display:none;">
+                        <span>បានបង់ (Deposit):</span>
+                        <span id="receiptDepositKHR" class="font-en text-emerald-700 font-bold">0 ៛</span>
+                    </div>
+                    <div class="flex justify-between text-xs" id="receiptRemainingRow" style="display:none;">
+                        <span>នៅខ្វះ (Remaining):</span>
+                        <span id="receiptRemainingKHR" class="font-en text-rose-600 font-bold">0 ៛</span>
                     </div>
                 </div>
                 <div class="text-center pt-2 text-[10px] text-stone-600 font-medium">សូមអរគុណចំពោះការគាំទ្រ!</div>
@@ -1049,6 +1180,8 @@
         let activeStockSubTab = 'products';
         let currentDiscountKHR = 0;
         let batchUploadedImages = [];
+
+        let activePaymentType = 'full'; // 'full' or 'deposit'
 
         let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
             googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec',
@@ -1429,23 +1562,85 @@
             document.getElementById('summaryTotalUSD').innerText = `≈ $${totalUSD}`;
         }
 
-        // ================= CHECKOUT =================
+        // ================= 💵 CHECKOUT & ជម្រើសប្រាក់កក់ =================
+        function setPaymentType(type) {
+            activePaymentType = type;
+            const btnFull = document.getElementById('btnPayFull');
+            const btnDep = document.getElementById('btnPayDeposit');
+            const depContainer = document.getElementById('depositInputContainer');
+
+            const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+            const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
+
+            if (type === 'full') {
+                btnFull.className = "py-2 px-3 rounded-xl border-2 border-bakery-caramel bg-white font-extrabold text-bakery-caramel shadow-xs text-center transition flex items-center justify-center gap-1";
+                btnDep.className = "py-2 px-3 rounded-xl border border-stone-300 bg-stone-50 font-bold text-stone-700 text-center transition flex items-center justify-center gap-1";
+                depContainer.classList.add('hidden');
+            } else {
+                btnDep.className = "py-2 px-3 rounded-xl border-2 border-bakery-caramel bg-white font-extrabold text-bakery-caramel shadow-xs text-center transition flex items-center justify-center gap-1";
+                btnFull.className = "py-2 px-3 rounded-xl border border-stone-300 bg-stone-50 font-bold text-stone-700 text-center transition flex items-center justify-center gap-1";
+                depContainer.classList.remove('hidden');
+
+                // ដាក់ប្រាក់កក់លំនាំដើម ៥០%
+                const half = Math.round((totalKHR * 0.5) / 500) * 500;
+                document.getElementById('depositAmountInput').value = half;
+                calculateDepositRemaining();
+            }
+            updateModalPaymentDisplays();
+        }
+
+        function calculateDepositRemaining() {
+            const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+            const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
+            const dep = parseFloat(document.getElementById('depositAmountInput').value) || 0;
+            const rem = Math.max(0, totalKHR - dep);
+            document.getElementById('depositRemainingText').innerText = `${rem.toLocaleString()} ៛`;
+            updateModalPaymentDisplays();
+        }
+
+        function updateModalPaymentDisplays() {
+            const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+            const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
+            const toCollect = (activePaymentType === 'deposit')
+                ? (parseFloat(document.getElementById('depositAmountInput')?.value) || totalKHR)
+                : totalKHR;
+
+            const khqrTotalEl = document.getElementById('khqrTotalKHR');
+            if (khqrTotalEl) khqrTotalEl.innerText = `${toCollect.toLocaleString()} ៛`;
+
+            const khqrUsdEl = document.getElementById('khqrTotalUSD');
+            if (khqrUsdEl) {
+                khqrUsdEl.innerText = `≈ $${(toCollect / KHR_RATE).toFixed(2)}${activePaymentType === 'deposit' ? ' (ប្រាក់កក់)' : ''}`;
+            }
+
+            const cashTotalEl = document.getElementById('cashTotalKHR');
+            if (cashTotalEl) {
+                cashTotalEl.innerText = `${toCollect.toLocaleString()} ៛${activePaymentType === 'deposit' ? ' (ប្រាក់កក់)' : ''}`;
+            }
+            calculateChangeKHR();
+        }
+
         function openPaymentModal(method) {
             if (cart.length === 0) { showToast('សូមបញ្ចូលមុខទំនិញជាមុនសិន!', 'warning'); return; }
             document.getElementById('paymentModal').classList.remove('hidden');
             const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
             const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
 
+            document.getElementById('custNameInput').value = '';
+            document.getElementById('custPhoneInput').value = '';
+
+            const payModalTotal = document.getElementById('payModalTotalDisplay');
+            if (payModalTotal) payModalTotal.innerText = `${totalKHR.toLocaleString()} ៛`;
+
+            setPaymentType('full');
+
             if (method === 'khqr') {
                 document.getElementById('khqrContent').classList.remove('hidden');
                 document.getElementById('cashContent').classList.add('hidden');
-                document.getElementById('khqrTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
-                document.getElementById('khqrTotalUSD').innerText = `≈ $${(totalKHR / KHR_RATE).toFixed(2)}`;
                 initKhqrImg();
             } else {
                 document.getElementById('khqrContent').classList.add('hidden');
                 document.getElementById('cashContent').classList.remove('hidden');
-                document.getElementById('cashTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
                 document.getElementById('cashReceivedKHRInput').value = '';
                 document.getElementById('cashChangeKHR').innerText = '0 ៛';
             }
@@ -1456,8 +1651,12 @@
         function calculateChangeKHR() {
             const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
             const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
+            const toCollect = (activePaymentType === 'deposit')
+                ? (parseFloat(document.getElementById('depositAmountInput')?.value) || totalKHR)
+                : totalKHR;
+
             const received = parseFloat(document.getElementById('cashReceivedKHRInput').value) || 0;
-            const change = received - totalKHR;
+            const change = received - toCollect;
             document.getElementById('cashChangeKHR').innerText = change >= 0 ? `${change.toLocaleString()} ៛` : `នៅខ្វះ ${Math.abs(change).toLocaleString()} ៛`;
         }
 
@@ -1475,16 +1674,39 @@
                 if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
             });
 
+            const custName = (document.getElementById('custNameInput')?.value || '').trim() || 'អតិថិជនទូទៅ';
+            const custPhone = (document.getElementById('custPhoneInput')?.value || '').trim() || 'គ្មាន';
+
+            let depositKHR = totalKHR;
+            let remainingKHR = 0;
+            let statusStr = 'Paid (គ្រប់)';
+
+            if (activePaymentType === 'deposit') {
+                depositKHR = parseFloat(document.getElementById('depositAmountInput')?.value) || 0;
+                remainingKHR = Math.max(0, totalKHR - depositKHR);
+                statusStr = remainingKHR > 0 ? `Deposit (នៅខ្វះ ${remainingKHR.toLocaleString()} ៛)` : 'Paid (គ្រប់)';
+            }
+
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
             const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
 
             const newTx = {
-                id: invId, date: todayStr, time: timeStr, customerName: 'អតិថិជនទូទៅ', customerPhone: 'គ្មាន',
-                itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
-                method: method, totalKHR: totalKHR, depositKHR: totalKHR, remainingKHR: 0,
-                totalUSD: parseFloat(totalUSD), status: 'Paid (គ្រប់)'
+                id: invId,
+                date: todayStr,
+                time: timeStr,
+                customerName: custName,
+                customerPhone: custPhone,
+                itemsCount: totalQty,
+                itemsSummary: itemsSummaryArr.join(', '),
+                method: method,
+                totalKHR: totalKHR,
+                depositKHR: depositKHR,
+                remainingKHR: remainingKHR,
+                totalUSD: parseFloat(totalUSD),
+                status: statusStr,
+                cartItems: [...cart]
             };
 
             transactions.unshift(newTx);
@@ -1507,21 +1729,20 @@
             renderAnalytics();
             renderExpenses();
 
-            openReceiptModal(invId, method, totalKHR);
+            openReceiptModal(newTx);
             confetti({ particleCount: 80, spread: 70 });
             showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ & បាញ់សារទៅ Telegram!', 'success');
         }
 
-        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS (WITH CAKE PHOTO) =================
+        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS (WITH PHOTO & CUSTOMER INFO) =================
         async function sendTelegramNotification(tx) {
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
             if (!token || !chatId) return;
 
-            // រកមើលរូបភាពនំដែលមានក្នុងកន្ត្រក/វិក្កយបត្រ ដើម្បីផ្ញើទៅ Telegram
             let photoUrl = null;
-            if (cart && cart.length > 0) {
-                for (const item of cart) {
+            if (tx.cartItems && tx.cartItems.length > 0) {
+                for (const item of tx.cartItems) {
                     if (item.img && (item.img.startsWith('http://') || item.img.startsWith('https://')) && !item.img.includes('flaticon.com') && !item.img.includes('data:image')) {
                         photoUrl = item.img;
                         break;
@@ -1540,22 +1761,27 @@
             }
 
             const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
+
+            const depositText = (tx.remainingKHR > 0)
+                ? `💵 *បានបង់ (កក់):* *${Number(tx.depositKHR).toLocaleString()} ៛*\n⚠️ *នៅខ្វះ:* *${Number(tx.remainingKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* នៅជំពាក់ (Deposit)\n`
+                : `💵 *បានបង់គ្រប់:* *${Number(tx.totalKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* បង់គ្រប់ (Paid)\n`;
+
             const msg = `🎂 *ហាងនំខេកវិជ្ជដា - ការលក់ថ្មី!* 🎂\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
                 `🧾 *វិក្កយបត្រ:* \`${tx.id}\`\n` +
                 `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${tx.time})\n` +
-                `👤 *អតិថិជន:* ${tx.customerName || 'ទូទៅ'}\n` +
+                `👤 *អតិថិជន:* *${tx.customerName || 'ទូទៅ'}*\n` +
+                `📞 *លេខទូរស័ព្ទ:* *${tx.customerPhone || 'គ្មាន'}*\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
                 `🛒 *មុខទំនិញ:*\n${itemsText}\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
-                `💰 *សរុប (KHR):* *${Number(tx.totalKHR).toLocaleString()} ៛*\n` +
-                `💵 *សរុប (USD):* *$${Number(tx.totalUSD).toFixed(2)}*\n` +
+                `💰 *តម្លៃសរុប:* *${Number(tx.totalKHR).toLocaleString()} ៛* ($${Number(tx.totalUSD).toFixed(2)})\n` +
+                depositText +
                 `💳 *វិធីទូទាត់:* ${tx.method}\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
                 `🙏 _សូមអរគុណចំពោះការគាំទ្រ!_`;
 
             try {
-                // សាកល្បងផ្ញើជាមួយ sendPhoto (មានរូបភាពនំ + វិក្កយបត្រ)
                 const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1569,7 +1795,6 @@
                 const photoData = await photoRes.json();
                 if (!photoData.ok) {
                     console.warn('sendPhoto failed, falling back to sendMessage:', photoData.description);
-                    // Fallback to text message
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1596,7 +1821,6 @@
 
             showToast('កំពុងសាកល្បងផ្ញើសារ...', 'info');
             try {
-                // សាកល្បងផ្ញើរូបភាពនំខេកចូល Telegram
                 const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1611,7 +1835,6 @@
                 if (data.ok) {
                     showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
                 } else {
-                    // Fallback to text test if photo fails
                     const resText = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -1633,7 +1856,7 @@
             }
         }
 
-        // ================= GOOGLE SHEET SYNC (ទាញទាំងមុខនំ រូបភាព & ការលក់) =================
+        // ================= GOOGLE SHEET SYNC =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) return;
@@ -1656,7 +1879,6 @@
             }
         }
 
-        // 🌟 មុខងារពិសេស៖ ទាញទាំងមុខនំ រូបភាព និងការលក់ពី Google Sheet ចូលទូរស័ព្ទ
         async function pullProductsFromGoogleSheet() {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) {
@@ -1668,20 +1890,17 @@
             showToast('កំពុងទាញទិន្នន័យពី Google Sheet... ⏳', 'info');
 
             try {
-                // សាកល្បងទាញទិន្នន័យទាំងអស់ (ទាំងនំ និងការលក់)
                 const response = await fetch(`${targetUrl}?action=get_all&t=${Date.now()}`);
                 const result = await response.json();
 
                 let updatedItems = [];
 
-                // ១. ប្រសិនបើមានទិន្នន័យមុខនំ & រូបភាព
                 if (result && result.products && result.products.length > 0) {
                     products = result.products.map(p => {
                         const existing = products.find(ep => String(ep.id) === String(p.id) || ep.name === p.name);
                         let price = Number(p.priceKHR || p.Price || p.price || 0);
                         let stock = Number(p.stock || p.Stock || 0);
 
-                        // ការពារកុំឱ្យច្រឡំយកចំនួនស្តុកមកធ្វើជាតម្លៃលក់ (ដូចជា 3 ៛, 4 ៛)
                         if (price > 0 && price <= 50 && stock >= 500) {
                             const temp = price;
                             price = stock;
@@ -1693,7 +1912,6 @@
                             price = existing.priceKHR;
                         }
 
-                        // ការពាររូបភាព៖ បើ Sheet គ្មានរូបភាព ឬជារូបនំប៉័ងចាស់ ត្រូវរក្សារូបនំដើមស្អាតៗ
                         let rawImg = p.img || p.Image || p.imageUrl || '';
                         let finalImg = formatImgUrl(rawImg, existing ? existing.img : null);
 
@@ -1711,7 +1929,6 @@
                     updatedItems.push(`${products.length} មុខទំនិញ`);
                 }
 
-                // ២. ប្រសិនបើមានទិន្នន័យការលក់
                 if (result && result.sales && result.sales.length > 0) {
                     transactions = result.sales;
                     updatedItems.push(`${transactions.length} វិក្កយបត្រ`);
@@ -1829,7 +2046,7 @@
             `).join('');
         }
 
-        // ================= INVENTORY (បែងចែកស្តុក) =================
+        // ================= INVENTORY =================
         function switchStockSubTab(tab) {
             activeStockSubTab = tab;
             const btnProd = document.getElementById('tab-stock-products');
@@ -1922,7 +2139,7 @@
             showToast('បានបញ្ចូលនំកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
         }
 
-        // ================= ANALYTICS =================
+        // ================= ANALYTICS & TRANSACTIONS =================
         function initAnalyticsDates() {
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('analyticsStartDate').value = today;
@@ -1953,24 +2170,46 @@
             const tbody = document.getElementById('recentOrdersBody');
             if (!tbody) return;
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-10 text-stone-500 font-bold">មិនមានទិន្នន័យលក់ក្នុងចន្លោះកាលបរិច្ឆេទនេះទេ</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-stone-500 font-bold">មិនមានទិន្នន័យលក់ក្នុងចន្លោះកាលបរិច្ឆេទនេះទេ</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = filtered.map((t, idx) => `
                 <tr class="hover:bg-orange-50/40 transition">
-                    <td class="p-3 pl-4 font-black text-bakery-dark">${t.id}</td>
-                    <td class="p-3 text-stone-700 font-extrabold">${t.date}</td>
-                    <td class="p-3 text-stone-500 text-xs">${t.time || ''}</td>
-                    <td class="p-3 font-bold">${t.itemsSummary || (t.itemsCount + ' មុខ')}</td>
+                    <td class="p-3 pl-4">
+                        <div class="font-black text-bakery-dark">${t.id}</div>
+                        <div class="text-[11px] font-bold text-stone-800">${t.customerName || 'ទូទៅ'}</div>
+                        ${t.customerPhone && t.customerPhone !== 'គ្មាន' ? `<div class="text-[10px] text-stone-500 font-en font-semibold">${t.customerPhone}</div>` : ''}
+                    </td>
+                    <td class="p-3">
+                        <div class="text-stone-700 font-extrabold">${t.date}</div>
+                        <div class="text-stone-400 text-[10px]">${t.time || ''}</div>
+                    </td>
+                    <td class="p-3 font-bold max-w-[200px] truncate" title="${t.itemsSummary || ''}">
+                        ${t.itemsSummary || (t.itemsCount + ' មុខ')}
+                    </td>
                     <td class="p-3">
                         <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${String(t.method).includes('KHQR') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">
                             ${t.method}
                         </span>
+                        ${t.remainingKHR > 0 
+                            ? `<div class="mt-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md inline-block">ខ្វះ: ${Number(t.remainingKHR).toLocaleString()}៛</div>` 
+                            : `<div class="mt-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-check"></i> បង់គ្រប់</div>`
+                        }
                     </td>
                     <td class="p-3 font-black text-bakery-caramel">${(Number(t.totalKHR) || 0).toLocaleString()} ៛</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                        <div class="flex items-center justify-center gap-1.5">
+                            <button onclick="openReceiptModal('${t.id}')" class="p-1.5 px-2 rounded-lg bg-orange-50 hover:bg-orange-100 text-bakery-caramel font-bold text-xs transition" title="ចុចបើកមើលវិក្កយបត្រ">
+                                <i class="fa-solid fa-eye"></i>
+                            </button>
+                            <button onclick="openEditTxModal('${t.id}')" class="p-1.5 px-2 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-700 font-bold text-xs transition" title="កែប្រែឈ្មោះ លេខទូរស័ព្ទ ឬ ការបង់ប្រាក់">
+                                <i class="fa-solid fa-pen-to-square"></i>
+                            </button>
+                            <button onclick="deleteInvoice('${t.id}')" class="p-1.5 px-2 rounded-lg bg-stone-100 hover:bg-rose-100 text-stone-400 hover:text-rose-600 transition" title="លុប">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -1985,16 +2224,128 @@
             }
         }
 
-        // ================= RECEIPT & MODALS =================
-        function openReceiptModal(invId, method, totalKHR) {
-            document.getElementById('receiptInvoiceNo').innerText = `INV #${invId}`;
-            document.getElementById('receiptTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
-            document.getElementById('receiptItemsList').innerHTML = cart.map(i => `
-                <div class="flex justify-between">
-                    <span>${i.name} x${i.qty}</span>
-                    <span>${(i.priceKHR * i.qty).toLocaleString()} ៛</span>
-                </div>
-            `).join('');
+        // ================= ✏️ EDIT TRANSACTION MODAL =================
+        function openEditTxModal(invId) {
+            const tx = transactions.find(t => t.id === invId);
+            if (!tx) return;
+
+            document.getElementById('editTxId').value = tx.id;
+            document.getElementById('editTxIdDisplay').innerText = `វិក្កយបត្រ: ${tx.id} (${tx.date})`;
+            document.getElementById('editTxTotalDisplay').innerText = `${(Number(tx.totalKHR) || 0).toLocaleString()} ៛`;
+            document.getElementById('editTxCustName').value = tx.customerName && tx.customerName !== 'អតិថិជនទូទៅ' ? tx.customerName : '';
+            document.getElementById('editTxCustPhone').value = tx.customerPhone && tx.customerPhone !== 'គ្មាន' ? tx.customerPhone : '';
+            document.getElementById('editTxDeposit').value = tx.depositKHR !== undefined ? tx.depositKHR : tx.totalKHR;
+            updateEditTxRemaining();
+
+            document.getElementById('editTxModal').classList.remove('hidden');
+        }
+
+        function closeEditTxModal() {
+            document.getElementById('editTxModal').classList.add('hidden');
+        }
+
+        function updateEditTxRemaining() {
+            const invId = document.getElementById('editTxId').value;
+            const tx = transactions.find(t => t.id === invId);
+            if (!tx) return;
+            const total = Number(tx.totalKHR) || 0;
+            const dep = parseFloat(document.getElementById('editTxDeposit').value) || 0;
+            const rem = Math.max(0, total - dep);
+            document.getElementById('editTxRemaining').value = rem;
+        }
+
+        function markTxAsFullyPaid() {
+            const invId = document.getElementById('editTxId').value;
+            const tx = transactions.find(t => t.id === invId);
+            if (!tx) return;
+            document.getElementById('editTxDeposit').value = tx.totalKHR;
+            document.getElementById('editTxRemaining').value = 0;
+            showToast('បានជ្រើសរើស "បានបង់បង្គ្រប់"!', 'info');
+        }
+
+        function saveEditedTx(e) {
+            e.preventDefault();
+            const invId = document.getElementById('editTxId').value;
+            const idx = transactions.findIndex(t => t.id === invId);
+            if (idx === -1) return;
+
+            const name = document.getElementById('editTxCustName').value.trim() || 'អតិថិជនទូទៅ';
+            const phone = document.getElementById('editTxCustPhone').value.trim() || 'គ្មាន';
+            const dep = parseFloat(document.getElementById('editTxDeposit').value) || 0;
+            const total = Number(transactions[idx].totalKHR) || 0;
+            const rem = Math.max(0, total - dep);
+
+            transactions[idx].customerName = name;
+            transactions[idx].customerPhone = phone;
+            transactions[idx].depositKHR = dep;
+            transactions[idx].remainingKHR = rem;
+            transactions[idx].status = rem > 0 ? `Deposit (នៅខ្វះ ${rem.toLocaleString()} ៛)` : 'Paid (គ្រប់)';
+
+            saveState();
+            renderAnalytics();
+            renderExpenses();
+            closeEditTxModal();
+            showToast(`✅ បានកែប្រែវិក្កយបត្រ ${invId} ជោគជ័យ!`, 'success');
+
+            sendGoogleSheetPayload({
+                action: 'update_sale',
+                invoice: transactions[idx]
+            });
+        }
+
+        // ================= 🧾 RECEIPT MODAL (បើកមើលវិក្កយបត្រ & បោះពុម្ព) =================
+        function openReceiptModal(txOrId) {
+            let tx = typeof txOrId === 'object' ? txOrId : transactions.find(t => t.id === txOrId);
+            if (!tx) {
+                tx = {
+                    id: txOrId || 'BK-M' + Math.floor(1000 + Math.random() * 9000),
+                    customerName: 'អតិថិជនទូទៅ',
+                    customerPhone: 'គ្មាន',
+                    totalKHR: 0,
+                    depositKHR: 0,
+                    remainingKHR: 0,
+                    itemsSummary: ''
+                };
+            }
+
+            document.getElementById('receiptInvoiceNo').innerText = `INV #${tx.id}`;
+            const custTxt = `អតិថិជន: ${tx.customerName || 'ទូទៅ'} ${tx.customerPhone && tx.customerPhone !== 'គ្មាន' ? '• Tel: ' + tx.customerPhone : ''}`;
+            const custEl = document.getElementById('receiptCustomerInfo');
+            if (custEl) custEl.innerText = custTxt;
+
+            document.getElementById('receiptTotalKHR').innerText = `${(Number(tx.totalKHR) || 0).toLocaleString()} ៛`;
+
+            const depRow = document.getElementById('receiptDepositRow');
+            const remRow = document.getElementById('receiptRemainingRow');
+            const depEl = document.getElementById('receiptDepositKHR');
+            const remEl = document.getElementById('receiptRemainingKHR');
+
+            if (tx.remainingKHR && tx.remainingKHR > 0) {
+                if (depRow) depRow.style.display = 'flex';
+                if (remRow) remRow.style.display = 'flex';
+                if (depEl) depEl.innerText = `${(Number(tx.depositKHR) || 0).toLocaleString()} ៛`;
+                if (remEl) remEl.innerText = `${(Number(tx.remainingKHR) || 0).toLocaleString()} ៛`;
+            } else {
+                if (depRow) depRow.style.display = 'none';
+                if (remRow) remRow.style.display = 'none';
+            }
+
+            let itemsHtml = '';
+            if (tx.cartItems && tx.cartItems.length > 0) {
+                itemsHtml = tx.cartItems.map(i => `
+                    <div class="flex justify-between">
+                        <span>${i.name} x${i.qty}</span>
+                        <span>${(i.priceKHR * i.qty).toLocaleString()} ៛</span>
+                    </div>
+                `).join('');
+            } else if (tx.itemsSummary) {
+                itemsHtml = tx.itemsSummary.split(', ').map(itemStr => `
+                    <div class="flex justify-between">
+                        <span>${itemStr}</span>
+                    </div>
+                `).join('');
+            }
+            document.getElementById('receiptItemsList').innerHTML = itemsHtml || '<div class="text-stone-400 text-center">ទំនិញ</div>';
             document.getElementById('receiptModal').classList.remove('hidden');
         }
 
