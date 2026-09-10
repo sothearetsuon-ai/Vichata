@@ -698,7 +698,8 @@
     </main>
 
     <!-- ================= 📱 របារ MENU ខាងក្រោមសម្រាប់ទូរស័ព្ទដៃ (MOBILE BOTTOM MENU) 📱 ================= -->
-    <nav class="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-orange-200 px-2 py-2 shadow-lg flex items-center justify-around">
+    <nav
+        class="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-orange-200 px-2 py-2 shadow-lg flex items-center justify-around">
         <button onclick="switchView('pos')" id="mob-nav-pos"
             class="flex flex-col items-center gap-1 py-1 px-2 text-bakery-caramel font-black text-[10px] transition-all">
             <i class="fa-solid fa-cash-register text-lg"></i>
@@ -878,10 +879,12 @@
     <!-- ================= MODAL: SETTINGS (GOOGLE SHEET & TELEGRAM) ================= -->
     <div id="settingsModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] overflow-y-auto custom-scroll">
+        <div
+            class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] overflow-y-auto custom-scroll">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">ការកំណត់ Google Sheets & Telegram</h3>
-                <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3.5 text-xs">
                 <div>
@@ -952,10 +955,13 @@
 
     <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
     <script>
-        const FALLBACK_BAKERY_SVG = "https://cdn-icons-png.flaticon.com/512/992/992714.png";
+        // រូបភាពនំខេកពិតៗ គុណភាពខ្ពស់ សម្រាប់ប្រើជំនួស fallback ចាស់
+        const FALLBACK_BAKERY_SVG = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600";
 
-        function formatImgUrl(rawUrl) {
-            if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim()) return FALLBACK_BAKERY_SVG;
+        function formatImgUrl(rawUrl, existingFallback = null) {
+            if (!rawUrl || typeof rawUrl !== 'string' || !rawUrl.trim() || rawUrl.includes('992714.png')) {
+                return existingFallback || FALLBACK_BAKERY_SVG;
+            }
             return rawUrl.trim();
         }
 
@@ -1023,6 +1029,14 @@
         ];
 
         let products = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || [...initialProducts];
+
+        // ជួសជុលរូបភាពប្រសិនបើមានជាប់រូបតំណាងចាស់
+        products = products.map(p => {
+            if (!p.img || p.img.includes('992714.png')) {
+                p.img = FALLBACK_BAKERY_SVG;
+            }
+            return p;
+        });
 
         if (!products.some(p => p.cat === 'ingredients')) {
             products = [...products, ...defaultIngredients];
@@ -1309,7 +1323,7 @@
             grid.innerHTML = filtered.map(p => `
                 <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
                     <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openMultiUploadModal('${p.id}')">
-                        <img src="${formatImgUrl(p.img)}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy">
+                        <img src="${formatImgUrl(p.img)}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy" onerror="this.src='${FALLBACK_BAKERY_SVG}'">
                         ${p.badge ? `<span class="absolute top-2 left-2 bg-bakery-caramel text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
                         <span class="absolute bottom-2 right-2 bg-white/95 text-stone-800 text-[9px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
                     </div>
@@ -1363,7 +1377,7 @@
             const accs = products.filter(p => p.cat === 'accessories');
             container.innerHTML = accs.map(acc => `
                 <button onclick="addToCart('${acc.id}')" class="flex items-center gap-1 px-2 py-1 bg-white hover:bg-amber-100/80 border border-orange-200 rounded-xl whitespace-nowrap text-left">
-                    <img src="${formatImgUrl(acc.img)}" class="w-5 h-5 rounded-lg object-cover">
+                    <img src="${formatImgUrl(acc.img)}" class="w-5 h-5 rounded-lg object-cover" onerror="this.src='${FALLBACK_BAKERY_SVG}'">
                     <div>
                         <div class="text-[9px] font-bold text-bakery-dark line-clamp-1">${acc.name.split('(')[0]}</div>
                         <div class="text-[8px] font-black text-bakery-caramel font-en">${acc.priceKHR.toLocaleString()}៛</div>
@@ -1383,7 +1397,7 @@
                     <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-2 flex-1 min-w-0">
-                                <img src="${formatImgUrl(item.img)}" class="w-8 h-8 rounded-lg object-cover bg-stone-100 flex-shrink-0">
+                                <img src="${formatImgUrl(item.img)}" class="w-8 h-8 rounded-lg object-cover bg-stone-100 flex-shrink-0" onerror="this.src='${FALLBACK_BAKERY_SVG}'">
                                 <div class="min-w-0 flex-1">
                                     <div class="text-xs font-bold text-bakery-dark truncate">${item.name}</div>
                                     <div class="flex items-center gap-1.5 mt-0.5">
@@ -1483,7 +1497,7 @@
                 sale: newTx
             });
 
-            // ២. ផ្ញើសារជូនដំណឹងទៅ Telegram Bot
+            // ២. ផ្ញើសារជូនដំណឹង + រូបភាពនំទៅ Telegram Bot
             sendTelegramNotification(newTx);
 
             closePaymentModal();
@@ -1498,37 +1512,74 @@
             showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ & បាញ់សារទៅ Telegram!', 'success');
         }
 
-        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS =================
+        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS (WITH CAKE PHOTO) =================
         async function sendTelegramNotification(tx) {
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
             if (!token || !chatId) return;
 
+            // រកមើលរូបភាពនំដែលមានក្នុងកន្ត្រក/វិក្កយបត្រ ដើម្បីផ្ញើទៅ Telegram
+            let photoUrl = null;
+            if (cart && cart.length > 0) {
+                for (const item of cart) {
+                    if (item.img && (item.img.startsWith('http://') || item.img.startsWith('https://')) && !item.img.includes('flaticon.com') && !item.img.includes('data:image')) {
+                        photoUrl = item.img;
+                        break;
+                    }
+                }
+            }
+            if (!photoUrl && products && products.length > 0) {
+                const firstItemName = tx.itemsSummary ? tx.itemsSummary.split(' x')[0].trim() : '';
+                const matchProd = products.find(p => p.name === firstItemName);
+                if (matchProd && matchProd.img && matchProd.img.startsWith('http')) {
+                    photoUrl = matchProd.img;
+                }
+            }
+            if (!photoUrl) {
+                photoUrl = FALLBACK_BAKERY_SVG;
+            }
+
             const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
             const msg = `🎂 *ហាងនំខេកវិជ្ជដា - ការលក់ថ្មី!* 🎂\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `🧾 *វិក្កយបត្រ:* \`${tx.id}\`\n` +
-                        `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${tx.time})\n` +
-                        `👤 *អតិថិជន:* ${tx.customerName || 'ទូទៅ'}\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `🛒 *មុខទំនិញ:*\n${itemsText}\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `💰 *សរុប (KHR):* *${Number(tx.totalKHR).toLocaleString()} ៛*\n` +
-                        `💵 *សរុប (USD):* *$${Number(tx.totalUSD).toFixed(2)}*\n` +
-                        `💳 *វិធីទូទាត់:* ${tx.method}\n` +
-                        `━━━━━━━━━━━━━━━━━━━━\n` +
-                        `🙏 _សូមអរគុណចំពោះការគាំទ្រ!_`;
+                `━━━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 *វិក្កយបត្រ:* \`${tx.id}\`\n` +
+                `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${tx.time})\n` +
+                `👤 *អតិថិជន:* ${tx.customerName || 'ទូទៅ'}\n` +
+                `━━━━━━━━━━━━━━━━━━━━\n` +
+                `🛒 *មុខទំនិញ:*\n${itemsText}\n` +
+                `━━━━━━━━━━━━━━━━━━━━\n` +
+                `💰 *សរុប (KHR):* *${Number(tx.totalKHR).toLocaleString()} ៛*\n` +
+                `💵 *សរុប (USD):* *$${Number(tx.totalUSD).toFixed(2)}*\n` +
+                `💳 *វិធីទូទាត់:* ${tx.method}\n` +
+                `━━━━━━━━━━━━━━━━━━━━\n` +
+                `🙏 _សូមអរគុណចំពោះការគាំទ្រ!_`;
 
             try {
-                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                // សាកល្បងផ្ញើជាមួយ sendPhoto (មានរូបភាពនំ + វិក្កយបត្រ)
+                const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: chatId,
-                        text: msg,
+                        photo: photoUrl,
+                        caption: msg,
                         parse_mode: 'Markdown'
                     })
                 });
+                const photoData = await photoRes.json();
+                if (!photoData.ok) {
+                    console.warn('sendPhoto failed, falling back to sendMessage:', photoData.description);
+                    // Fallback to text message
+                    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: msg,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                }
             } catch (err) {
                 console.warn('Telegram send failed:', err);
             }
@@ -1545,12 +1596,14 @@
 
             showToast('កំពុងសាកល្បងផ្ញើសារ...', 'info');
             try {
-                const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                // សាកល្បងផ្ញើរូបភាពនំខេកចូល Telegram
+                const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         chat_id: chatId,
-                        text: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram របស់លោកអ្នករួចរាល់ហើយ។ ពេលមានការលក់ថ្មី សារនឹងលោតមកទីនេះស្វ័យប្រវត្តិ!`,
+                        photo: FALLBACK_BAKERY_SVG,
+                        caption: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram របស់លោកអ្នករួចរាល់ហើយ។ ពេលមានការលក់ថ្មី រូបភាពនំ និងវិក្កយបត្រនឹងលោតមកទីនេះស្វ័យប្រវត្តិ!`,
                         parse_mode: 'Markdown'
                     })
                 });
@@ -1558,7 +1611,22 @@
                 if (data.ok) {
                     showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
                 } else {
-                    showToast('❌ បរាជ័យ: ' + (data.description || 'ពិនិត្យ Chat ID'), 'error');
+                    // Fallback to text test if photo fails
+                    const resText = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram រួចរាល់!`,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                    const dataText = await resText.json();
+                    if (dataText.ok) {
+                        showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
+                    } else {
+                        showToast('❌ បរាជ័យ: ' + (dataText.description || 'ពិនិត្យ Chat ID'), 'error');
+                    }
                 }
             } catch (e) {
                 showToast('❌ មិនអាចភ្ជាប់ទៅកាន់ Telegram បានទេ!', 'error');
@@ -1608,16 +1676,38 @@
 
                 // ១. ប្រសិនបើមានទិន្នន័យមុខនំ & រូបភាព
                 if (result && result.products && result.products.length > 0) {
-                    products = result.products.map(p => ({
-                        id: p.id || p.ID || Date.now(),
-                        name: p.name || p.Name || 'ទំនិញ',
-                        cat: (p.cat || p.Category || 'cakes').toLowerCase(),
-                        priceKHR: Number(p.priceKHR || p.Price || p.price || 0),
-                        stock: Number(p.stock || p.Stock || 0),
-                        img: formatImgUrl(p.img || p.Image || p.imageUrl || ''),
-                        images: p.images || [formatImgUrl(p.img || p.Image || '')],
-                        badge: p.badge || ''
-                    }));
+                    products = result.products.map(p => {
+                        const existing = products.find(ep => String(ep.id) === String(p.id) || ep.name === p.name);
+                        let price = Number(p.priceKHR || p.Price || p.price || 0);
+                        let stock = Number(p.stock || p.Stock || 0);
+
+                        // ការពារកុំឱ្យច្រឡំយកចំនួនស្តុកមកធ្វើជាតម្លៃលក់ (ដូចជា 3 ៛, 4 ៛)
+                        if (price > 0 && price <= 50 && stock >= 500) {
+                            const temp = price;
+                            price = stock;
+                            stock = temp;
+                        } else if (price > 0 && price <= 50 && existing && existing.priceKHR >= 1000) {
+                            stock = price;
+                            price = existing.priceKHR;
+                        } else if (price === 0 && existing) {
+                            price = existing.priceKHR;
+                        }
+
+                        // ការពាររូបភាព៖ បើ Sheet គ្មានរូបភាព ឬជារូបនំប៉័ងចាស់ ត្រូវរក្សារូបនំដើមស្អាតៗ
+                        let rawImg = p.img || p.Image || p.imageUrl || '';
+                        let finalImg = formatImgUrl(rawImg, existing ? existing.img : null);
+
+                        return {
+                            id: p.id || p.ID || (existing ? existing.id : Date.now()),
+                            name: p.name || p.Name || (existing ? existing.name : 'ទំនិញ'),
+                            cat: (p.cat || p.Category || (existing ? existing.cat : 'cakes')).toLowerCase(),
+                            priceKHR: price,
+                            stock: stock,
+                            img: finalImg,
+                            images: p.images || [finalImg],
+                            badge: p.badge || (existing ? existing.badge : '')
+                        };
+                    });
                     updatedItems.push(`${products.length} មុខទំនិញ`);
                 }
 
@@ -1729,7 +1819,7 @@
             grid.innerHTML = cakes.map(p => `
                 <div class="bg-white rounded-3xl overflow-hidden shadow-soft border border-orange-100 group">
                     <div class="relative h-48 overflow-hidden bg-stone-100">
-                        <img src="${formatImgUrl(p.img)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        <img src="${formatImgUrl(p.img)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.src='${FALLBACK_BAKERY_SVG}'">
                     </div>
                     <div class="p-4 flex justify-between items-center">
                         <h3 class="font-bold text-sm text-bakery-dark">${p.name}</h3>
@@ -1783,7 +1873,7 @@
             tbody.innerHTML = currentList.map((p, idx) => `
                 <tr class="hover:bg-orange-50/40 transition">
                     <td class="p-3.5 pl-4 flex items-center gap-2.5">
-                        <img src="${formatImgUrl(p.img)}" class="w-10 h-10 rounded-xl object-cover">
+                        <img src="${formatImgUrl(p.img)}" class="w-10 h-10 rounded-xl object-cover" onerror="this.src='${FALLBACK_BAKERY_SVG}'">
                         <span class="font-extrabold text-stone-800">${p.name}</span>
                     </td>
                     <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat === 'ingredients' ? '🌾 គ្រឿងផ្សំ' : p.cat}</td>
