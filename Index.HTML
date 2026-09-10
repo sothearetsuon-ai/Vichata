@@ -2105,7 +2105,41 @@
       confetti({ particleCount: 70, spread: 60 });
       showToast(`🎉 បានកត់ត្រាការលក់ថ្ងៃ ${date} ចំនួន ${totalKHR.toLocaleString()}៛ ជោគជ័យ!`, 'success');
     }
+// មុខងាររុញទិន្នន័យទាំងអស់ (ស្តុកទំនិញ និង គ្រឿងផ្សំ) ទៅកាន់ Google Sheet
+async function syncAllToGoogleSheet() {
+  const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
+  const sheetUrl = settings.googleSheetUrl;
 
+  if (!sheetUrl) {
+    alert('សូមបំពេញ និងរក្សាទុក Google Sheet URL ជាមុនសិន!');
+    return;
+  }
+
+  showToast('⏳ កំពុងបញ្ជូនទិន្នន័យទាំងអស់ទៅ Google Sheet...');
+
+  // ប្រមូលទិន្នន័យពី LocalStorage
+  const prodList = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || products || [];
+  const ingList = JSON.parse(localStorage.getItem('BAKERY_INGREDIENTS')) || rawMaterials || [];
+
+  const payload = {
+    action: 'sync_all',
+    products: prodList,
+    ingredients: ingList
+  };
+
+  try {
+    await fetch(sheetUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload)
+    });
+    showToast('✅ បានបញ្ជូនស្តុក និងគ្រឿងផ្សំចូល Google Sheet រួចរាល់!');
+  } catch (err) {
+    console.error(err);
+    showToast('❌ បរាជ័យក្នុងការបញ្ជូន: ' + err.message);
+  }
+}
     // ================= GOOGLE SHEET SYNC =================
     async function sendGoogleSheetPayload(payload, showToastNotice = false) {
       if (!integrationSettings.googleSheetUrl) return;
