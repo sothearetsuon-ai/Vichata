@@ -2244,6 +2244,7 @@
             sendGoogleSheetPayload({ action: 'new_sale', invoice: testSale }, true);
         }
 
+        // ================= 🌟 GOOGLE SHEET SYNC ENGINE (SMART MERGE) =================
         async function pullProductsFromGoogleSheet() {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
             if (!settings.googleSheetUrl) {
@@ -2253,10 +2254,10 @@
             }
             const spinIcon = document.getElementById('syncSpinIcon');
             if (spinIcon) spinIcon.classList.add('fa-spin');
-            showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
+            showToast('កំពុងទាញទិន្នន័យពី Google Sheet...', 'info');
 
             try {
-                const response = await fetch(`${settings.googleSheetUrl}?action=sync_all`);
+                const response = await fetch(`${settings.googleSheetUrl}?action=sync_all&t=${Date.now()}`);
                 const result = await response.json();
 
                 let remoteProducts = [];
@@ -2271,14 +2272,24 @@
                     remoteProducts = result;
                 }
 
+                // 🌟 SMART MERGE៖ មិនលុបទំនិញចាស់ចោលឡើយ បើក្នុង Sheet មានតិចជាង
                 if (remoteProducts.length > 0) {
                     remoteProducts.forEach(remoteItem => {
-                        const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
-                        if (localItem && localItem.img && !remoteItem.img) {
-                            remoteItem.img = localItem.img;
+                        const idx = products.findIndex(p => String(p.id) === String(remoteItem.id) || p.name === remoteItem.name);
+                        if (idx !== -1) {
+                            if (remoteItem.priceKHR !== undefined) products[idx].priceKHR = Number(remoteItem.priceKHR);
+                            if (remoteItem.stock !== undefined) products[idx].stock = Number(remoteItem.stock);
+                            if (remoteItem.cat) products[idx].cat = remoteItem.cat;
+                            if (remoteItem.badge) products[idx].badge = remoteItem.badge;
+                            // ប្រសិនបើក្នុង Sheet មាន Link រូបភាព ទើបយកមកប្រើ
+                            if (remoteItem.img && remoteItem.img.trim().startsWith('http')) {
+                                products[idx].img = remoteItem.img.trim();
+                                products[idx].images = [remoteItem.img.trim()];
+                            }
+                        } else {
+                            products.push(remoteItem);
                         }
                     });
-                    products = remoteProducts;
                 }
 
                 if (remoteSales.length > 0) transactions = remoteSales;
@@ -2596,420 +2607,7 @@
             }
         }
 
-        // ================= MULTI-UPLOAD & STOCK =================
-        function openMultiUploadModal(id = null) {
-            batchUploadedImages = [];
-            document.getElementById('multiUploadForm').reset();
-            document.getElementById('multiUploadProdId').value = '';
-
-            if (id) {
-                const prod = products.find(p => p.id == id);
-                if (!prod) return;
-                document.getElementById('multiUploadProdId').value = prod.id;
-                document.getElementById('batchProdName').value = prod.name;
-                document.getElementById('batchProdCat').value = prod.cat;
-                document.getElementById('batchProdBadge').value = prod.badge || '';
-                document.getElementById('batchProdPriceKHR').value = prod.priceKHR;
-                document.getElementById('batchProdStock').value = prod.stock;
-                batchUploadedImages = prod.images ? [...prod.images] : [prod.img];
-            } else {
-                if (activeInventoryTab === 'ingredients') document.getElementById('batchProdCat').value = 'ingredients';
-            }
-            renderBatchPreviews();
-            document.getElementById('multiUploadModal').classList.remove('hidden');
-        }
-
-        function closeMultiUploadModal() { document.getElementById('multiUploadModal').classList.add('hidden'); }
-
-        async function handleBatchFileSelect(event) {
-            const files = Array.from(event.target.files);
-            if (!files.length) return;
-
-            showToast('កំពុងបង្រួមទំហំរូបភាព... ⏳', 'info');
-            for (const file of files) {
-                if (!file.type.startsWith('image/')) continue;
-                const compressed = await compressImageFile(file, 800, 800, 0.75);
-                batchUploadedImages.push(compressed);
-            }
-            renderBatchPreviews();
-            event.target.value = '';
-            showToast('បានជ្រើសរើសរូបរួចរាល់!', 'success');
-        }
-
-        function renderBatchPreviews() {
-            const container = document.getElementById('batchPreviewGrid');
-            const countText = document.getElementById('batchImageCountText');
-            if (countText) {
-                countText.innerText = batchUploadedImages.length > 0 ? `បានជ្រើសរើស ${batchUploadedImages.length} សន្លឹក` : 'មិនទាន់បានជ្រើសរើសរូបនៅឡើយទេ';
-            }
-            container.innerHTML = batchUploadedImages.map((src, idx) => `
-        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-stone-300">
-            <img src="${src}" class="w-full h-full object-cover">
-            <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px]">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-      `).join('');
-        }
-
-        function clearBatchImages() { batchUploadedImages = []; renderBatchPreviews(); }
-
-        function saveBatchProduct(event) {
-            event.preventDefault();
-            const id = document.getElementById('multiUploadProdId').value;
-            const name = document.getElementById('batchProdName').value.trim();
-            const cat = document.getElementById('batchProdCat').value;
-            const badge = document.getElementById('batchProdBadge').value.trim();
-            const priceKHR = parseInt(document.getElementById('batchProdPriceKHR').value) || 0;
-            const stock = parseInt(document.getElementById('batchProdStock').value) || 0;
-
-            const fallbackImg = 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
-            const images = batchUploadedImages.length > 0 ? [...batchUploadedImages] : [fallbackImg];
-
-            if (id) {
-                const idx = products.findIndex(p => p.id == id);
-                if (idx !== -1) products[idx] = { ...products[idx], name, cat, badge, priceKHR, stock, img: images[0], images };
-            } else {
-                products.unshift({ id: Date.now(), name, cat, badge, priceKHR, stock, img: images[0], images });
-            }
-
-            saveState();
-            renderProducts();
-            renderInventory();
-            renderShowcase();
-            renderQuickAddons();
-
-            // Sync ទៅ Sheet ភ្លាមៗ
-            syncStockToGoogleSheet();
-
-            closeMultiUploadModal();
-            confetti({ particleCount: 50, spread: 60 });
-            showToast(`បានរក្សាទុក "${name}" ជោគជ័យ!`, 'success');
-        }
-
-        function adjustProductStock(id, delta) {
-            const p = products.find(x => x.id == id);
-            if (p) {
-                p.stock = Math.max(0, p.stock + delta);
-                saveState();
-                renderInventory();
-                renderProducts();
-
-                // Sync ស្តុកថ្មីទៅ Sheet ភ្លាមៗ
-                syncStockToGoogleSheet();
-                showToast(`បានបន្ថែមស្តុក ${p.name} ចំនួន ${delta}`, 'info');
-            }
-        }
-
-        function deleteProduct(id) {
-            if (confirm('តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?')) {
-                products = products.filter(p => p.id != id);
-                saveState();
-                renderProducts();
-                renderInventory();
-                renderShowcase();
-                renderQuickAddons();
-
-                // Sync ការលុបទំនិញទៅ Sheet
-                syncStockToGoogleSheet();
-                showToast('បានលុបទំនិញរួចរាល់', 'info');
-            }
-        }
-
-        // ================= INVENTORY SUB-TABS =================
-        function setInventoryTab(tab) {
-            activeInventoryTab = tab;
-            const btnProd = document.getElementById('subtab-stock-products');
-            const btnIng = document.getElementById('subtab-stock-ingredients');
-
-            if (tab === 'products') {
-                btnProd.className = "px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-white text-bakery-caramel shadow-sm";
-                btnIng.className = "px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 text-stone-700 hover:text-bakery-dark";
-            } else {
-                btnIng.className = "px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 bg-white text-bakery-caramel shadow-sm";
-                btnProd.className = "px-3.5 py-2 rounded-xl text-xs font-extrabold transition flex items-center gap-1.5 text-stone-700 hover:text-bakery-dark";
-            }
-            renderInventory();
-        }
-
-        function renderInventory() {
-            const tbody = document.getElementById('inventoryTableBody');
-            if (!tbody) return;
-
-            const prodList = products.filter(p => p.cat !== 'ingredients');
-            const ingList = products.filter(p => p.cat === 'ingredients');
-
-            document.getElementById('stockProductsCount').innerText = prodList.length;
-            document.getElementById('stockIngredientsCount').innerText = ingList.length;
-
-            const displayList = (activeInventoryTab === 'ingredients') ? ingList : prodList;
-            if (displayList.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-stone-500 font-khmer font-bold">មិនទាន់មានទិន្នន័យក្នុងស្តុកនេះនៅឡើយទេ</td></tr>`;
-                return;
-            }
-
-            tbody.innerHTML = displayList.map(p => {
-                const img = formatImgUrl(p.img || (p.images && p.images[0]));
-                return `
-          <tr class="hover:bg-orange-50/40 transition">
-              <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
-                  <img src="${img}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-                  <span class="font-extrabold text-stone-800">${p.name}</span>
-              </td>
-              <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
-              <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
-              <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
-              <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
-              <td class="p-3.5 text-center">
-                  <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
-                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
-              </td>
-          </tr>
-        `;
-            }).join('');
-        }
-
-        // ================= POS & CART =================
-        function renderCategories() {
-            const container = document.getElementById('categoryChips');
-            container.innerHTML = categories.map(c => `
-        <button onclick="filterCategory('${c.id}')" class="px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all ${activeCategory === c.id ? 'bg-bakery-caramel text-white shadow-sm' : 'bg-bakery-vanilla text-stone-700 hover:bg-orange-100'}">
-            ${c.label}
-        </button>
-      `).join('');
-        }
-
-        function filterCategory(catId) {
-            activeCategory = catId;
-            renderCategories();
-            renderProducts();
-        }
-
-        function renderProducts() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const grid = document.getElementById('productGrid');
-            const filtered = products.filter(p =>
-                p.cat !== 'ingredients' &&
-                (activeCategory === 'all' || p.cat === activeCategory) &&
-                p.name.toLowerCase().includes(query)
-            );
-
-            grid.innerHTML = filtered.map(p => {
-                const img = formatImgUrl(p.img || (p.images && p.images[0]));
-                return `
-          <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft hover:shadow-glow transition flex flex-col">
-              <div class="relative h-32 sm:h-40 overflow-hidden bg-stone-100 cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                  <img src="${img}" alt="${p.name}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
-                  ${p.badge ? `<span class="absolute top-2 left-2 sm:top-3 sm:left-3 bg-bakery-caramel text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
-                  <span class="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 bg-white/95 text-stone-800 text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-lg shadow-xs">ស្តុក: ${p.stock}</span>
-              </div>
-              <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between">
-                  <div>
-                      <h4 class="font-bold text-xs sm:text-sm text-bakery-dark line-clamp-1">${p.name}</h4>
-                      <div class="text-sm sm:text-base font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
-                  </div>
-                  <button onclick="addToCart('${p.id}')" class="mt-2.5 sm:mt-3 w-full py-2 sm:py-2.5 rounded-xl bg-bakery-vanilla text-bakery-dark font-extrabold text-xs hover:bg-bakery-caramel hover:text-white transition flex items-center justify-center gap-1.5 border border-orange-200 ${p.stock <= 0 ? 'opacity-50' : ''}" ${p.stock <= 0 ? 'disabled' : ''}>
-                      <i class="fa-solid fa-plus text-[10px]"></i> ${p.stock <= 0 ? 'អស់ស្តុក' : 'ទិញ'}
-                  </button>
-              </div>
-          </div>
-        `;
-            }).join('');
-        }
-
-        function addToCart(id) {
-            const p = products.find(prod => prod.id == id);
-            if (!p || p.stock <= 0) return;
-            const defaultFlavor = (p.cat === 'cakes') ? cakeFlavors[0].name : '';
-            const exist = cart.find(i => i.id == id && !i.isCustom && i.flavor === defaultFlavor);
-            if (exist) {
-                if (exist.qty < p.stock) exist.qty++;
-            } else {
-                cart.push({
-                    id: p.id,
-                    name: p.name,
-                    cat: p.cat,
-                    priceKHR: p.priceKHR,
-                    qty: 1,
-                    flavor: defaultFlavor,
-                    img: p.img || (p.images && p.images[0])
-                });
-            }
-            renderCart();
-            showToast(`បានបញ្ចូល ${p.name}`, 'success');
-        }
-
-        function updateCartItemFlavor(idx, newFlavor) {
-            if (cart[idx]) {
-                if (newFlavor === 'ផ្សេងទៀត... (Other)') {
-                    const custom = prompt('សូមបញ្ចូលរសជាតិនំ៖', '');
-                    cart[idx].flavor = custom && custom.trim() ? custom.trim() : 'រសជាតិពិសេស';
-                } else cart[idx].flavor = newFlavor;
-                renderCart();
-            }
-        }
-
-        function updateCartQty(idx, delta) {
-            cart[idx].qty += delta;
-            if (cart[idx].qty <= 0) cart.splice(idx, 1);
-            renderCart();
-        }
-
-        function clearCart() {
-            cart = [];
-            currentDiscountKHR = 0;
-            document.getElementById('customerPhoneInput').value = '';
-            document.getElementById('customerPointsDisplay').innerText = '0 pts';
-            renderCart();
-        }
-
-        function renderCart() {
-            const container = document.getElementById('cartItemsList');
-            const mobileBar = document.getElementById('mobileFloatingCartBar');
-            const mobCount = document.getElementById('mobCartCount');
-            const mobTotal = document.getElementById('mobCartTotal');
-
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="py-10 text-center text-stone-400 font-bold text-xs">កន្ត្រកទំនិញនៅទំនេរ</div>`;
-                if (mobileBar) mobileBar.classList.add('hidden');
-            } else {
-                container.innerHTML = cart.map((item, idx) => {
-                    const img = formatImgUrl(item.img);
-                    return `
-            <div class="py-2 flex flex-col gap-1 border-b border-orange-50 last:border-0">
-                <div class="flex items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                        <img src="${img}" class="w-8 h-8 rounded-lg object-cover bg-stone-100" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-                        <div>
-                            <div class="text-xs font-bold text-bakery-dark line-clamp-1">${item.name}</div>
-                            <div class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</div>
-                        </div>
-                    </div>
-                    <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
-                        <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
-                        <span class="text-xs font-black font-en px-1">${item.qty}</span>
-                        <button onclick="updateCartQty(${idx}, 1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-plus"></i></button>
-                    </div>
-                </div>
-                ${(item.cat === 'cakes' || item.isCustom) ? `
-                    <div class="flex items-center gap-1.5 pl-10 pr-1">
-                        <span class="text-[10px] font-bold text-amber-900 whitespace-nowrap">រសជាតិ:</span>
-                        <select onchange="updateCartItemFlavor(${idx}, this.value)" class="w-full text-[10px] font-bold bg-white border border-amber-300 rounded-lg px-1.5 py-0.5">
-                            ${cakeFlavors.map(f => `<option value="${f.name}" ${item.flavor === f.name ? 'selected' : ''}>${f.name}</option>`).join('')}
-                        </select>
-                    </div>
-                ` : ''}
-            </div>
-          `;
-                }).join('');
-
-                if (mobileBar) mobileBar.classList.remove('hidden');
-            }
-
-            const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
-            const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
-            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
-            const totalQty = cart.reduce((sum, i) => sum + i.qty, 0);
-
-            document.getElementById('summarySubtotalKHR').innerText = `${subtotalKHR.toLocaleString()} ៛`;
-            document.getElementById('summaryDiscountKHR').innerText = `-${currentDiscountKHR.toLocaleString()} ៛`;
-            document.getElementById('summaryTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
-            document.getElementById('summaryTotalUSD').innerText = `≈ $${totalUSD}`;
-
-            if (mobCount) mobCount.innerText = totalQty;
-            if (mobTotal) mobTotal.innerText = `${totalKHR.toLocaleString()} ៛`;
-        }
-
-        function lookupCustomerPoints() {
-            const phone = document.getElementById('customerPhoneInput').value.trim();
-            const pts = customerLoyalty[phone] || 0;
-            document.getElementById('customerPointsDisplay').innerText = `${pts} pts`;
-            if (pts > 0) showToast(`ភ្ញៀវមាន ${pts} ពិន្ទុ!`, 'info');
-        }
-
-        function redeemPointsDiscount() {
-            const phone = document.getElementById('customerPhoneInput').value.trim();
-            if (!phone || (customerLoyalty[phone] || 0) < 100) {
-                alert('ភ្ញៀវត្រូវការ 100 ពិន្ទុដើម្បីដូរយក 5,000 ៛!');
-                return;
-            }
-            currentDiscountKHR = 5000;
-            customerLoyalty[phone] -= 100;
-            saveState();
-            lookupCustomerPoints();
-            renderCart();
-            showToast('បានដូរ 100 ពិន្ទុជាការបញ្ចុះតម្លៃ 5,000 ៛', 'success');
-        }
-
-        // ================= CHECKOUT =================
-        function openPaymentModal(method) {
-            if (cart.length === 0) { showToast('សូមបញ្ចូលមុខទំនិញជាមុនសិន!', 'warning'); return; }
-            setPaymentType('full');
-            document.getElementById('paymentModal').classList.remove('hidden');
-            if (method === 'khqr') {
-                document.getElementById('khqrContent').classList.remove('hidden');
-                document.getElementById('cashContent').classList.add('hidden');
-                updatePaymentModalAmounts();
-                initKhqrImg();
-            } else {
-                document.getElementById('khqrContent').classList.add('hidden');
-                document.getElementById('cashContent').classList.remove('hidden');
-                document.getElementById('cashReceivedKHRInput').value = '';
-                document.getElementById('cashChangeKHR').innerText = '0 ៛';
-                updatePaymentModalAmounts();
-            }
-        }
-
-        function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
-
-        function setPaymentType(type) {
-            currentPaymentType = type;
-            const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
-            const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
-            const depositRow = document.getElementById('depositInputRow');
-
-            if (type === 'full') {
-                document.getElementById('btnPayFull').className = "px-3 py-1 rounded-xl text-xs font-bold bg-bakery-caramel text-white";
-                document.getElementById('btnPayDeposit').className = "px-3 py-1 rounded-xl text-xs font-bold bg-white text-stone-600 border border-orange-200";
-                depositRow.classList.add('hidden');
-                currentDepositKHR = totalKHR;
-            } else {
-                document.getElementById('btnPayDeposit').className = "px-3 py-1 rounded-xl text-xs font-bold bg-bakery-caramel text-white";
-                document.getElementById('btnPayFull').className = "px-3 py-1 rounded-xl text-xs font-bold bg-white text-stone-600 border border-orange-200";
-                depositRow.classList.remove('hidden');
-                currentDepositKHR = Math.round((totalKHR * 0.5) / 500) * 500;
-                document.getElementById('depositAmountInput').value = currentDepositKHR;
-                calculateDepositBalance();
-            }
-            updatePaymentModalAmounts();
-        }
-
-        function calculateDepositBalance() {
-            const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
-            const dep = parseInt(document.getElementById('depositAmountInput').value) || 0;
-            currentDepositKHR = Math.min(totalKHR, Math.max(0, dep));
-            document.getElementById('balanceDueDisplay').innerText = `${Math.max(0, totalKHR - currentDepositKHR).toLocaleString()} ៛`;
-            updatePaymentModalAmounts();
-        }
-
-        function updatePaymentModalAmounts() {
-            const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
-            const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : totalKHR;
-
-            document.getElementById('khqrTotalKHR').innerText = `${payAmount.toLocaleString()} ៛`;
-            document.getElementById('khqrTotalUSD').innerText = `≈ $${(payAmount / KHR_RATE).toFixed(2)}`;
-            document.getElementById('cashTotalKHR').innerText = `${payAmount.toLocaleString()} ៛`;
-            calculateChangeKHR();
-        }
-
-        function calculateChangeKHR() {
-            const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
-            const received = parseFloat(document.getElementById('cashReceivedKHRInput').value) || 0;
-            const change = received - payAmount;
-            document.getElementById('cashChangeKHR').innerText = change >= 0 ? `${change.toLocaleString()} ៛` : `នៅខ្វះ ${Math.abs(change).toLocaleString()} ៛`;
-        }
-
+        // ================= CHECKOUT COMPLETE =================
         async function completeTransaction(method) {
             const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
             const invId = 'BK-' + Math.floor(1000 + Math.random() * 9000);
@@ -3025,8 +2623,6 @@
 
             let itemsSummaryArr = [];
             let totalQty = 0;
-
-            // ចាប់យករូបភាពនំដំបូងដែលភ្ញៀវបានទិញ
             const firstCakePhoto = (cart[0] && cart[0].img) ? cart[0].img : (products[0] ? products[0].img : null);
 
             cart.forEach((item) => {
@@ -3048,238 +2644,348 @@
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
             const status = (remainingKHR > 0) ? `កក់ ${depositKHR.toLocaleString()}៛ (ខ្វះ ${remainingKHR.toLocaleString()}៛)` : 'Paid (គ្រប់)';
 
-            const newOrder = {
-                id: invId, date: todayStr, time: timeStr,
-                customerName: custName, customerPhone: phone,
-                itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
-                method: method, totalKHR: totalKHR, depositKHR: depositKHR,
-                remainingKHR: remainingKHR, status: status,
+            const newTx = {
+                id: invId,
+                date: todayStr,
+                time: timeStr,
+                customerName: custName,
+                customerPhone: phone,
+                itemsCount: totalQty,
+                itemsSummary: itemsSummaryArr.join(', '),
+                cakeFlavors: 'នំខេក',
+                addOns: 'គ្រឿងបន្ថែម',
+                method: method,
+                totalKHR: totalKHR,
+                depositKHR: depositKHR,
+                remainingKHR: remainingKHR,
+                status: status,
+                note: '',
                 firstImage: firstCakePhoto
             };
 
-            transactions.unshift(newOrder);
+            transactions.unshift(newTx);
             saveState();
-            closePaymentModal();
-            openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
 
-            // 1. Send to Telegram with cake photo
-            const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
-            if (shouldSendTelegram) {
-                sendTelegramInvoice(newOrder);
+            const sendTele = document.getElementById('paySendTelegramCheck');
+            if (sendTele && sendTele.checked) {
+                sendTelegramInvoice(newTx);
             }
 
-            // 2. Send to Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: {
-                    id: invId, date: todayStr, time: timeStr,
-                    customerName: custName, customerPhone: phone,
-                    itemsSummary: itemsSummaryArr.join(', '),
-                    totalQty: totalQty, totalKHR: totalKHR,
-                    depositKHR: depositKHR, remainingKHR: remainingKHR,
-                    totalUSD: parseFloat(totalUSD), method: method, status: status
+                    id: invId,
+                    date: todayStr,
+                    time: timeStr,
+                    customerName: custName,
+                    customerPhone: phone,
+                    itemsSummary: newTx.itemsSummary,
+                    cakeFlavors: newTx.cakeFlavors,
+                    addOns: newTx.addOns,
+                    totalQty: totalQty,
+                    totalKHR: totalKHR,
+                    depositKHR: depositKHR,
+                    remainingKHR: remainingKHR,
+                    totalUSD: parseFloat(totalUSD),
+                    method: method,
+                    status: status
                 }
             });
 
-            // 3. Update stock in Google Sheet automatically
-            setTimeout(() => syncStockToGoogleSheet(), 600);
+            setTimeout(() => syncStockToGoogleSheet(), 800);
 
-            cart = [];
-            currentDiscountKHR = 0;
-            renderCart();
+            closePaymentModal();
+            clearCart();
             renderProducts();
             renderInventory();
             renderAnalytics();
             renderExpenses();
+
+            openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
             confetti({ particleCount: 80, spread: 70 });
-            showToast('ទូទាត់ប្រាក់ជោគជ័យ!', 'success');
+            showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ!', 'success');
         }
 
-        // ================= RECEIPT =================
-        function openReceiptModal(id, method, total, deposit = total, remaining = 0) {
-            document.getElementById('receiptInvoiceNo').innerText = `INV #${id}`;
-            document.getElementById('receiptTotalKHR').innerText = `${total.toLocaleString()} ៛`;
-            document.getElementById('receiptTotalUSD').innerText = `≈ $${(total / KHR_RATE).toFixed(2)}`;
-            document.getElementById('receiptDepositKHR').innerText = `${deposit.toLocaleString()} ៛`;
-            document.getElementById('receiptRemainingKHR').innerText = `${remaining.toLocaleString()} ៛`;
+        // ================= RECEIPT MODAL =================
+        function openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR) {
+            const tx = transactions.find(t => t.id === invId);
+            document.getElementById('receiptInvoiceNo').innerText = `INV #${invId}`;
+            document.getElementById('receiptTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
+            document.getElementById('receiptDepositKHR').innerText = `${depositKHR.toLocaleString()} ៛`;
+            document.getElementById('receiptRemainingKHR').innerText = `${remainingKHR.toLocaleString()} ៛`;
+            document.getElementById('receiptTotalUSD').innerText = `≈ $${(totalKHR / KHR_RATE).toFixed(2)}`;
 
-            const recItemsList = document.getElementById('receiptItemsList');
-            recItemsList.innerHTML = `
-        <div class="text-[10px] pb-1 border-b border-dashed border-stone-200">
-            <div>វិធីទូទាត់: <b>${method}</b></div>
-        </div>
-        ${cart.map(i => `
-            <div class="flex justify-between items-start text-[10px] py-0.5 font-semibold">
-                <div>${i.name}</div>
-                <div>x${i.qty} = <b>${(i.priceKHR * i.qty).toLocaleString()}៛</b></div>
-            </div>
-        `).join('')}
-      `;
+            const itemsContainer = document.getElementById('receiptItemsList');
+            if (tx && tx.itemsSummary) {
+                const items = tx.itemsSummary.split(', ');
+                itemsContainer.innerHTML = items.map(it => `
+                    <div class="flex justify-between text-[11px]">
+                        <span>${it}</span>
+                    </div>
+                `).join('');
+            }
+
             document.getElementById('receiptModal').classList.remove('hidden');
         }
 
-        function closeReceiptModal() { document.getElementById('receiptModal').classList.add('hidden'); }
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
+        }
 
-        // ================= LIGHTBOX & STUDIO =================
+        // ================= LIGHTBOX & SHOWCASE =================
         function openPhotoLightbox(id) {
-            const p = products.find(prod => prod.id == id);
-            if (!p) return;
-            const imgs = p.images ? p.images : [p.img];
-            document.getElementById('lightboxTitle').innerText = p.name;
-            document.getElementById('lightboxPrice').innerText = `${p.priceKHR.toLocaleString()} ៛`;
-            document.getElementById('lightboxMainImage').src = formatImgUrl(imgs[0]);
-            document.getElementById('lightboxThumbnails').innerHTML = imgs.map(src => `
-        <img src="${formatImgUrl(src)}" onclick="document.getElementById('lightboxMainImage').src=formatImgUrl('${src}')" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-      `).join('');
+            const prod = products.find(p => p.id == id);
+            if (!prod) return;
+            const img = formatImgUrl(prod.img || (prod.images && prod.images[0]));
+            document.getElementById('lightboxMainImage').src = img;
+            document.getElementById('lightboxTitle').innerText = prod.name;
+            document.getElementById('lightboxPrice').innerText = `${prod.priceKHR.toLocaleString()} ៛ (≈ $${(prod.priceKHR / KHR_RATE).toFixed(2)})`;
+
+            const thumbContainer = document.getElementById('lightboxThumbnails');
+            const imgs = (prod.images && prod.images.length > 0) ? prod.images : [prod.img];
+            thumbContainer.innerHTML = imgs.map(src => {
+                const fSrc = formatImgUrl(src);
+                return `
+                    <img src="${fSrc}" onclick="document.getElementById('lightboxMainImage').src='${fSrc}'" 
+                        class="w-12 h-12 rounded-xl object-cover cursor-pointer border-2 border-white/50 hover:border-amber-400 transition"
+                        onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                `;
+            }).join('');
+
             document.getElementById('photoLightboxModal').classList.remove('hidden');
         }
 
-        function closePhotoLightbox() { document.getElementById('photoLightboxModal').classList.add('hidden'); }
-
-        function renderFlavorsDropdown() {
-            document.getElementById('cakeFlavorSelect').innerHTML = cakeFlavors.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+        function closePhotoLightbox() {
+            document.getElementById('photoLightboxModal').classList.add('hidden');
         }
 
-        function updateCakeConfig(type, val, priceKHR) {
+        function renderShowcase() {
+            const grid = document.getElementById('showcaseGrid');
+            const chips = document.getElementById('showcaseCategoryChips');
+            if (!grid) return;
+
+            const showcaseCats = [
+                { id: 'all', label: 'ទាំងអស់' },
+                { id: 'cakes', label: '🎂 នំខេក' },
+                { id: 'breads', label: '🥖 នំប៉័ង' },
+                { id: 'pastries', label: '🥐 នំផេស្ទ្រី' },
+                { id: 'drinks', label: '☕ ភេសជ្ជៈ' }
+            ];
+
+            if (chips) {
+                chips.innerHTML = showcaseCats.map(c => `
+                    <button onclick="filterShowcaseCategory('${c.id}')" 
+                        class="px-4 py-2 rounded-2xl text-xs font-black whitespace-nowrap transition ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white shadow' : 'bg-white text-stone-700 hover:bg-orange-100'}">
+                        ${c.label}
+                    </button>
+                `).join('');
+            }
+
+            const filtered = products.filter(p =>
+                p.cat !== 'ingredients' && p.cat !== 'accessories' &&
+                (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory)
+            );
+
+            grid.innerHTML = filtered.map(p => {
+                const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                return `
+                    <div class="bg-white rounded-3xl overflow-hidden shadow-soft border border-orange-100 group hover:shadow-glow transition cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                        <div class="relative h-48 sm:h-56 overflow-hidden bg-stone-100">
+                            <img src="${img}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
+                            ${p.badge ? `<span class="absolute top-3 left-3 bg-bakery-caramel text-white text-xs font-black px-2.5 py-1 rounded-full shadow">${p.badge}</span>` : ''}
+                        </div>
+                        <div class="p-4 flex justify-between items-center">
+                            <div>
+                                <h3 class="font-bold text-sm sm:text-base text-bakery-dark line-clamp-1">${p.name}</h3>
+                                <p class="text-xs text-stone-500 uppercase font-bold">${p.cat}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-base sm:text-lg font-black text-bakery-caramel font-en">${p.priceKHR.toLocaleString()} ៛</div>
+                                <div class="text-xs font-bold text-stone-500 font-en">≈ $${(p.priceKHR / KHR_RATE).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterShowcaseCategory(cat) {
+            activeShowcaseCategory = cat;
+            renderShowcase();
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => alert(err.message));
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        // ================= CUSTOM CAKE STUDIO =================
+        function renderFlavorsDropdown() {
+            const sel = document.getElementById('cakeFlavorSelect');
+            if (!sel) return;
+            sel.innerHTML = cakeFlavors.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+        }
+
+        function updateCakeConfig(type, val, price) {
             if (type === 'tiers') {
                 customCake.tiers = val;
-                customCake.priceKHR = priceKHR;
-                document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.replace('border-bakery-caramel', 'border-transparent'));
-                event.currentTarget.classList.replace('border-transparent', 'border-bakery-caramel');
-                document.getElementById('visualTierTop').classList.toggle('hidden', val === 1);
+                customCake.priceKHR = price;
+                document.querySelectorAll('.tier-btn').forEach(btn => {
+                    btn.classList.remove('border-bakery-caramel', 'bg-orange-50/50');
+                    btn.classList.add('border-transparent', 'bg-stone-50');
+                });
+                event.currentTarget.classList.add('border-bakery-caramel', 'bg-orange-50/50');
+                event.currentTarget.classList.remove('border-transparent', 'bg-stone-50');
+
+                const topTier = document.getElementById('visualTierTop');
+                if (val === 1) {
+                    if (topTier) topTier.classList.add('hidden');
+                } else {
+                    if (topTier) topTier.classList.remove('hidden');
+                }
             } else if (type === 'flavor') {
                 customCake.flavor = val;
-                customCake.flavorName = cakeFlavors.find(f => f.id === val).name;
+                const found = cakeFlavors.find(f => f.id === val);
+                customCake.flavorName = found ? found.name : val;
+                const topFlavorText = document.getElementById('visualTierTopFlavor');
+                if (topFlavorText) topFlavorText.innerText = customCake.flavorName.split('(')[0];
             }
             document.getElementById('customCakePriceKHR').innerText = `${customCake.priceKHR.toLocaleString()} ៛`;
         }
 
         function updateCakeMessage(msg) {
-            customCake.message = msg || 'រីករាយថ្ងៃខួបកំណើត!';
-            document.getElementById('visualMessage').innerText = customCake.message;
+            customCake.message = msg;
+            const el = document.getElementById('visualMessage');
+            if (el) el.innerText = msg || 'រីករាយថ្ងៃខួបកំណើត!';
         }
 
         function addCustomCakeToCart() {
+            const cakeDate = document.getElementById('cakeDateInput').value;
+            const cakePhone = document.getElementById('cakePhoneInput').value.trim();
+            const cakeName = `នំខេកកុម្ម៉ង់ (${customCake.tiers}ជាន់, ${customCake.flavorName.split('(')[0]})`;
+
             cart.push({
-                id: Date.now(),
-                name: `🎂 នំខេកកុម្ម៉ង់ (${customCake.tiers} ជាន់, ${customCake.flavorName})`,
-                cat: 'cakes', flavor: customCake.flavorName,
-                priceKHR: customCake.priceKHR, qty: 1, isCustom: true,
-                img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80'
+                id: 'custom-' + Date.now(),
+                name: cakeName,
+                cat: 'cakes',
+                priceKHR: customCake.priceKHR,
+                qty: 1,
+                flavor: customCake.flavorName,
+                isCustom: true,
+                message: customCake.message,
+                pickupDate: cakeDate,
+                customerPhone: cakePhone,
+                img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=800'
             });
+
+            if (cakePhone) {
+                document.getElementById('customerPhoneInput').value = cakePhone;
+            }
+
             renderCart();
             switchView('pos');
-            showToast('បានបញ្ចូលនំខេកកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
+            confetti({ particleCount: 50, spread: 60 });
+            showToast('🎂 បានបញ្ចូលនំខេកកុម្ម៉ង់ទៅក្នុងកន្ត្រក POS!', 'success');
         }
 
-        function renderShowcase() {
-            document.getElementById('showcaseCategoryChips').innerHTML = categories.map(c => `
-        <button onclick="activeShowcaseCategory='${c.id}'; renderShowcase();" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white' : 'bg-white text-stone-700'}">${c.label}</button>
-      `).join('');
-
-            const grid = document.getElementById('showcaseGrid');
-            const filtered = products.filter(p => p.cat !== 'ingredients' && (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory));
-            grid.innerHTML = filtered.map(p => {
-                const img = formatImgUrl(p.img || (p.images && p.images[0]));
-                return `
-          <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
-              <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                  <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
-              </div>
-              <div class="p-4 flex items-center justify-between">
-                  <div>
-                      <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
-                      <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
-                  </div>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
-              </div>
-          </div>
-        `;
-            }).join('');
-        }
-
-        function toggleFullscreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { });
-            else document.exitFullscreen();
-        }
-
-        // ================= SETTINGS & SHIFT =================
+        // ================= SETTINGS & EXCHANGE RATE =================
         function openSettingsModal() {
+            const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
             document.getElementById('settingStoreName').value = storeInfo.name;
             document.getElementById('settingStorePhone').value = storeInfo.phone;
             document.getElementById('settingStoreAddress').value = storeInfo.address;
             document.getElementById('settingStoreTagline').value = storeInfo.tagline;
-            document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken;
-            document.getElementById('telegramChatId').value = integrationSettings.telegramChatId;
-            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl;
+            document.getElementById('googleSheetUrl').value = settings.googleSheetUrl || '';
+            document.getElementById('telegramBotToken').value = settings.telegramBotToken || '';
+            document.getElementById('telegramChatId').value = settings.telegramChatId || '';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
-        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
 
         function saveIntegrationSettings() {
             storeInfo.name = document.getElementById('settingStoreName').value.trim() || 'ហាងនំខេកវិជ្ជដា';
-            storeInfo.phone = document.getElementById('settingStorePhone').value.trim();
-            storeInfo.address = document.getElementById('settingStoreAddress').value.trim();
-            storeInfo.tagline = document.getElementById('settingStoreTagline').value.trim();
-            localStorage.setItem('BAKERY_STORE_INFO', JSON.stringify(storeInfo));
+            storeInfo.phone = document.getElementById('settingStorePhone').value.trim() || '0978707000';
+            storeInfo.address = document.getElementById('settingStoreAddress').value.trim() || 'កោះរ៉ុងសន្លឹម';
+            storeInfo.tagline = document.getElementById('settingStoreTagline').value.trim() || `${storeInfo.address} • ${storeInfo.phone}`;
 
+            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
             integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim();
             integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim();
-            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
-            localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
 
+            saveState();
             renderStoreInfo();
             closeSettingsModal();
-            confetti({ particleCount: 50, spread: 60 });
-            showToast('🎉 បានរក្សាទុកការកំណត់ជោគជ័យ!', 'success');
+            showToast('🎉 បានរក្សាទុកការកំណត់ទាំងអស់ជោគជ័យ!', 'success');
         }
 
-        function openRateModal() { document.getElementById('inputExchangeRate').value = KHR_RATE; document.getElementById('rateModal').classList.remove('hidden'); }
+        function openRateModal() {
+            document.getElementById('inputExchangeRate').value = KHR_RATE;
+            document.getElementById('rateModal').classList.remove('hidden');
+        }
         function closeRateModal() { document.getElementById('rateModal').classList.add('hidden'); }
         function saveExchangeRate() {
-            KHR_RATE = parseInt(document.getElementById('inputExchangeRate').value) || 4100;
-            localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
-            renderCart(); renderInventory(); renderAnalytics();
-            closeRateModal(); showToast('បានកែប្រែអត្រាប្រាក់ជោគជ័យ!', 'success');
+            const newRate = parseInt(document.getElementById('inputExchangeRate').value) || 4100;
+            KHR_RATE = newRate;
+            localStorage.setItem('BAKERY_EXCHANGE_RATE', newRate);
+            closeRateModal();
+            renderCart();
+            renderProducts();
+            renderInventory();
+            renderAnalytics();
+            showToast(`បានប្តូរអត្រាប្រាក់៖ 1$ = ${newRate.toLocaleString()}៛`, 'success');
         }
 
+        // ================= SHIFT CLOSE =================
         function openShiftModal() {
             const today = new Date().toISOString().split('T')[0];
             const todaySales = transactions.filter(t => t.date === today);
-            const cash = todaySales.filter(t => t.method.includes('ប្រាក់សុទ្ធ')).reduce((sum, t) => sum + t.totalKHR, 0);
-            const khqr = todaySales.filter(t => t.method.includes('KHQR')).reduce((sum, t) => sum + t.totalKHR, 0);
+            const cash = todaySales.filter(t => t.method && t.method.includes('ប្រាក់សុទ្ធ')).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const khqr = todaySales.filter(t => t.method && t.method.includes('KHQR')).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const expected = 100000 + cash;
+
             document.getElementById('shiftCashSalesKHR').innerText = `${cash.toLocaleString()} ៛`;
             document.getElementById('shiftKhqrSalesKHR').innerText = `${khqr.toLocaleString()} ៛`;
-            document.getElementById('shiftExpectedCashKHR').innerText = `${(100000 + cash).toLocaleString()} ៛`;
-            document.getElementById('shiftActualCashInput').value = 100000 + cash;
+            document.getElementById('shiftExpectedCashKHR').innerText = `${expected.toLocaleString()} ៛`;
+            document.getElementById('shiftActualCashInput').value = '';
             document.getElementById('shiftModal').classList.remove('hidden');
         }
         function closeShiftModal() { document.getElementById('shiftModal').classList.add('hidden'); }
-        function confirmShiftClose() { closeShiftModal(); showToast('បានបិទវេនលក់ជោគជ័យ!', 'success'); }
+        function confirmShiftClose() {
+            const actual = parseInt(document.getElementById('shiftActualCashInput').value) || 0;
+            alert(`✅ បានបិទវេនលក់ដោយជោគជ័យ! លុយរាប់បាន៖ ${actual.toLocaleString()} ៛`);
+            closeShiftModal();
+        }
 
+        // ================= TOAST NOTIFICATION =================
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
-            const colors = { success: 'bg-emerald-700', warning: 'bg-amber-600', error: 'bg-rose-700', info: 'bg-bakery-dark' };
-            toast.className = `${colors[type] || colors.info} text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-black flex items-center gap-2 pointer-events-auto border border-white/20`;
-            toast.innerHTML = `<i class="fa-solid fa-bell"></i><span>${msg}</span>`;
+            const bgClass = type === 'success' ? 'bg-emerald-600' : (type === 'error' ? 'bg-rose-600' : (type === 'warning' ? 'bg-amber-600' : 'bg-stone-800'));
+            toast.className = `${bgClass} text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 transition-all transform translate-y-2 opacity-0 pointer-events-auto`;
+            toast.innerHTML = `<span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            }, 10);
+
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
         }
 
-        /* --- 🌟 2. AUTO-PURGE NETLIFY BADGES --- */
         function purgeNetlifyBadge() {
-            const selectors = [
-                '#netlify-drawer-container',
-                '[data-netlify-deploy-preview]',
-                '.netlify-drawer',
-                'iframe[src*="netlify"]'
-            ];
-            selectors.forEach(sel => {
-                document.querySelectorAll(sel).forEach(el => el.remove());
-            });
+            const el = document.querySelector('[data-netlify-deploy-preview]');
+            if (el) el.remove();
         }
-        setInterval(purgeNetlifyBadge, 500);
     </script>
 </body>
 
