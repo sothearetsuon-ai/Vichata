@@ -17,7 +17,9 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
@@ -64,14 +66,42 @@
             color: #261B14;
             -webkit-tap-highlight-color: transparent;
         }
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #FFF5E9; }
-        ::-webkit-scrollbar-thumb { background: #DDA15E; border-radius: 999px; }
-        .custom-scroll::-webkit-scrollbar { width: 4px; height: 4px; }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #FFF5E9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #DDA15E;
+            border-radius: 999px;
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 4px;
+            height: 4px;
+        }
+
         @media print {
-            body * { visibility: hidden; }
-            #receiptPrintArea, #receiptPrintArea * { visibility: visible; }
-            #receiptPrintArea { position: absolute; left: 0; top: 0; width: 80mm; }
+            body * {
+                visibility: hidden;
+            }
+
+            #receiptPrintArea,
+            #receiptPrintArea * {
+                visibility: visible;
+            }
+
+            #receiptPrintArea {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 80mm;
+            }
         }
     </style>
 </head>
@@ -84,64 +114,79 @@
             <div class="flex items-center justify-between h-16 sm:h-20">
 
                 <div class="flex items-center gap-2 sm:gap-3 cursor-pointer group" onclick="switchView('pos')">
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-bakery-caramel to-amber-500 flex items-center justify-center text-white text-xl sm:text-2xl shadow-glow group-hover:scale-105 transition">
+                    <div
+                        class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-bakery-caramel to-amber-500 flex items-center justify-center text-white text-xl sm:text-2xl shadow-glow group-hover:scale-105 transition">
                         <i class="fa-solid fa-cake-candles"></i>
                     </div>
                     <div>
                         <div class="flex items-center gap-1.5 sm:gap-2">
-                            <span class="font-black text-lg sm:text-2xl tracking-tight text-bakery-dark" id="storeNameDisplay">
+                            <span class="font-black text-lg sm:text-2xl tracking-tight text-bakery-dark"
+                                id="storeNameDisplay">
                                 ហាងនំខេក<span class="text-bakery-caramel">វិជ្ជដា</span>
                             </span>
-                            <span class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-emerald-300 flex items-center gap-1">
+                            <span
+                                class="bg-emerald-100 text-emerald-800 text-[9px] sm:text-[11px] px-2 py-0.5 rounded-full font-extrabold border border-emerald-300 flex items-center gap-1">
                                 <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i> <span>Sync</span>
                             </span>
                         </div>
-                        <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate" id="storeTaglineDisplay">
+                        <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate"
+                            id="storeTaglineDisplay">
                             កោះរ៉ុងសន្លឹម • 0978707000
                         </p>
                     </div>
                 </div>
 
                 <!-- DESKTOP NAVIGATION TABS -->
-                <nav class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
-                    <button id="nav-pos" onclick="switchView('pos')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
+                <nav
+                    class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
+                    <button id="nav-pos" onclick="switchView('pos')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 bg-white text-bakery-caramel shadow-sm">
                         <i class="fa-solid fa-cash-register"></i> កន្លែងគិតលុយ (POS)
                     </button>
-                    <button id="nav-expenses" onclick="switchView('expenses')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <button id="nav-expenses" onclick="switchView('expenses')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-receipt text-rose-500"></i> កត់ត្រាចំណាយ
                     </button>
-                    <button id="nav-showcase" onclick="switchView('showcase')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <button id="nav-showcase" onclick="switchView('showcase')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-images text-amber-600"></i> ផ្ទាំងបង្ហាញភ្ញៀវ
                     </button>
-                    <button id="nav-custom" onclick="switchView('custom')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <button id="nav-custom" onclick="switchView('custom')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> កុម្ម៉ង់ខេក (Studio)
                     </button>
-                    <button id="nav-inventory" onclick="switchView('inventory')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <button id="nav-inventory" onclick="switchView('inventory')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-boxes-stacked text-emerald-600"></i> ស្តុកទំនិញ (Stock)
                     </button>
-                    <button id="nav-analytics" onclick="switchView('analytics')" class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <button id="nav-analytics" onclick="switchView('analytics')"
+                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-chart-pie text-sky-600"></i> របាយការណ៍ (Stats)
                     </button>
                 </nav>
 
                 <!-- RIGHT ACTIONS -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5">
-                    <button onclick="openMultiUploadModal()" class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-orange-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-orange-300">
+                    <button onclick="openMultiUploadModal()"
+                        class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-orange-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-orange-300">
                         <i class="fa-solid fa-cloud-arrow-up text-xs sm:text-sm"></i>
                         <span>Upload រូប</span>
                     </button>
 
-                    <button onclick="openKhqrSetupModal()" class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-[11px] sm:text-xs shadow-sm transition flex items-center gap-1.5">
+                    <button onclick="openKhqrSetupModal()"
+                        class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-[11px] sm:text-xs shadow-sm transition flex items-center gap-1.5">
                         <i class="fa-solid fa-qrcode text-xs sm:text-sm"></i>
                         <span class="hidden md:inline">KHQR ហាង</span>
                     </button>
 
-                    <button onclick="pullProductsFromGoogleSheet()" class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition">
+                    <button onclick="pullProductsFromGoogleSheet()"
+                        class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition">
                         <i class="fa-solid fa-rotate text-xs sm:text-sm" id="syncSpinIcon"></i>
                         <span class="hidden lg:inline">ទាញពី Sheet</span>
                     </button>
 
-                    <button onclick="openSettingsModal()" class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition">
+                    <button onclick="openSettingsModal()"
+                        class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition">
                         <i class="fa-solid fa-gear text-sm sm:text-base"></i>
                     </button>
                 </div>
@@ -157,12 +202,17 @@
         <section id="view-pos" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
                 <!-- Search & Filter Category Chips -->
-                <div class="bg-white p-3.5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center">
+                <div
+                    class="bg-white p-3.5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center">
                     <div class="relative w-full sm:w-80">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
-                        <input type="text" id="searchInput" oninput="renderProducts()" placeholder="ស្វែងរកឈ្មោះនំ, ភេសជ្ជៈ, ទៀន..." class="w-full pl-11 pr-4 py-2.5 sm:py-3 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs sm:text-sm font-semibold">
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-stone-400"></i>
+                        <input type="text" id="searchInput" oninput="renderProducts()"
+                            placeholder="ស្វែងរកឈ្មោះនំ, ភេសជ្ជៈ, ទៀន..."
+                            class="w-full pl-11 pr-4 py-2.5 sm:py-3 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs sm:text-sm font-semibold">
                     </div>
-                    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 custom-scroll" id="categoryChips"></div>
+                    <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full sm:w-auto pb-1 sm:pb-0 custom-scroll"
+                        id="categoryChips"></div>
                 </div>
 
                 <!-- Products Grid -->
@@ -171,10 +221,12 @@
 
             <!-- Cart Sidebar -->
             <div class="lg:col-span-4" id="cartSidebar">
-                <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 flex flex-col sticky top-24">
+                <div
+                    class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 flex flex-col sticky top-24">
                     <div class="flex items-center justify-between pb-3 border-b border-orange-100">
                         <div class="flex items-center gap-2">
-                            <div class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center font-bold">
+                            <div
+                                class="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-orange-100 text-bakery-caramel flex items-center justify-center font-bold">
                                 <i class="fa-solid fa-cart-shopping"></i>
                             </div>
                             <h3 class="font-extrabold text-base sm:text-lg text-bakery-dark">កន្ត្រកទំនិញ</h3>
@@ -182,43 +234,54 @@
 
                         <!-- 🎂 ប៊ូតុងបញ្ចូលនំកុម្ម៉ង់តម្លៃតាមចិត្ត & សម្អាត -->
                         <div class="flex items-center gap-2">
-                            <button onclick="addCustomPriceItem()" class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2 py-1 rounded-xl transition flex items-center gap-1" title="បញ្ចូលនំកុម្ម៉ង់តម្លៃតាមចិត្ត">
+                            <button onclick="addCustomPriceItem()"
+                                class="text-xs bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold px-2 py-1 rounded-xl transition flex items-center gap-1"
+                                title="បញ្ចូលនំកុម្ម៉ង់តម្លៃតាមចិត្ត">
                                 <i class="fa-solid fa-plus text-[10px]"></i> នំកុម្ម៉ង់
                             </button>
-                            <button onclick="clearCart()" class="text-xs text-rose-600 hover:text-rose-700 font-bold px-1.5 py-1 rounded-lg hover:bg-rose-50 transition">
+                            <button onclick="clearCart()"
+                                class="text-xs text-rose-600 hover:text-rose-700 font-bold px-1.5 py-1 rounded-lg hover:bg-rose-50 transition">
                                 <i class="fa-regular fa-trash-can"></i> សម្អាត
                             </button>
                         </div>
                     </div>
 
                     <!-- Quick Add-ons Party Bar -->
-                    <div class="my-2.5 p-2.5 sm:p-3 bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 rounded-2xl border border-orange-200 shadow-xs">
+                    <div
+                        class="my-2.5 p-2.5 sm:p-3 bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 rounded-2xl border border-orange-200 shadow-xs">
                         <div class="flex items-center justify-between mb-1.5">
-                            <span class="text-[10px] sm:text-[11px] font-black text-bakery-dark flex items-center gap-1.5">
+                            <span
+                                class="text-[10px] sm:text-[11px] font-black text-bakery-dark flex items-center gap-1.5">
                                 <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> ឥវ៉ាន់បន្ថែម (Add-ons)
                             </span>
-                            <button onclick="filterCategory('accessories')" class="text-[10px] text-bakery-caramel font-extrabold hover:underline">
+                            <button onclick="filterCategory('accessories')"
+                                class="text-[10px] text-bakery-caramel font-extrabold hover:underline">
                                 ទាំងអស់ →
                             </button>
                         </div>
-                        <div class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll" id="quickAddonsList"></div>
+                        <div class="flex items-center gap-2 overflow-x-auto pb-1 custom-scroll" id="quickAddonsList">
+                        </div>
                     </div>
 
                     <!-- Cart Items List (មានប៊ូតុង ✏️ កែតម្លៃ) -->
-                    <div id="cartItemsList" class="flex-1 overflow-y-auto max-h-[220px] sm:max-h-[260px] my-1 divide-y divide-orange-100 pr-1 custom-scroll"></div>
+                    <div id="cartItemsList"
+                        class="flex-1 overflow-y-auto max-h-[220px] sm:max-h-[260px] my-1 divide-y divide-orange-100 pr-1 custom-scroll">
+                    </div>
 
                     <!-- Financial Summary (មានកន្លែងកែបញ្ចុះតម្លៃ) -->
-                    <div class="bg-bakery-vanilla/60 rounded-2xl p-3.5 sm:p-4 border border-orange-200 space-y-1.5 sm:space-y-2 text-xs sm:text-sm mt-2 shadow-xs">
+                    <div
+                        class="bg-bakery-vanilla/60 rounded-2xl p-3.5 sm:p-4 border border-orange-200 space-y-1.5 sm:space-y-2 text-xs sm:text-sm mt-2 shadow-xs">
                         <div class="flex justify-between text-stone-700 font-semibold">
                             <span>សរុបដើម (Subtotal)</span>
                             <span class="font-extrabold font-en text-bakery-dark" id="summarySubtotalKHR">0 ៛</span>
                         </div>
-                        
+
                         <!-- Discount Row (ចុចលើវាដើម្បីកែប្រែបញ្ចុះតម្លៃ) -->
                         <div class="flex justify-between text-emerald-700 font-bold items-center">
                             <span class="flex items-center gap-1">
                                 <span>បញ្ចុះតម្លៃ (Discount)</span>
-                                <button onclick="editCustomDiscount()" class="text-[10px] text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded font-extrabold hover:bg-blue-100">
+                                <button onclick="editCustomDiscount()"
+                                    class="text-[10px] text-blue-600 bg-blue-50 border border-blue-200 px-1.5 py-0.5 rounded font-extrabold hover:bg-blue-100">
                                     <i class="fa-solid fa-pen text-[8px]"></i> កែ
                                 </button>
                             </span>
@@ -228,20 +291,25 @@
                         <div class="pt-2 sm:pt-3 border-t border-orange-200 flex justify-between items-baseline">
                             <div>
                                 <div class="font-black text-sm sm:text-base text-bakery-dark">ទឹកប្រាក់ត្រូវបង់</div>
-                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount</div>
+                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount
+                                </div>
                             </div>
                             <div class="text-right">
-                                <div class="text-xl sm:text-3xl font-black text-bakery-caramel tracking-tight font-en" id="summaryTotalKHR">0 ៛</div>
-                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en" id="summaryTotalUSD">≈ $0.00</div>
+                                <div class="text-xl sm:text-3xl font-black text-bakery-caramel tracking-tight font-en"
+                                    id="summaryTotalKHR">0 ៛</div>
+                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en"
+                                    id="summaryTotalUSD">≈ $0.00</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="mt-3 grid grid-cols-2 gap-2.5 sm:gap-3">
-                        <button onclick="openPaymentModal('khqr')" class="py-3 sm:py-3.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs sm:text-sm shadow-md hover:opacity-95 transition flex items-center justify-center gap-1.5 sm:gap-2">
+                        <button onclick="openPaymentModal('khqr')"
+                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs sm:text-sm shadow-md hover:opacity-95 transition flex items-center justify-center gap-1.5 sm:gap-2">
                             <i class="fa-solid fa-qrcode text-base"></i> KHQR រៀល
                         </button>
-                        <button onclick="openPaymentModal('cash')" class="py-3 sm:py-3.5 px-3 rounded-2xl bg-bakery-dark text-white font-black text-xs sm:text-sm shadow-md hover:bg-black transition flex items-center justify-center gap-1.5 sm:gap-2">
+                        <button onclick="openPaymentModal('cash')"
+                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-bakery-dark text-white font-black text-xs sm:text-sm shadow-md hover:bg-black transition flex items-center justify-center gap-1.5 sm:gap-2">
                             <i class="fa-solid fa-money-bill-wave text-base"></i> ប្រាក់សុទ្ធ (Cash)
                         </button>
                     </div>
@@ -253,41 +321,52 @@
         <!-- ================= VIEW 2: EXPENSES SYSTEM ================= -->
         <section id="view-expenses" class="hidden space-y-6">
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-money-bill-trend-up"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណូលលក់សរុប</span>
-                        <div class="text-xl sm:text-2xl font-black text-emerald-700 font-en mt-0.5" id="expenseTotalIncomeKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-emerald-700 font-en mt-0.5"
+                            id="expenseTotalIncomeKHR">0 ៛</div>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-rose-100 text-rose-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-hand-holding-dollar"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណាយសរុប</span>
-                        <div class="text-xl sm:text-2xl font-black text-rose-600 font-en mt-0.5" id="expenseTotalSpentKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-rose-600 font-en mt-0.5"
+                            id="expenseTotalSpentKHR">0 ៛</div>
                     </div>
                 </div>
 
-                <div class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
-                    <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner font-bold">
+                <div
+                    class="bg-white p-4 sm:p-5 rounded-3xl shadow-soft border border-orange-100 flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl shadow-inner font-bold">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
                         <span class="text-xs font-bold text-stone-500 block">ចំណេញសុទ្ធ</span>
-                        <div class="text-xl sm:text-2xl font-black text-bakery-caramel font-en mt-0.5" id="expenseNetProfitKHR">0 ៛</div>
+                        <div class="text-xl sm:text-2xl font-black text-bakery-caramel font-en mt-0.5"
+                            id="expenseNetProfitKHR">0 ៛</div>
                     </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
+                <div
+                    class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
                     <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
-                        <div class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                        <div
+                            class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
                             <i class="fa-solid fa-plus"></i>
                         </div>
                         <h3 class="font-extrabold text-base text-bakery-dark">កត់ត្រាការចំណាយថ្មី</h3>
@@ -296,13 +375,16 @@
                     <form onsubmit="handleNewExpense(event)" class="space-y-3.5 text-xs">
                         <div>
                             <label class="block font-bold text-stone-800 mb-1">ឈ្មោះ ឬ មុខចំណាយ *</label>
-                            <input type="text" id="expenseTitleInput" required placeholder="ឧ. ទិញម្សៅមី និង ប័រ, ទិញប្រអប់..." class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-semibold focus:ring-2 focus:ring-bakery-caramel text-sm">
+                            <input type="text" id="expenseTitleInput" required
+                                placeholder="ឧ. ទិញម្សៅមី និង ប័រ, ទិញប្រអប់..."
+                                class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-semibold focus:ring-2 focus:ring-bakery-caramel text-sm">
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
                             <div>
                                 <label class="block font-bold text-stone-800 mb-1">ប្រភេទចំណាយ</label>
-                                <select id="expenseCategoryInput" class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-bold text-stone-800">
+                                <select id="expenseCategoryInput"
+                                    class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-bold text-stone-800">
                                     <option value="ingredients">🌾 គ្រឿងផ្សំនំ</option>
                                     <option value="packaging">📦 ប្រអប់ & ថង់</option>
                                     <option value="utilities">💡 ទឹក ភ្លើង ហ្គាស</option>
@@ -312,27 +394,33 @@
                             </div>
                             <div>
                                 <label class="block font-bold text-stone-800 mb-1">កាលបរិច្ឆេទ</label>
-                                <input type="date" id="expenseDateInput" required class="w-full p-2 rounded-xl bg-stone-50 border border-stone-300 font-en font-bold">
+                                <input type="date" id="expenseDateInput" required
+                                    class="w-full p-2 rounded-xl bg-stone-50 border border-stone-300 font-en font-bold">
                             </div>
                         </div>
 
                         <div>
-                            <label class="block font-bold text-stone-800 mb-1">ចំនួនទឹកប្រាក់គិតជាប្រាក់រៀល (៛) *</label>
-                            <input type="number" id="expenseAmountInput" step="500" required placeholder="ឧ. 45000" class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-black font-en text-rose-600 text-base">
+                            <label class="block font-bold text-stone-800 mb-1">ចំនួនទឹកប្រាក់គិតជាប្រាក់រៀល (៛)
+                                *</label>
+                            <input type="number" id="expenseAmountInput" step="500" required placeholder="ឧ. 45000"
+                                class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-black font-en text-rose-600 text-base">
                         </div>
 
                         <div>
                             <label class="block font-bold text-stone-800 mb-1">ចំណាំបន្ថែម (Note)</label>
-                            <input type="text" id="expenseNoteInput" placeholder="ចំណាំខ្លីៗ..." class="w-full p-2 rounded-xl bg-stone-50 border border-stone-300 font-medium">
+                            <input type="text" id="expenseNoteInput" placeholder="ចំណាំខ្លីៗ..."
+                                class="w-full p-2 rounded-xl bg-stone-50 border border-stone-300 font-medium">
                         </div>
 
-                        <button type="submit" class="w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 hover:opacity-95 text-white font-extrabold rounded-2xl text-xs shadow-soft transition flex items-center justify-center gap-1.5">
+                        <button type="submit"
+                            class="w-full py-3 bg-gradient-to-r from-rose-500 to-red-600 hover:opacity-95 text-white font-extrabold rounded-2xl text-xs shadow-soft transition flex items-center justify-center gap-1.5">
                             <i class="fa-solid fa-floppy-disk"></i> រក្សាទុក & Sync ចូល Google Sheet
                         </button>
                     </form>
                 </div>
 
-                <div class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col justify-between">
+                <div
+                    class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                             <h3 class="font-extrabold text-base text-bakery-dark flex items-center gap-2">
@@ -344,7 +432,8 @@
 
                         <div class="overflow-x-auto mt-3 custom-scroll">
                             <table class="w-full text-left text-xs min-w-[500px]">
-                                <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
+                                <thead
+                                    class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                                     <tr>
                                         <th class="p-3 pl-4">កាលបរិច្ឆេទ</th>
                                         <th class="p-3">មុខចំណាយ</th>
@@ -363,16 +452,19 @@
 
         <!-- ================= VIEW 3: SHOWCASE ================= -->
         <section id="view-showcase" class="hidden space-y-6">
-            <div class="bg-gradient-to-r from-bakery-caramel via-amber-500 to-rose-500 rounded-3xl p-5 sm:p-8 text-white shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div
+                class="bg-gradient-to-r from-bakery-caramel via-amber-500 to-rose-500 rounded-3xl p-5 sm:p-8 text-white shadow-soft flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>
-                    <span class="bg-white/20 backdrop-blur text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">
+                    <span
+                        class="bg-white/20 backdrop-blur text-white text-[11px] font-extrabold px-3 py-1 rounded-full uppercase">
                         <i class="fa-solid fa-tv mr-1"></i> Customer Display
                     </span>
                     <h2 class="text-xl sm:text-3xl font-black mt-2">ផ្ទាំងរូបភាពនំប្រចាំហាង</h2>
                     <p class="text-xs text-orange-100 mt-1 font-semibold">សម្រាប់បញ្ចាំងលើទូរទស្សន៍ ឬ Tablet មុខហាង</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button onclick="openMultiUploadModal()" class="px-4 py-2.5 sm:py-3 rounded-2xl bg-white text-bakery-caramel font-black text-xs sm:text-sm shadow hover:bg-orange-50 transition flex items-center gap-2">
+                    <button onclick="openMultiUploadModal()"
+                        class="px-4 py-2.5 sm:py-3 rounded-2xl bg-white text-bakery-caramel font-black text-xs sm:text-sm shadow hover:bg-orange-50 transition flex items-center gap-2">
                         <i class="fa-solid fa-cloud-arrow-up text-base"></i>
                         <span>Upload រូបច្រើនសន្លឹក</span>
                     </button>
@@ -386,22 +478,28 @@
         <section id="view-custom" class="hidden">
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-5 sm:p-8">
                 <div class="flex justify-between items-center pb-4 sm:pb-6 border-b border-orange-100">
-                    <h2 class="text-xl sm:text-3xl font-extrabold text-bakery-dark">ស្ទូឌីយោកុម្ម៉ង់នំខេកតាមតម្រូវការ</h2>
+                    <h2 class="text-xl sm:text-3xl font-extrabold text-bakery-dark">ស្ទូឌីយោកុម្ម៉ង់នំខេកតាមតម្រូវការ
+                    </h2>
                     <div class="text-right">
                         <div class="text-xs text-stone-500 font-bold">តម្លៃប៉ាន់ស្មាន</div>
-                        <div class="text-2xl sm:text-3xl font-black text-bakery-caramel font-en" id="customCakePriceKHR">95,000 ៛</div>
+                        <div class="text-2xl sm:text-3xl font-black text-bakery-caramel font-en"
+                            id="customCakePriceKHR">95,000 ៛</div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 mt-6 sm:mt-8 items-center">
-                    <div class="lg:col-span-6 flex flex-col items-center justify-center bg-gradient-to-b from-orange-50/70 to-amber-50/30 p-6 sm:p-8 rounded-3xl border border-orange-200/60 min-h-[380px]">
+                    <div
+                        class="lg:col-span-6 flex flex-col items-center justify-center bg-gradient-to-b from-orange-50/70 to-amber-50/30 p-6 sm:p-8 rounded-3xl border border-orange-200/60 min-h-[380px]">
                         <div class="relative flex flex-col items-center" id="cakeStage">
                             <div class="text-3xl mb-[-10px] z-30">🍓 🕯️ 🍓</div>
-                            <div class="w-32 h-16 rounded-2xl shadow-md flex items-center justify-center p-2 z-20 border-4 border-white/60 bg-rose-200">
+                            <div
+                                class="w-32 h-16 rounded-2xl shadow-md flex items-center justify-center p-2 z-20 border-4 border-white/60 bg-rose-200">
                                 <span class="text-xs font-bold text-stone-700">Vanilla Top</span>
                             </div>
-                            <div class="w-48 h-24 rounded-3xl shadow-lg flex flex-col items-center justify-center p-4 z-10 border-4 border-white/70 -mt-2 bg-rose-200">
-                                <div class="px-3 py-1 rounded-full bg-white/60 text-xs font-bold text-rose-700">រីករាយថ្ងៃខួបកំណើត!</div>
+                            <div
+                                class="w-48 h-24 rounded-3xl shadow-lg flex flex-col items-center justify-center p-4 z-10 border-4 border-white/70 -mt-2 bg-rose-200">
+                                <div class="px-3 py-1 rounded-full bg-white/60 text-xs font-bold text-rose-700">
+                                    រីករាយថ្ងៃខួបកំណើត!</div>
                             </div>
                             <div class="w-56 h-3 bg-stone-200 rounded-full mt-1"></div>
                         </div>
@@ -411,14 +509,21 @@
                         <div>
                             <label class="block text-sm font-extrabold text-bakery-dark mb-2">១. ទំហំ & ជាន់នំ</label>
                             <div class="grid grid-cols-3 gap-2">
-                                <button onclick="updateCakeConfig(1, 60000)" class="p-2.5 rounded-2xl border bg-stone-50 text-left font-bold text-xs">១ ជាន់ (60,000 ៛)</button>
-                                <button onclick="updateCakeConfig(2, 95000)" class="p-2.5 rounded-2xl border-2 border-bakery-caramel bg-orange-50 text-left font-bold text-xs">២ ជាន់ (95,000 ៛)</button>
-                                <button onclick="updateCakeConfig('heart', 85000)" class="p-2.5 rounded-2xl border bg-stone-50 text-left font-bold text-xs">បេះដូង (85,000 ៛)</button>
+                                <button onclick="updateCakeConfig(1, 60000)"
+                                    class="p-2.5 rounded-2xl border bg-stone-50 text-left font-bold text-xs">១ ជាន់
+                                    (60,000 ៛)</button>
+                                <button onclick="updateCakeConfig(2, 95000)"
+                                    class="p-2.5 rounded-2xl border-2 border-bakery-caramel bg-orange-50 text-left font-bold text-xs">២
+                                    ជាន់ (95,000 ៛)</button>
+                                <button onclick="updateCakeConfig('heart', 85000)"
+                                    class="p-2.5 rounded-2xl border bg-stone-50 text-left font-bold text-xs">បេះដូង
+                                    (85,000 ៛)</button>
                             </div>
                         </div>
                         <div>
                             <label class="block text-sm font-extrabold text-bakery-dark mb-2">២. រសជាតិនំខេក</label>
-                            <select id="cakeFlavorSelect" class="w-full p-2.5 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 text-sm font-bold text-bakery-dark">
+                            <select id="cakeFlavorSelect"
+                                class="w-full p-2.5 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 text-sm font-bold text-bakery-dark">
                                 <option value="តយដូង (Pandan Coconut)">តយដូង (Pandan Coconut)</option>
                                 <option value="ស្ត្រប៊ឺរី (Strawberry Fresh)">ស្ត្រប៊ឺរី (Strawberry Fresh)</option>
                                 <option value="សូកូឡាខ្មៅ (Dark Chocolate)">សូកូឡាខ្មៅ (Dark Chocolate)</option>
@@ -427,9 +532,11 @@
                         </div>
                         <div>
                             <label class="block text-sm font-extrabold text-bakery-dark mb-2">៣. សរសេរអក្សរលើនំ</label>
-                            <input type="text" id="cakeMessageInput" value="រីករាយថ្ងៃខួបកំណើត!" class="w-full p-2.5 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 text-sm font-bold text-bakery-dark">
+                            <input type="text" id="cakeMessageInput" value="រីករាយថ្ងៃខួបកំណើត!"
+                                class="w-full p-2.5 rounded-2xl bg-bakery-vanilla/60 border border-orange-200 text-sm font-bold text-bakery-dark">
                         </div>
-                        <button onclick="addCustomCakeStudioToCart()" class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-bakery-caramel to-amber-500 text-white font-extrabold text-sm shadow-glow flex items-center justify-center gap-2">
+                        <button onclick="addCustomCakeStudioToCart()"
+                            class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-bakery-caramel to-amber-500 text-white font-extrabold text-sm shadow-glow flex items-center justify-center gap-2">
                             <i class="fa-solid fa-cake-candles text-lg"></i> បញ្ចូលនំខេកនេះទៅកាន់កន្ត្រក POS
                         </button>
                     </div>
@@ -437,22 +544,39 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 5: INVENTORY ================= -->
+        <!-- ================= VIEW 5: INVENTORY (បែងចែកជាពីរស្តុក) ================= -->
         <section id="view-inventory" class="hidden space-y-6">
-            <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div
+                class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
                     <h2 class="text-xl sm:text-2xl font-extrabold text-bakery-dark">ការគ្រប់គ្រងស្តុកនំ និង គ្រឿងផ្សំ</h2>
-                    <p class="text-xs sm:text-sm text-stone-600 font-medium">តាមដានស្តុកទំនិញលក់</p>
+                    <p class="text-xs sm:text-sm text-stone-600 font-medium">តាមដានស្តុកទំនិញលក់ និងគ្រឿងផ្សំធ្វើនំ</p>
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
-                    <button onclick="syncStockToGoogleSheet()" class="px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust font-extrabold text-xs border border-amber-200 flex items-center gap-1.5 shadow-xs">
+                    <button onclick="syncStockToGoogleSheet()"
+                        class="px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust font-extrabold text-xs border border-amber-200 flex items-center gap-1.5 shadow-xs">
                         <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> Sync ស្តុក
                     </button>
-                    <button onclick="openMultiUploadModal()" class="px-3.5 py-2 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow flex items-center gap-1.5">
+                    <button onclick="openMultiUploadModal()"
+                        class="px-3.5 py-2 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow flex items-center gap-1.5">
                         <i class="fa-solid fa-plus"></i> បន្ថែមទំនិញ
                     </button>
                 </div>
+            </div>
+
+            <!-- 🌟 SUB-TABS: ប៊ូតុងប្តូររវាងស្តុកនំ & ស្តុកគ្រឿងផ្សំ 🌟 -->
+            <div class="flex items-center gap-2 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner w-full sm:w-fit">
+                <button id="tab-stock-products" onclick="switchStockSubTab('products')"
+                    class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-white text-bakery-caramel shadow-sm">
+                    <i class="fa-solid fa-cake-candles"></i> <span>🎂 ស្តុកនំ & ទំនិញលក់</span>
+                    <span id="stockProductsBadge" class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-orange-100 text-bakery-caramel font-black">0</span>
+                </button>
+                <button id="tab-stock-ingredients" onclick="switchStockSubTab('ingredients')"
+                    class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-stone-700 hover:text-bakery-dark">
+                    <i class="fa-solid fa-wheat-awn text-amber-600"></i> <span>🌾 ស្តុកគ្រឿងផ្សំ</span>
+                    <span id="stockIngredientsBadge" class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-stone-200 text-stone-700 font-black">0</span>
+                </button>
             </div>
 
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 overflow-hidden">
@@ -460,10 +584,10 @@
                     <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
                         <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                             <tr>
-                                <th class="p-3.5 pl-4 sm:pl-6">ទំនិញ</th>
+                                <th class="p-3.5 pl-4 sm:pl-6">ទំនិញ / គ្រឿងផ្សំ</th>
                                 <th class="p-3.5">ប្រភេទ</th>
-                                <th class="p-3.5">តម្លៃរៀល</th>
-                                <th class="p-3.5">ដុល្លារ</th>
+                                <th class="p-3.5" id="invColHeaderPrice">តម្លៃរៀល</th>
+                                <th class="p-3.5" id="invColHeaderUSD">ដុល្លារ</th>
                                 <th class="p-3.5">ស្តុក</th>
                                 <th class="p-3.5 text-center">សកម្មភាព</th>
                             </tr>
@@ -477,7 +601,8 @@
         <!-- ================= VIEW 6: ANALYTICS & STATS ================= -->
         <section id="view-analytics" class="hidden space-y-6">
             <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-orange-100">
+                <div
+                    class="flex flex-col md:flex-row md:items-center justify-between gap-3 pb-3 border-b border-orange-100">
                     <div>
                         <h2 class="text-xl font-extrabold text-bakery-dark flex items-center gap-2">
                             <i class="fa-solid fa-chart-pie text-bakery-caramel"></i>
@@ -488,22 +613,28 @@
 
                     <div class="flex flex-wrap items-center gap-2">
                         <!-- 📥 ប៊ូតុងទាញការលក់ពី Google Sheet -->
-                        <button onclick="pullProductsFromGoogleSheet()" class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
+                        <button onclick="pullProductsFromGoogleSheet()"
+                            class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
                             <i class="fa-solid fa-cloud-arrow-down"></i> <span>📥 ទាញពី Sheet</span>
                         </button>
                     </div>
                 </div>
 
                 <div class="flex flex-col sm:flex-row items-center gap-3 pt-1 text-xs">
-                    <div class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
+                    <div
+                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
                         <span class="font-extrabold text-stone-800 pl-1">ពី:</span>
-                        <input type="date" id="analyticsStartDate" onchange="renderAnalytics()" class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+                        <input type="date" id="analyticsStartDate" onchange="renderAnalytics()"
+                            class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
                     </div>
-                    <div class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
+                    <div
+                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
                         <span class="font-extrabold text-stone-800 pl-1">ដល់:</span>
-                        <input type="date" id="analyticsEndDate" onchange="renderAnalytics()" class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+                        <input type="date" id="analyticsEndDate" onchange="renderAnalytics()"
+                            class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
                     </div>
-                    <button onclick="renderAnalytics()" class="w-full sm:w-auto px-4 py-2 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition">
+                    <button onclick="renderAnalytics()"
+                        class="w-full sm:w-auto px-4 py-2 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition">
                         ត្រងមើល
                     </button>
                 </div>
@@ -513,17 +644,21 @@
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">ចំណូលសរុប (KHR)</span>
-                    <div class="text-xl sm:text-2xl font-black text-bakery-caramel mt-1 font-en" id="statTodayRevenueKHR">0 ៛</div>
-                    <div class="text-xs font-extrabold text-stone-600 font-en mt-0.5" id="statTodayRevenueUSD">≈ $0.00</div>
+                    <div class="text-xl sm:text-2xl font-black text-bakery-caramel mt-1 font-en"
+                        id="statTodayRevenueKHR">0 ៛</div>
+                    <div class="text-xs font-extrabold text-stone-600 font-en mt-0.5" id="statTodayRevenueUSD">≈ $0.00
+                    </div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">ចំនួនវិក្កយបត្រ</span>
-                    <div class="text-xl sm:text-2xl font-black text-bakery-dark mt-1 font-en" id="statOrdersCount">0</div>
+                    <div class="text-xl sm:text-2xl font-black text-bakery-dark mt-1 font-en" id="statOrdersCount">0
+                    </div>
                     <div class="text-xs font-bold text-emerald-700 mt-0.5">ជោគជ័យ ១០០%</div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
                     <span class="text-xs font-bold text-stone-500 block">សាច់ប្រាក់ (Cash)</span>
-                    <div class="text-lg sm:text-xl font-black text-emerald-700 mt-1 font-en" id="statCashSales">0 ៛</div>
+                    <div class="text-lg sm:text-xl font-black text-emerald-700 mt-1 font-en" id="statCashSales">0 ៛
+                    </div>
                     <div class="text-[10px] text-stone-500">ក្រដាសប្រាក់</div>
                 </div>
                 <div class="bg-white p-4 rounded-3xl shadow-soft border border-orange-100">
@@ -556,61 +691,75 @@
     </main>
 
     <!-- ================= 📸 MODAL: MULTI-IMAGE UPLOAD (UPLOAD រូបភាព) ================= -->
-    <div id="multiUploadModal" class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
+    <div id="multiUploadModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div
+            class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">📸 Upload រូបភាព & បន្ថែមទំនិញ</h3>
-                <button onclick="closeMultiUploadModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeMultiUploadModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
 
-            <form id="multiUploadForm" onsubmit="saveBatchProduct(event)" class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
+            <form id="multiUploadForm" onsubmit="saveBatchProduct(event)"
+                class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
                 <input type="hidden" id="multiUploadProdId">
-                
+
                 <!-- Camera / Image selector box -->
                 <div class="p-4 bg-orange-50/80 border-2 border-dashed border-orange-300 rounded-2xl text-center">
                     <label for="batchFileInput" class="cursor-pointer block py-2">
                         <i class="fa-solid fa-camera text-3xl text-bakery-caramel mb-2"></i>
                         <p class="font-extrabold text-stone-800 text-sm">ចុចទីនេះ ដើម្បីជ្រើសរើសរូប ឬ ថតរូប</p>
-                        <span class="inline-block mt-1 px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full text-[10px] font-bold">
+                        <span
+                            class="inline-block mt-1 px-2.5 py-0.5 bg-amber-100 text-amber-800 rounded-full text-[10px] font-bold">
                             ⚡ ប្រព័ន្ធបង្រួមទំហំរូបស្វ័យប្រវត្តិ
                         </span>
                     </label>
-                    <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden" onchange="handleBatchFileSelect(event)">
-                    <div id="batchPreviewGrid" class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-orange-200 empty:hidden"></div>
+                    <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden"
+                        onchange="handleBatchFileSelect(event)">
+                    <div id="batchPreviewGrid"
+                        class="flex flex-wrap gap-2 mt-3 pt-3 border-t border-orange-200 empty:hidden"></div>
                 </div>
 
                 <div>
                     <label class="block font-bold text-stone-700 mb-1">ឈ្មោះនំ ឬ ទំនិញ *</label>
-                    <input type="text" id="batchProdName" required placeholder="ឧ. នំខេកស្ត្របឺរីស្រស់" class="w-full p-2.5 rounded-xl border border-stone-300 text-sm font-semibold">
+                    <input type="text" id="batchProdName" required placeholder="ឧ. នំខេកស្ត្របឺរីស្រស់ ឬ ម្សៅមី"
+                        class="w-full p-2.5 rounded-xl border border-stone-300 text-sm font-semibold">
                 </div>
 
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ប្រភេទ</label>
-                        <select id="batchProdCat" class="w-full p-2.5 rounded-xl border border-stone-300 bg-white font-bold text-stone-800">
+                        <select id="batchProdCat"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 bg-white font-bold text-stone-800">
                             <option value="cakes">🎂 នំខេក</option>
                             <option value="breads">🥖 នំប៉័ង</option>
                             <option value="pastries">🥐 នំផេស្ទ្រី</option>
                             <option value="drinks">☕ ភេសជ្ជៈ</option>
                             <option value="accessories">🎉 គ្រឿងបន្ថែម</option>
+                            <option value="ingredients">🌾 គ្រឿងផ្សំ (Ingredients)</option>
                         </select>
                     </div>
                     <div>
                         <label class="block font-bold text-stone-700 mb-1">ចំនួនស្តុក</label>
-                        <input type="number" id="batchProdStock" min="0" value="15" class="w-full p-2.5 rounded-xl border border-stone-300 font-bold text-sm">
+                        <input type="number" id="batchProdStock" min="0" value="15"
+                            class="w-full p-2.5 rounded-xl border border-stone-300 font-bold text-sm">
                     </div>
                 </div>
 
                 <div>
                     <label class="block font-bold text-stone-700 mb-1">តម្លៃរៀល (៛) *</label>
-                    <input type="number" id="batchProdPriceKHR" step="500" required placeholder="ឧ. 20000" class="w-full p-2.5 rounded-xl border border-stone-300 font-black text-bakery-caramel text-sm">
+                    <input type="number" id="batchProdPriceKHR" step="500" required placeholder="ឧ. 20000"
+                        class="w-full p-2.5 rounded-xl border border-stone-300 font-black text-bakery-caramel text-sm">
                 </div>
 
                 <div class="pt-2 flex gap-2">
-                    <button type="submit" class="flex-1 py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs transition">
+                    <button type="submit"
+                        class="flex-1 py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs transition">
                         💾 រក្សាទុក & Sync ទៅ Sheet
                     </button>
-                    <button type="button" onclick="closeMultiUploadModal()" class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">
+                    <button type="button" onclick="closeMultiUploadModal()"
+                        class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">
                         បោះបង់
                     </button>
                 </div>
@@ -619,13 +768,14 @@
     </div>
 
     <!-- ================= MODAL: PAYMENT ================= -->
-    <div id="paymentModal" class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="paymentModal"
+        class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark">ទូទាត់ប្រាក់</h3>
                 <button onclick="closePaymentModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            
+
             <div class="mt-4">
                 <div id="khqrContent" class="flex flex-col items-center text-center">
                     <div class="text-sm font-bold text-stone-700" id="khqrMerchantDisplay">ហាងនំខេកវិជ្ជដា</div>
@@ -634,16 +784,20 @@
                     </div>
                     <div class="text-2xl font-black text-red-600 font-en" id="khqrTotalKHR">0 ៛</div>
                     <div class="text-xs text-stone-500 font-en font-bold mb-3" id="khqrTotalUSD">≈ $0.00</div>
-                    <button onclick="completeTransaction('KHQR (៛)')" class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
+                    <button onclick="completeTransaction('KHQR (៛)')"
+                        class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
                         <i class="fa-solid fa-check"></i> ទទួលបានប្រាក់រួចរាល់
                     </button>
                 </div>
 
                 <div id="cashContent" class="hidden space-y-3">
                     <div class="text-2xl font-black text-bakery-caramel font-en text-center" id="cashTotalKHR">0 ៛</div>
-                    <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()" placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..." class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
+                    <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()"
+                        placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..."
+                        class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
                     <div class="text-emerald-700 font-black font-en text-lg text-center" id="cashChangeKHR">0 ៛</div>
-                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')" class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
+                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')"
+                        class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
                         គិតលុយ & ចេញវិក្កយបត្រ
                     </button>
                 </div>
@@ -652,7 +806,8 @@
     </div>
 
     <!-- ================= MODAL: RECEIPT PRINT ================= -->
-    <div id="receiptModal" class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div id="receiptModal"
+        class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 border border-orange-100">
             <div id="receiptPrintArea" class="bg-white text-stone-900 font-mono text-xs p-2">
                 <div class="text-center pb-2 border-b border-dashed border-stone-300">
@@ -670,14 +825,18 @@
                 <div class="text-center pt-2 text-[10px] text-stone-600 font-medium">សូមអរគុណចំពោះការគាំទ្រ!</div>
             </div>
             <div class="mt-4 flex gap-2">
-                <button onclick="window.print()" class="flex-1 py-2.5 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow"><i class="fa-solid fa-print"></i> បោះពុម្ព</button>
-                <button onclick="closeReceiptModal()" class="py-2.5 px-4 rounded-xl bg-stone-100 text-stone-700 font-bold text-xs">បិទ</button>
+                <button onclick="window.print()"
+                    class="flex-1 py-2.5 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow"><i
+                        class="fa-solid fa-print"></i> បោះពុម្ព</button>
+                <button onclick="closeReceiptModal()"
+                    class="py-2.5 px-4 rounded-xl bg-stone-100 text-stone-700 font-bold text-xs">បិទ</button>
             </div>
         </div>
     </div>
 
     <!-- ================= MODAL: SETTINGS ================= -->
-    <div id="settingsModal" class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div id="settingsModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">ការកំណត់ Google Sheets</h3>
@@ -686,9 +845,11 @@
             <div class="mt-4 space-y-3 text-xs">
                 <div>
                     <label class="block font-bold text-stone-700 mb-1">Web App URL</label>
-                    <input type="text" id="googleSheetUrl" class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs">
+                    <input type="text" id="googleSheetUrl"
+                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs">
                 </div>
-                <button onclick="saveIntegrationSettings()" class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs shadow">
+                <button onclick="saveIntegrationSettings()"
+                    class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs shadow">
                     💾 រក្សាទុកការកំណត់
                 </button>
             </div>
@@ -696,26 +857,33 @@
     </div>
 
     <!-- ================= MODAL: KHQR SETUP ================= -->
-    <div id="khqrSetupModal" class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div id="khqrSetupModal"
+        class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">KHQR របស់ហាង</h3>
-                <button onclick="closeKhqrSetupModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeKhqrSetupModal()" class="text-stone-400"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3 text-xs text-center">
-                <div class="p-3 bg-orange-50 rounded-2xl border-2 border-dashed border-red-300 flex flex-col items-center">
+                <div
+                    class="p-3 bg-orange-50 rounded-2xl border-2 border-dashed border-red-300 flex flex-col items-center">
                     <img id="khqrSetupPreviewImg" src="" class="w-40 h-40 object-contain rounded-xl mb-2">
-                    <input type="file" id="khqrSetupFileInput" accept="image/*" class="hidden" onchange="handleKhqrSetupFile(event)">
-                    <label for="khqrSetupFileInput" class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl cursor-pointer shadow-sm">
+                    <input type="file" id="khqrSetupFileInput" accept="image/*" class="hidden"
+                        onchange="handleKhqrSetupFile(event)">
+                    <label for="khqrSetupFileInput"
+                        class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl cursor-pointer shadow-sm">
                         📸 ជ្រើសរើសរូបភាព QR
                     </label>
                 </div>
-                <button onclick="saveKhqrSetup()" class="w-full py-2.5 rounded-xl bg-red-600 text-white font-bold text-xs">រក្សាទុក</button>
+                <button onclick="saveKhqrSetup()"
+                    class="w-full py-2.5 rounded-xl bg-red-600 text-white font-bold text-xs">រក្សាទុក</button>
             </div>
         </div>
     </div>
 
-    <div id="toastContainer" class="fixed bottom-20 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+    <div id="toastContainer" class="fixed bottom-20 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
+    </div>
 
     <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
     <script>
@@ -771,20 +939,38 @@
             { id: 'acc-4', name: 'ទៀនផាវភ្លើង Sparklers (កញ្ចប់ 6ដើម)', cat: 'accessories', priceKHR: 6000, stock: 20, img: 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?w=400', badge: 'Hot' }
         ];
 
+        // 🌾 គ្រឿងផ្សំដើម (Default Raw Ingredients)
+        const defaultIngredients = [
+            { id: 'ing-1', name: 'ម្សៅមីខេក (Cake Flour)', cat: 'ingredients', priceKHR: 15000, stock: 25, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400', badge: 'គ្រឿងផ្សំ' },
+            { id: 'ing-2', name: 'ប័រស្រស់ (Pure Butter)', cat: 'ingredients', priceKHR: 28000, stock: 15, img: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400', badge: 'គ្រឿងផ្សំ' },
+            { id: 'ing-3', name: 'ពងមាន់ស្រស់ (Fresh Eggs)', cat: 'ingredients', priceKHR: 14000, stock: 100, img: 'https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=400', badge: 'គ្រឿងផ្សំ' },
+            { id: 'ing-4', name: 'ស្ករសម៉ត់ (White Sugar)', cat: 'ingredients', priceKHR: 9000, stock: 30, img: 'https://images.unsplash.com/photo-1581441363689-1f3c3c414635?w=400', badge: 'គ្រឿងផ្សំ' },
+            { id: 'ing-5', name: 'ម្សៅកាកាវសុទ្ធ (Cocoa Powder)', cat: 'ingredients', priceKHR: 32000, stock: 10, img: 'https://images.unsplash.com/photo-1542990253-0d0f5be5f0ed?w=400', badge: 'គ្រឿងផ្សំ' },
+            { id: 'ing-6', name: 'ទឹកដោះគោស្រស់ (Fresh Milk)', cat: 'ingredients', priceKHR: 12000, stock: 20, img: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400', badge: 'គ្រឿងផ្សំ' }
+        ];
+
         const initialProducts = [
             { id: 1, name: 'នំខេកស្ត្របឺរីស្រស់ (Strawberry Shortcake)', cat: 'cakes', priceKHR: 65000, stock: 12, img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600', badge: 'លក់ដាច់បំផុត' },
             { id: 2, name: 'នំខេកសូកូឡាឡាវ៉ា (Choco Lava Cake)', cat: 'cakes', priceKHR: 55000, stock: 8, img: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?w=600', badge: 'ពេញនិយម' },
             { id: 3, name: 'នំប៉័ងប៊័រស្រួយ (French Butter Croissant)', cat: 'breads', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?w=600', badge: 'ដុតថ្មីៗ' },
             { id: 4, name: 'នំម៉ាកការ៉ុងបារាំង ៦គ្រាប់ (Macarons Box)', cat: 'pastries', priceKHR: 28000, stock: 18, img: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?w=600', badge: 'កញ្ចប់កាដូ' },
             { id: 5, name: 'កាហ្វេទឹកដោះគោទឹកកក (Iced Milk Coffee)', cat: 'drinks', priceKHR: 7000, stock: 50, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?w=600', badge: 'ប្រចាំហាង' },
-            ...defaultAccessories
+            ...defaultAccessories,
+            ...defaultIngredients
         ];
 
         let products = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || [...initialProducts];
+        
+        // ធានាថាមានគ្រឿងផ្សំក្នុងទិន្នន័យ
+        if (!products.some(p => p.cat === 'ingredients')) {
+            products = [...products, ...defaultIngredients];
+        }
+
         let cart = [];
         let expenses = JSON.parse(localStorage.getItem('BAKERY_EXPENSES')) || [];
         let transactions = JSON.parse(localStorage.getItem('BAKERY_TRANSACTIONS')) || [];
         let activeCategory = 'all';
+        let activeStockSubTab = 'products'; // 'products' ឬ 'ingredients'
         let currentDiscountKHR = 0;
         let batchUploadedImages = [];
 
@@ -866,6 +1052,13 @@
                 document.getElementById('batchProdPriceKHR').value = prod.priceKHR;
                 document.getElementById('batchProdStock').value = prod.stock;
                 batchUploadedImages = prod.images ? [...prod.images] : [prod.img];
+            } else {
+                // ប្រសិនបើកំពុងនៅផ្ទាំងស្តុកគ្រឿងផ្សំ ឱ្យរើស 'ingredients' ស្វ័យប្រវត្តិ
+                if (activeStockSubTab === 'ingredients') {
+                    document.getElementById('batchProdCat').value = 'ingredients';
+                } else {
+                    document.getElementById('batchProdCat').value = 'cakes';
+                }
             }
             renderBatchPreviews();
             document.getElementById('multiUploadModal').classList.remove('hidden');
@@ -917,26 +1110,26 @@
                     return;
                 }
 
-                const fallbackImg = 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600';
-                const images = (batchUploadedImages && batchUploadedImages.length > 0) 
-                    ? [...batchUploadedImages] 
+                const fallbackImg = (cat === 'ingredients') ? 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600' : 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600';
+                const images = (batchUploadedImages && batchUploadedImages.length > 0)
+                    ? [...batchUploadedImages]
                     : [fallbackImg];
 
                 if (id) {
                     const idx = products.findIndex(p => String(p.id) === String(id));
                     if (idx !== -1) {
-                        products[idx] = { 
-                            ...products[idx], 
-                            name, cat, priceKHR, stock, 
-                            img: images[0], 
+                        products[idx] = {
+                            ...products[idx],
+                            name, cat, priceKHR, stock,
+                            img: images[0],
                             images
                         };
                     }
                 } else {
-                    products.unshift({ 
-                        id: Date.now(), 
-                        name, cat, priceKHR, stock, 
-                        img: images[0], 
+                    products.unshift({
+                        id: Date.now(),
+                        name, cat, priceKHR, stock,
+                        img: images[0],
                         images
                     });
                 }
@@ -987,7 +1180,7 @@
             const priceStr = prompt('តម្លៃនំ (រៀល):', '20000');
             if (!priceStr) return;
             const price = parseInt(priceStr.replace(/[^0-9]/g, '')) || 0;
-            
+
             cart.push({
                 id: 'CUSTOM-' + Date.now(),
                 name: name.trim(),
@@ -1024,6 +1217,9 @@
             if (!grid) return;
 
             const filtered = products.filter(p => {
+                // 🌾 មិនបង្ហាញគ្រឿងផ្សំក្នុង POS ឡើយ (សម្រាប់តែទំនិញលក់ប៉ុណ្ណោះ)
+                if (p.cat === 'ingredients') return false;
+
                 const matchCat = (activeCategory === 'all' || p.cat === activeCategory);
                 const matchQuery = !query || String(p.name).toLowerCase().includes(query);
                 return matchCat && matchQuery;
@@ -1201,7 +1397,6 @@
             transactions.unshift(newTx);
             saveState();
 
-            // 🌟 បញ្ជូនទៅ Google Sheet ដោយប្រើទាំង invoice និង sale
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
@@ -1352,19 +1547,58 @@
             `).join('');
         }
 
-        // ================= INVENTORY =================
+        // ================= INVENTORY (កែសម្រួលបែងចែកស្តុក) =================
+        function switchStockSubTab(tab) {
+            activeStockSubTab = tab;
+            const btnProd = document.getElementById('tab-stock-products');
+            const btnIng = document.getElementById('tab-stock-ingredients');
+            const colHeaderPrice = document.getElementById('invColHeaderPrice');
+            const colHeaderUSD = document.getElementById('invColHeaderUSD');
+
+            if (tab === 'products') {
+                btnProd.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-white text-bakery-caramel shadow-sm";
+                btnIng.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-stone-700 hover:text-bakery-dark";
+                if (colHeaderPrice) colHeaderPrice.innerText = "តម្លៃរៀល";
+                if (colHeaderUSD) colHeaderUSD.innerText = "ដុល្លារ";
+            } else {
+                btnIng.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-white text-bakery-caramel shadow-sm";
+                btnProd.className = "flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-stone-700 hover:text-bakery-dark";
+                if (colHeaderPrice) colHeaderPrice.innerText = "តម្លៃដើម (៛)";
+                if (colHeaderUSD) colHeaderUSD.innerText = "ដុល្លារ ($)";
+            }
+            renderInventory();
+        }
+
         function renderInventory() {
             const tbody = document.getElementById('inventoryTableBody');
             if (!tbody) return;
-            tbody.innerHTML = products.map((p, idx) => `
+
+            const prodItems = products.filter(p => p.cat !== 'ingredients');
+            const ingItems = products.filter(p => p.cat === 'ingredients');
+
+            // អាប់ដេតចំនួនលេខលើ badge
+            const badgeProd = document.getElementById('stockProductsBadge');
+            const badgeIng = document.getElementById('stockIngredientsBadge');
+            if (badgeProd) badgeProd.innerText = prodItems.length;
+            if (badgeIng) badgeIng.innerText = ingItems.length;
+
+            // ជ្រើសរើសបញ្ជីតាមផ្ទាំងដែលកំពុងបើក
+            const currentList = (activeStockSubTab === 'products') ? prodItems : ingItems;
+
+            if (currentList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-8 text-stone-500 font-bold">មិនទាន់មានទំនិញក្នុងស្តុកនេះទេ</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = currentList.map((p, idx) => `
                 <tr class="hover:bg-orange-50/40 transition">
                     <td class="p-3.5 pl-4 flex items-center gap-2.5">
                         <img src="${formatImgUrl(p.img)}" class="w-10 h-10 rounded-xl object-cover">
                         <span class="font-extrabold text-stone-800">${p.name}</span>
                     </td>
-                    <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
-                    <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
-                    <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
+                    <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat === 'ingredients' ? '🌾 គ្រឿងផ្សំ' : p.cat}</td>
+                    <td class="p-3.5 font-black font-en text-bakery-caramel">${(p.priceKHR || 0).toLocaleString()} ៛</td>
+                    <td class="p-3.5 font-bold font-en text-stone-600">$${((p.priceKHR || 0) / KHR_RATE).toFixed(2)}</td>
                     <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
                     <td class="p-3.5 text-center">
                         <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold mr-1"><i class="fa-solid fa-pen"></i></button>
@@ -1535,4 +1769,5 @@
         }
     </script>
 </body>
+
 </html>
