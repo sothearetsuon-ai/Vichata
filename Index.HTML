@@ -136,7 +136,7 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP NAVIGATION TABS (កុំព្យូទ័រ) -->
+                <!-- DESKTOP NAVIGATION TABS -->
                 <nav
                     class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
                     <button id="nav-pos" onclick="switchView('pos')"
@@ -167,7 +167,6 @@
 
                 <!-- RIGHT ACTIONS -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5">
-                    <!-- 📅 ប៊ូតុងបញ្ចូលការលក់ចាស់ៗតាមថ្ងៃ -->
                     <button onclick="openPastSaleModal()"
                         class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-600 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-amber-300"
                         title="បញ្ចូលការទិញរបស់ភ្ញៀវមុនៗដែលមិនទាន់បានបញ្ចូល តាមថ្ងៃ">
@@ -188,7 +187,6 @@
                         <span class="hidden md:inline">KHQR ហាង</span>
                     </button>
 
-                    <!-- 📥 ប៊ូតុងទាញទិន្នន័យ (មុខនំ រូបភាព និងការលក់) ពី Sheet -->
                     <button onclick="pullProductsFromGoogleSheet()"
                         class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition"
                         title="ទាញទិន្នន័យមុខនំ រូបភាព និងការលក់ពី Google Sheet">
@@ -213,7 +211,6 @@
         <!-- ================= VIEW 1: POS SYSTEM ================= -->
         <section id="view-pos" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
-                <!-- Search & Filter Category Chips -->
                 <div
                     class="bg-white p-3.5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row gap-3 sm:gap-4 justify-between items-center">
                     <div class="relative w-full sm:w-80">
@@ -227,11 +224,9 @@
                         id="categoryChips"></div>
                 </div>
 
-                <!-- Products Grid -->
                 <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-3 gap-3 sm:gap-5" id="productGrid"></div>
             </div>
 
-            <!-- Cart Sidebar -->
             <div class="lg:col-span-4" id="cartSidebar">
                 <div
                     class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 flex flex-col sticky top-24">
@@ -244,7 +239,6 @@
                             <h3 class="font-extrabold text-base sm:text-lg text-bakery-dark">កន្ត្រកទំនិញ</h3>
                         </div>
 
-                        <!-- 🎂 ប៊ូតុងបញ្ចូលការលក់ចាស់ៗ & នំកុម្ម៉ង់តម្លៃតាមចិត្ត & សម្អាត -->
                         <div class="flex items-center gap-1.5">
                             <button onclick="openPastSaleModal()"
                                 class="text-[11px] bg-orange-50 hover:bg-orange-100 text-bakery-caramel border border-orange-300 font-extrabold px-2 py-1 rounded-xl transition flex items-center gap-1"
@@ -263,7 +257,6 @@
                         </div>
                     </div>
 
-                    <!-- Quick Add-ons Party Bar -->
                     <div
                         class="my-2.5 p-2.5 sm:p-3 bg-gradient-to-r from-orange-50 via-amber-50 to-rose-50 rounded-2xl border border-orange-200 shadow-xs">
                         <div class="flex items-center justify-between mb-1.5">
@@ -280,12 +273,10 @@
                         </div>
                     </div>
 
-                    <!-- Cart Items List (មានប៊ូតុង ✏️ កែតម្លៃ) -->
                     <div id="cartItemsList"
                         class="flex-1 overflow-y-auto max-h-[220px] sm:max-h-[260px] my-1 divide-y divide-orange-100 pr-1 custom-scroll">
                     </div>
 
-                    <!-- Financial Summary (មានកន្លែងកែបញ្ចុះតម្លៃ) -->
                     <div
                         class="bg-bakery-vanilla/60 rounded-2xl p-3.5 sm:p-4 border border-orange-200 space-y-1.5 sm:space-y-2 text-xs sm:text-sm mt-2 shadow-xs">
                         <div class="flex justify-between text-stone-700 font-semibold">
@@ -293,7 +284,6 @@
                             <span class="font-extrabold font-en text-bakery-dark" id="summarySubtotalKHR">0 ៛</span>
                         </div>
 
-                        <!-- Discount Row -->
                         <div class="flex justify-between text-emerald-700 font-bold items-center">
                             <span class="flex items-center gap-1">
                                 <span>បញ្ចុះតម្លៃ (Discount)</span>
@@ -561,7 +551,7 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 5: INVENTORY (បែងចែកជាពីរស្តុក) ================= -->
+        <!-- ================= VIEW 5: INVENTORY ================= -->
         <section id="view-inventory" class="hidden space-y-6">
             <div
                 class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
@@ -584,7 +574,6 @@
                 </div>
             </div>
 
-            <!-- 🌟 SUB-TABS: ប៊ូតុងប្តូររវាងស្តុកនំ & ស្តុកគ្រឿងផ្សំ 🌟 -->
             <div
                 class="flex items-center gap-2 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner w-full sm:w-fit">
                 <button id="tab-stock-products" onclick="switchStockSubTab('products')"
@@ -620,7 +609,7 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 6: ANALYTICS & STATS (កែលម្អថ្មី ទាញ និងមើលរបាយការណ៍បាន ១០០%) ================= -->
+        <!-- ================= VIEW 6: ANALYTICS & STATS ================= -->
         <section id="view-analytics" class="hidden space-y-6">
             <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
                 <div
@@ -634,7 +623,6 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2">
-                        <!-- 📅 ប៊ូតុងបញ្ចូលការលក់ចាស់ៗតាមថ្ងៃ ក្នុងផ្ទាំង Analytics -->
                         <button onclick="openPastSaleModal()"
                             class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-amber-600 to-bakery-caramel text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
                             <i class="fa-solid fa-calendar-plus"></i> <span>➕ បញ្ចូលការលក់ចាស់ៗតាមថ្ងៃ</span>
@@ -650,9 +638,7 @@
                     </div>
                 </div>
 
-                <!-- 🌟 ប៊ូតុងជ្រើសរើសកាលបរិច្ឆេទរហ័ស & Search 🌟 -->
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-1 text-xs">
-                    <!-- Quick Date Filter Chips -->
                     <div class="flex flex-wrap items-center gap-1.5">
                         <span class="font-extrabold text-stone-700 text-xs">រើសរហ័ស:</span>
                         <button type="button" onclick="setAnalyticsQuickFilter('all')" id="btnFilterAll"
@@ -677,7 +663,6 @@
                         </button>
                     </div>
 
-                    <!-- Date Pickers -->
                     <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
                         <div class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
                             <span class="font-extrabold text-stone-800 pl-1 text-[11px]">ពី:</span>
@@ -731,7 +716,6 @@
                         <i class="fa-solid fa-receipt text-bakery-caramel"></i>
                         <span>បញ្ជីប្រតិបត្តិការលក់ទាំងអស់ (<span id="analyticsCountDisplay">0</span>)</span>
                     </div>
-                    <!-- ប្រអប់ស្វែងរកក្នុងតារាង -->
                     <div class="relative w-full sm:w-64">
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
                         <input type="text" id="analyticsSearchInput" oninput="renderAnalytics()"
@@ -759,7 +743,7 @@
 
     </main>
 
-    <!-- ================= 📱 របារ MENU ខាងក្រោមសម្រាប់ទូរស័ព្ទដៃ (MOBILE BOTTOM MENU) 📱 ================= -->
+    <!-- ================= 📱 របារ MENU ខាងក្រោមសម្រាប់ទូរស័ព្ទដៃ ================= -->
     <nav
         class="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-orange-200 px-2 py-2 shadow-lg flex items-center justify-around">
         <button onclick="switchView('pos')" id="mob-nav-pos"
@@ -809,7 +793,6 @@
                 class="mt-4 space-y-4 overflow-y-auto pr-1 flex-1 text-xs custom-scroll">
                 <input type="hidden" id="multiUploadProdId">
 
-                <!-- Camera / Image selector box -->
                 <div class="p-4 bg-orange-50/80 border-2 border-dashed border-orange-300 rounded-2xl text-center">
                     <label for="batchFileInput" class="cursor-pointer block py-2">
                         <i class="fa-solid fa-camera text-3xl text-bakery-caramel mb-2"></i>
@@ -871,7 +854,7 @@
         </div>
     </div>
 
-    <!-- ================= 📅 MODAL: បញ្ចូលការទិញរបស់ភ្ញៀវមុនៗតាមថ្ងៃ (PAST SALES ENTRY) ================= -->
+    <!-- ================= 📅 MODAL: PAST SALES ENTRY ================= -->
     <div id="pastSaleModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div
@@ -893,7 +876,6 @@
             </div>
 
             <form id="pastSaleForm" onsubmit="savePastSale(event)" class="mt-4 space-y-3.5 text-xs">
-                <!-- 📅 កាលបរិច្ឆេទនៃការលក់ -->
                 <div class="p-3 bg-amber-50/60 rounded-2xl border border-amber-200 space-y-2">
                     <div class="flex items-center justify-between">
                         <label class="block font-extrabold text-stone-800 flex items-center gap-1.5">
@@ -918,7 +900,6 @@
                     </div>
                 </div>
 
-                <!-- 👤 ព័ត៌មានអតិថិជន (មាន Autocomplete អតិថិជនចាស់ៗ) -->
                 <div class="p-3 bg-orange-50/60 rounded-2xl border border-orange-200 space-y-2">
                     <div class="flex items-center justify-between">
                         <label class="block font-extrabold text-stone-800 flex items-center gap-1.5">
@@ -945,13 +926,11 @@
                     </div>
                 </div>
 
-                <!-- 🎂 មុខទំនិញដែលបានទិញ -->
                 <div class="space-y-2">
                     <label class="block font-bold text-stone-800 flex items-center justify-between">
                         <span>មុខទំនិញដែលបានទិញ (Items Purchased) *</span>
                         <span class="text-[10px] text-stone-400 font-normal">ជ្រើសរើសពីស្តុក ឬ វាយបញ្ចូល</span>
                     </label>
-                    <!-- រើសពីមុខនំដែលមានស្រាប់ដើម្បីបញ្ចូលលឿន -->
                     <div class="flex gap-2">
                         <select id="pastSaleProductSelect"
                             class="flex-1 p-2 rounded-xl bg-stone-50 border border-stone-300 text-xs font-semibold">
@@ -962,13 +941,11 @@
                             <i class="fa-solid fa-plus"></i> បន្ថែម
                         </button>
                     </div>
-                    <!-- ប្រអប់ពិពណ៌នាមុខទំនិញ -->
                     <textarea id="pastSaleItemsSummaryInput" rows="2" required
                         placeholder="ឧ. នំខេកស្ត្របឺរីស្រស់ x1, ទៀនលេខខួបកំណើត x2..."
                         class="w-full p-2.5 rounded-xl border border-stone-300 font-semibold text-xs focus:ring-2 focus:ring-bakery-caramel"></textarea>
                 </div>
 
-                <!-- 💰 ចំនួនទឹកប្រាក់សរុប (៛ & $) -->
                 <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label class="block font-bold text-stone-800 mb-1">ទឹកប្រាក់សរុបគិតជាប្រាក់រៀល (៛) *</label>
@@ -983,7 +960,6 @@
                     </div>
                 </div>
 
-                <!-- 💳 ជម្រើសការបង់ប្រាក់ & វិធីសាស្ត្រ -->
                 <div class="p-3 bg-bakery-vanilla/70 rounded-2xl border border-orange-200 space-y-2.5">
                     <div class="grid grid-cols-2 gap-2">
                         <div>
@@ -1004,7 +980,6 @@
                         </div>
                     </div>
 
-                    <!-- ប្រអប់ប្រាក់កក់ និងនៅខ្វះ (លាក់ពេលបង់គ្រប់) -->
                     <div id="pastSaleDepositBox"
                         class="hidden grid grid-cols-2 gap-2 pt-2 border-t border-orange-200/70">
                         <div>
@@ -1021,7 +996,6 @@
                     </div>
                 </div>
 
-                <!-- Submit & Cancel Buttons -->
                 <div class="pt-2 flex gap-2">
                     <button type="submit"
                         class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-600 to-bakery-caramel hover:opacity-95 text-white font-extrabold text-xs shadow-soft transition flex items-center justify-center gap-1.5">
@@ -1036,7 +1010,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: PAYMENT (មានឈ្មោះ លេខទូរស័ព្ទ, ជម្រើសប្រាក់កក់ & កាលបរិច្ឆេទ/អ្នកទិញមុនៗ) ================= -->
+    <!-- ================= MODAL: PAYMENT ================= -->
     <div id="paymentModal"
         class="fixed inset-0 bg-stone-900/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div
@@ -1051,7 +1025,6 @@
             </div>
 
             <div class="mt-3 space-y-3">
-                <!-- 👤 ព័ត៌មានអតិថិជន & កាលបរិច្ឆេទ (Customer & Date Picker & Past Customers) -->
                 <div class="p-3 bg-orange-50/70 rounded-2xl border border-orange-200/80 space-y-2 text-xs">
                     <div class="flex items-center justify-between font-extrabold text-bakery-dark">
                         <span class="flex items-center gap-1.5">
@@ -1063,7 +1036,6 @@
                         </span>
                     </div>
 
-                    <!-- 📅 កាលបរិច្ឆេទលក់ / កុម្ម៉ង់ (អាចជ្រើសថ្ងៃមុនៗ ឬថ្ងៃនេះ) -->
                     <div>
                         <label class="block text-[11px] font-bold text-stone-700 mb-0.5 flex items-center gap-1">
                             <i class="fa-regular fa-calendar text-bakery-caramel"></i>
@@ -1079,7 +1051,6 @@
                             <input list="previousCustomersList" type="text" id="custNameInput"
                                 oninput="onCustomerNameSelect(this.value)" placeholder="ឧ. សុខា..."
                                 class="w-full p-2 rounded-xl bg-white border border-stone-300 font-semibold text-xs focus:ring-2 focus:ring-bakery-caramel">
-                            <!-- បញ្ជីទាញឈ្មោះអតិថិជនចាស់ៗដោយស្វ័យប្រវត្តិ -->
                             <datalist id="previousCustomersList"></datalist>
                         </div>
                         <div>
@@ -1090,7 +1061,6 @@
                     </div>
                 </div>
 
-                <!-- 💰 ជម្រើសការបង់ប្រាក់៖ ប្រាក់ទាំងអស់ VS ប្រាក់កក់ -->
                 <div class="p-3 bg-bakery-vanilla/80 rounded-2xl border border-orange-200 space-y-2 text-xs">
                     <div class="flex items-center justify-between font-extrabold text-bakery-dark">
                         <span class="flex items-center gap-1.5">
@@ -1112,7 +1082,6 @@
                         </button>
                     </div>
 
-                    <!-- ប្រអប់បញ្ចូលប្រាក់កក់ (បង្ហាញពេលជ្រើសប្រាក់កក់) -->
                     <div id="depositInputContainer" class="hidden space-y-1.5 pt-1.5 border-t border-orange-200/70">
                         <div class="flex justify-between items-center text-[11px] font-bold text-stone-700">
                             <span>ចំនួនប្រាក់កក់ (៛):</span>
@@ -1125,7 +1094,6 @@
                     </div>
                 </div>
 
-                <!-- 💳 វិធីសាស្ត្រទូទាត់ (KHQR & Cash) -->
                 <div id="khqrContent" class="flex flex-col items-center text-center pt-1">
                     <div class="text-sm font-bold text-stone-700" id="khqrMerchantDisplay">ហាងនំខេកវិជ្ជដា</div>
                     <div class="p-2 border-2 border-red-500 rounded-2xl bg-white shadow-inner my-2">
@@ -1154,7 +1122,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: EDIT TRANSACTION (កែប្រែកាលបរិច្ឆេទ ឈ្មោះ លេខទូរស័ព្ទ ឬ ប្រាក់កក់) ================= -->
+    <!-- ================= MODAL: EDIT TRANSACTION ================= -->
     <div id="editTxModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div
@@ -1176,7 +1144,6 @@
                     <span class="font-black text-bakery-caramel font-en text-sm" id="editTxTotalDisplay">0 ៛</span>
                 </div>
 
-                <!-- 📅 កែប្រែកាលបរិច្ឆេទវិក្កយបត្រ -->
                 <div>
                     <label class="block font-bold text-stone-700 mb-1 flex items-center gap-1">
                         <i class="fa-regular fa-calendar text-bakery-caramel"></i>
@@ -1271,7 +1238,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: SETTINGS (GOOGLE SHEET & TELEGRAM) ================= -->
+    <!-- ================= MODAL: SETTINGS ================= -->
     <div id="settingsModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div
@@ -1350,7 +1317,6 @@
 
     <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
     <script>
-        // រូបភាពនំខេកពិតៗ គុណភាពខ្ពស់ សម្រាប់ប្រើជំនួស fallback ចាស់
         const FALLBACK_BAKERY_SVG = "https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600";
 
         function formatImgUrl(rawUrl, existingFallback = null) {
@@ -1384,6 +1350,19 @@
                 reader.onerror = () => resolve(FALLBACK_BAKERY_SVG);
                 reader.readAsDataURL(file);
             });
+        }
+
+        // មុខងារកែម៉ោងកុំឱ្យចេញ Sat Dec 30 1899...
+        function sanitizeTime(rawTime) {
+            if (!rawTime) return '';
+            const str = String(rawTime);
+            if (str.includes('1899') || str.includes('GMT') || str.includes('T')) {
+                const d = new Date(str);
+                if (!isNaN(d.getTime())) {
+                    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                }
+            }
+            return str.length > 8 ? str.slice(0, 5) : str;
         }
 
         let storeInfo = {
@@ -1424,18 +1403,11 @@
         ];
 
         let products = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || [...initialProducts];
-
-        // ជួសជុលរូបភាពប្រសិនបើមានជាប់រូបតំណាងចាស់
         products = products.map(p => {
-            if (!p.img || p.img.includes('992714.png')) {
-                p.img = FALLBACK_BAKERY_SVG;
-            }
+            if (!p.img || p.img.includes('992714.png')) p.img = FALLBACK_BAKERY_SVG;
             return p;
         });
-
-        if (!products.some(p => p.cat === 'ingredients')) {
-            products = [...products, ...defaultIngredients];
-        }
+        if (!products.some(p => p.cat === 'ingredients')) products = [...products, ...defaultIngredients];
 
         let cart = [];
         let expenses = JSON.parse(localStorage.getItem('BAKERY_EXPENSES')) || [];
@@ -1444,17 +1416,13 @@
         let activeStockSubTab = 'products';
         let currentDiscountKHR = 0;
         let batchUploadedImages = [];
-
-        let activePaymentType = 'full'; // 'full' or 'deposit'
+        let activePaymentType = 'full';
 
         let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
             googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec',
             telegramBotToken: '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4',
             telegramChatId: '8970210109'
         };
-
-        if (!integrationSettings.telegramBotToken) integrationSettings.telegramBotToken = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
-        if (!integrationSettings.telegramChatId) integrationSettings.telegramChatId = '8970210109';
 
         const categories = [
             { id: 'all', label: 'ទាំងអស់' },
@@ -1474,7 +1442,7 @@
             renderInventory();
             renderExpenses();
             initKhqrImg();
-            initAnalyticsDates(); // នឹងកំណត់ទៅ "ទាំងអស់ (All)" ជាលំនាំដើម
+            setAnalyticsQuickFilter('all');
             updateCustomerDatalist();
         });
 
@@ -1489,9 +1457,6 @@
             }
         }
 
-        /* ----------------------------------------------------
-           🌟 មុខងារគ្រប់គ្រងអតិថិជនចាស់ៗ (PAST CUSTOMERS AUTOCOMPLETE)
-        ---------------------------------------------------- */
         function updateCustomerDatalist() {
             const datalist = document.getElementById('previousCustomersList');
             if (datalist) {
@@ -1529,14 +1494,9 @@
             }
         }
 
-        /* ----------------------------------------------------
-           🌟 មុខងារបញ្ចូលការទិញរបស់ភ្ញៀវមុនៗតាមថ្ងៃ (PAST SALES ENTRY)
-        ---------------------------------------------------- */
         function openPastSaleModal() {
             const modal = document.getElementById('pastSaleModal');
             if (!modal) return;
-
-            // កំណត់កាលបរិច្ឆេទថ្ងៃនេះជាស្រេច
             const today = new Date().toISOString().split('T')[0];
             const dateInput = document.getElementById('pastSaleDateInput');
             if (dateInput && !dateInput.value) dateInput.value = today;
@@ -1547,7 +1507,6 @@
                 timeInput.value = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             }
 
-            // បញ្ចូលមុខនំពីស្តុកចូលក្នុង Dropdown
             const prodSelect = document.getElementById('pastSaleProductSelect');
             if (prodSelect) {
                 prodSelect.innerHTML = '<option value="">-- រើសនំពីស្តុកហាង --</option>' +
@@ -1569,7 +1528,6 @@
             const datalist = document.getElementById('pastSaleCustomersList');
             if (!datalist) return;
             datalist.innerHTML = '';
-
             const customerMap = new Map();
             transactions.forEach(tx => {
                 if (tx.customerName && tx.customerName.trim() && tx.customerName !== 'អតិថិជនទូទៅ' && tx.customerName !== 'ទូទៅ') {
@@ -1580,7 +1538,6 @@
                     }
                 }
             });
-
             customerMap.forEach((phone, name) => {
                 const opt = document.createElement('option');
                 opt.value = name;
@@ -1610,7 +1567,6 @@
 
             const textarea = document.getElementById('pastSaleItemsSummaryInput');
             const totalInput = document.getElementById('pastSaleTotalKHRInput');
-
             const currentText = textarea.value.trim();
             textarea.value = currentText ? `${currentText}, ${name} x1` : `${name} x1`;
 
@@ -1684,6 +1640,8 @@
                 customerPhone: custPhone,
                 itemsCount: 1,
                 itemsSummary: itemsSummary,
+                note: 'គ្មាន',
+                discount: 0,
                 method: method,
                 totalKHR: totalKHR,
                 depositKHR: depositKHR,
@@ -1694,18 +1652,16 @@
             };
 
             transactions.unshift(newTx);
-            // តម្រៀបប្រតិបត្តិការតាមកាលបរិច្ឆេទ
             transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
             saveState();
 
-            // ១. បញ្ជូនទៅ Google Sheet
+            // បញ្ជូនទៅ Google Sheet ដោយរៀបចំជួរឈរត្រឹមត្រូវ
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
                 sale: newTx
             }, true);
 
-            // ២. ផ្ញើសារជូនដំណឹងទៅ Telegram Bot
             sendTelegramNotification(newTx);
 
             closePastSaleModal();
@@ -1759,7 +1715,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ================= 📸 MULTI-IMAGE UPLOAD =================
         function openMultiUploadModal(id = null) {
             batchUploadedImages = [];
             const form = document.getElementById('multiUploadForm');
@@ -1776,11 +1731,7 @@
                 document.getElementById('batchProdStock').value = prod.stock;
                 batchUploadedImages = prod.images ? [...prod.images] : [prod.img];
             } else {
-                if (activeStockSubTab === 'ingredients') {
-                    document.getElementById('batchProdCat').value = 'ingredients';
-                } else {
-                    document.getElementById('batchProdCat').value = 'cakes';
-                }
+                document.getElementById('batchProdCat').value = (activeStockSubTab === 'ingredients') ? 'ingredients' : 'cakes';
             }
             renderBatchPreviews();
             document.getElementById('multiUploadModal').classList.remove('hidden');
@@ -1840,20 +1791,10 @@
                 if (id) {
                     const idx = products.findIndex(p => String(p.id) === String(id));
                     if (idx !== -1) {
-                        products[idx] = {
-                            ...products[idx],
-                            name, cat, priceKHR, stock,
-                            img: images[0],
-                            images
-                        };
+                        products[idx] = { ...products[idx], name, cat, priceKHR, stock, img: images[0], images };
                     }
                 } else {
-                    products.unshift({
-                        id: Date.now(),
-                        name, cat, priceKHR, stock,
-                        img: images[0],
-                        images
-                    });
+                    products.unshift({ id: Date.now(), name, cat, priceKHR, stock, img: images[0], images });
                 }
 
                 saveState();
@@ -1864,7 +1805,6 @@
                 renderShowcase();
                 renderQuickAddons();
 
-                alert(`✅ បានរក្សាទុក "${name}" ដោយជោគជ័យ!`);
                 showToast(`🎉 បានរក្សាទុក "${name}" ជោគជ័យ!`, 'success');
                 syncStockToGoogleSheet();
             } catch (err) {
@@ -1872,7 +1812,6 @@
             }
         }
 
-        // ================= 🛒 មុខងារកែតម្លៃនំក្នុងកន្ត្រកផ្ទាល់ដៃ =================
         function editCartItemPrice(idx) {
             if (!cart[idx]) return;
             const currentPrice = cart[idx].priceKHR;
@@ -1915,7 +1854,6 @@
             showToast(`បានបញ្ចូល "${name}" តម្លៃ ${price.toLocaleString()} ៛`, 'success');
         }
 
-        // ================= POS CATALOG & CART =================
         function renderCategories() {
             const container = document.getElementById('categoryChips');
             if (!container) return;
@@ -1940,7 +1878,6 @@
 
             const filtered = products.filter(p => {
                 if (p.cat === 'ingredients') return false;
-
                 const matchCat = (activeCategory === 'all' || p.cat === activeCategory);
                 const matchQuery = !query || String(p.name).toLowerCase().includes(query);
                 return matchCat && matchQuery;
@@ -1973,14 +1910,7 @@
             if (exist) {
                 exist.qty++;
             } else {
-                cart.push({
-                    id: p.id,
-                    name: p.name,
-                    cat: p.cat,
-                    priceKHR: p.priceKHR,
-                    qty: 1,
-                    img: p.img
-                });
+                cart.push({ id: p.id, name: p.name, cat: p.cat, priceKHR: p.priceKHR, qty: 1, img: p.img });
             }
             renderCart();
         }
@@ -2034,7 +1964,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="flex items-center gap-1 bg-stone-100 rounded-lg p-1">
                                 <button onclick="updateCartQty(${idx}, -1)" class="w-5 h-5 bg-white rounded flex items-center justify-center text-[10px] font-bold"><i class="fa-solid fa-minus"></i></button>
                                 <span class="text-xs font-black font-en px-1">${item.qty}</span>
@@ -2055,7 +1984,6 @@
             document.getElementById('summaryTotalUSD').innerText = `≈ $${totalUSD}`;
         }
 
-        // ================= 💵 CHECKOUT & ជម្រើសប្រាក់កក់ =================
         function setPaymentType(type) {
             activePaymentType = type;
             const btnFull = document.getElementById('btnPayFull');
@@ -2074,7 +2002,6 @@
                 btnFull.className = "py-2 px-3 rounded-xl border border-stone-300 bg-stone-50 font-bold text-stone-700 text-center transition flex items-center justify-center gap-1";
                 depContainer.classList.remove('hidden');
 
-                // ដាក់ប្រាក់កក់លំនាំដើម ៥០%
                 const half = Math.round((totalKHR * 0.5) / 500) * 500;
                 document.getElementById('depositAmountInput').value = half;
                 calculateDepositRemaining();
@@ -2122,7 +2049,6 @@
             document.getElementById('custNameInput').value = '';
             document.getElementById('custPhoneInput').value = '';
 
-            // 📅 កំណត់កាលបរិច្ឆេទថ្ងៃនេះជាស្រេច & ធ្វើបច្ចុប្បន្នភាពបញ្ជីអ្នកទិញមុនៗ
             const todayStr = new Date().toISOString().split('T')[0];
             const saleDateEl = document.getElementById('saleDateInput');
             if (saleDateEl) saleDateEl.value = todayStr;
@@ -2188,9 +2114,8 @@
 
             const now = new Date();
             const todayStr = now.toISOString().split('T')[0];
-            // 📅 យកកាលបរិច្ឆេទដែលបានរើសក្នុង Modal
             const selectedDate = document.getElementById('saleDateInput')?.value || todayStr;
-            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
 
             const newTx = {
@@ -2201,6 +2126,8 @@
                 customerPhone: custPhone,
                 itemsCount: totalQty,
                 itemsSummary: itemsSummaryArr.join(', '),
+                note: 'គ្មាន',
+                discount: currentDiscountKHR,
                 method: method,
                 totalKHR: totalKHR,
                 depositKHR: depositKHR,
@@ -2211,18 +2138,16 @@
             };
 
             transactions.unshift(newTx);
-            // តម្រៀបប្រតិបត្តិការតាមកាលបរិច្ឆេទ
             transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
             saveState();
 
-            // ១. បញ្ជូនទៅ Google Sheet
+            // បញ្ជូនទៅ Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
                 sale: newTx
             });
 
-            // ២. ផ្ញើសារជូនដំណឹង + រូបភាពនំទៅ Telegram Bot
             sendTelegramNotification(newTx);
 
             closePaymentModal();
@@ -2238,7 +2163,6 @@
             showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ & បាញ់សារទៅ Telegram!', 'success');
         }
 
-        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS (WITH PHOTO & CUSTOMER INFO) =================
         async function sendTelegramNotification(tx) {
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
@@ -2260,12 +2184,9 @@
                     photoUrl = matchProd.img;
                 }
             }
-            if (!photoUrl) {
-                photoUrl = FALLBACK_BAKERY_SVG;
-            }
+            if (!photoUrl) photoUrl = FALLBACK_BAKERY_SVG;
 
             const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
-
             const depositText = (tx.remainingKHR > 0)
                 ? `💵 *បានបង់ (កក់):* *${Number(tx.depositKHR).toLocaleString()} ៛*\n⚠️ *នៅខ្វះ:* *${Number(tx.remainingKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* នៅជំពាក់ (Deposit)\n`
                 : `💵 *បានបង់គ្រប់:* *${Number(tx.totalKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* បង់គ្រប់ (Paid)\n`;
@@ -2273,7 +2194,7 @@
             const msg = `🎂 *ហាងនំខេកវិជ្ជដា - ការលក់ថ្មី!* 🎂\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
                 `🧾 *វិក្កយបត្រ:* \`${tx.id}\`\n` +
-                `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${tx.time})\n` +
+                `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${sanitizeTime(tx.time)})\n` +
                 `👤 *អតិថិជន:* *${tx.customerName || 'ទូទៅ'}*\n` +
                 `📞 *លេខទូរស័ព្ទ:* *${tx.customerPhone || 'គ្មាន'}*\n` +
                 `━━━━━━━━━━━━━━━━━━━━\n` +
@@ -2298,7 +2219,6 @@
                 });
                 const photoData = await photoRes.json();
                 if (!photoData.ok) {
-                    console.warn('sendPhoto failed, falling back to sendMessage:', photoData.description);
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2360,7 +2280,7 @@
             }
         }
 
-        // ================= GOOGLE SHEET SYNC (ទាញ & បញ្ជូនទិន្នន័យ) =================
+        // ================= GOOGLE SHEET SYNC =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) return;
@@ -2399,7 +2319,6 @@
 
                 let updatedItems = [];
 
-                // ១. ទាញទំនិញ
                 if (result && result.products && result.products.length > 0) {
                     products = result.products.map(p => {
                         const existing = products.find(ep => String(ep.id) === String(p.id) || ep.name === p.name);
@@ -2434,26 +2353,23 @@
                     updatedItems.push(`${products.length} មុខទំនិញ`);
                 }
 
-                // ២. ទាញការលក់ (Transactions)
                 if (result && result.sales && Array.isArray(result.sales) && result.sales.length > 0) {
                     const txMap = new Map();
-                    // រក្សាទុកការលក់ក្នុងម៉ាស៊ីនមុន
                     transactions.forEach(t => txMap.set(String(t.id), t));
-                    // បញ្ចូលការលក់ដែលទាញពី Sheet មក
                     result.sales.forEach(s => {
                         const id = s.id || s.ID || ('BK-' + Math.floor(1000 + Math.random() * 9000));
                         txMap.set(String(id), {
                             id: id,
                             date: s.date || s.Date || (new Date().toISOString().split('T')[0]),
-                            time: s.time || s.Time || '',
+                            time: sanitizeTime(s.time || s.Time || ''),
                             customerName: s.customerName || s.CustomerName || s.Customer || 'អតិថិជនទូទៅ',
                             customerPhone: s.customerPhone || s.CustomerPhone || s.Phone || 'គ្មាន',
                             itemsCount: Number(s.itemsCount) || 1,
                             itemsSummary: s.itemsSummary || s.ItemsSummary || s.items || '',
                             method: s.method || s.Method || 'ប្រាក់សុទ្ធ (៛)',
-                            totalKHR: Number(s.totalKHR || s.TotalKHR || s.total || 0),
-                            depositKHR: Number(s.depositKHR || s.DepositKHR || s.deposit || (s.totalKHR || 0)),
-                            remainingKHR: Number(s.remainingKHR || s.RemainingKHR || s.remaining || 0),
+                            totalKHR: Number(s.totalKHR !== undefined ? s.totalKHR : (s.TotalKHR || s.total || 0)),
+                            depositKHR: Number(s.depositKHR !== undefined ? s.depositKHR : (s.DepositKHR || s.totalKHR || 0)),
+                            remainingKHR: Number(s.remainingKHR !== undefined ? s.remainingKHR : (s.RemainingKHR || 0)),
                             totalUSD: parseFloat(s.totalUSD || ((Number(s.totalKHR || 0) / KHR_RATE).toFixed(2))),
                             status: s.status || s.Status || ((Number(s.remainingKHR || 0) > 0) ? `Deposit (នៅខ្វះ ${Number(s.remainingKHR || 0).toLocaleString()} ៛)` : 'Paid (គ្រប់)'),
                             cartItems: s.cartItems || []
@@ -2470,7 +2386,7 @@
                 renderInventory();
                 renderShowcase();
                 renderQuickAddons();
-                setAnalyticsQuickFilter('all'); // បង្ហាញទាំងអស់ដើម្បីឱ្យឃើញភ្លាមៗ
+                setAnalyticsQuickFilter('all');
                 updateCustomerDatalist();
 
                 confetti({ particleCount: 50, spread: 60 });
@@ -2480,42 +2396,7 @@
                     showToast(`🎉 បានទាញទិន្នន័យពី Google Sheet រួចរាល់!`, 'success');
                 }
             } catch (err) {
-                console.warn('Get_all failed, trying get_sales fallback:', err);
-                try {
-                    const fallbackRes = await fetch(`${targetUrl}?action=get_sales&t=${Date.now()}`);
-                    const fallbackData = await fallbackRes.json();
-                    if (fallbackData && fallbackData.sales && Array.isArray(fallbackData.sales)) {
-                        const txMap = new Map();
-                        transactions.forEach(t => txMap.set(String(t.id), t));
-                        fallbackData.sales.forEach(s => {
-                            const id = s.id || s.ID || ('BK-' + Math.floor(1000 + Math.random() * 9000));
-                            txMap.set(String(id), {
-                                id: id,
-                                date: s.date || s.Date || (new Date().toISOString().split('T')[0]),
-                                time: s.time || s.Time || '',
-                                customerName: s.customerName || s.CustomerName || 'អតិថិជនទូទៅ',
-                                customerPhone: s.customerPhone || s.CustomerPhone || 'គ្មាន',
-                                itemsCount: Number(s.itemsCount) || 1,
-                                itemsSummary: s.itemsSummary || s.ItemsSummary || '',
-                                method: s.method || s.Method || 'ប្រាក់សុទ្ធ (៛)',
-                                totalKHR: Number(s.totalKHR || s.TotalKHR || 0),
-                                depositKHR: Number(s.depositKHR || s.totalKHR || 0),
-                                remainingKHR: Number(s.remainingKHR || 0),
-                                totalUSD: parseFloat(((Number(s.totalKHR || 0) / KHR_RATE).toFixed(2))),
-                                status: s.status || 'Paid (គ្រប់)',
-                                cartItems: []
-                            });
-                        });
-                        transactions = Array.from(txMap.values());
-                        transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
-                        saveState();
-                        setAnalyticsQuickFilter('all');
-                        updateCustomerDatalist();
-                        showToast(`🎉 បានទាញការលក់ ${transactions.length} វិក្កយបត្រ!`, 'success');
-                    }
-                } catch (err2) {
-                    showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ! សូមពិនិត្យមើល URL', 'error');
-                }
+                showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ! សូមពិនិត្យមើល URL', 'error');
             } finally {
                 if (spinIcon) spinIcon.classList.remove('fa-spin');
             }
@@ -2671,7 +2552,6 @@
             }
         }
 
-        // ================= STUDIO =================
         let customStudioPrice = 95000;
         function updateCakeConfig(tiers, price) {
             customStudioPrice = price;
@@ -2694,12 +2574,7 @@
             showToast('បានបញ្ចូលនំកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
         }
 
-        // ================= ANALYTICS & TRANSACTIONS (កែលម្អថ្មី) =================
-        function initAnalyticsDates() {
-            // កំណត់ទៅមើលទាំងអស់ (All) ជាលំនាំដើម
-            setAnalyticsQuickFilter('all');
-        }
-
+        // ================= ANALYTICS =================
         function setAnalyticsQuickFilter(range) {
             const today = new Date().toISOString().split('T')[0];
             const startInput = document.getElementById('analyticsStartDate');
@@ -2707,9 +2582,7 @@
 
             ['All', 'Month', '7days', 'Yesterday', 'Today'].forEach(k => {
                 const btn = document.getElementById('btnFilter' + k);
-                if (btn) {
-                    btn.className = "px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition";
-                }
+                if (btn) btn.className = "px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition";
             });
 
             if (range === 'today') {
@@ -2719,9 +2592,8 @@
             } else if (range === 'yesterday') {
                 const yest = new Date();
                 yest.setDate(yest.getDate() - 1);
-                const yStr = yest.toISOString().split('T')[0];
-                startInput.value = yStr;
-                endInput.value = yStr;
+                startInput.value = yest.toISOString().split('T')[0];
+                endInput.value = yest.toISOString().split('T')[0];
                 document.getElementById('btnFilterYesterday')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
             } else if (range === '7days') {
                 const past7 = new Date();
@@ -2733,7 +2605,7 @@
                 startInput.value = today.slice(0, 7) + '-01';
                 endInput.value = today;
                 document.getElementById('btnFilterMonth')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
-            } else { // 'all'
+            } else {
                 startInput.value = '';
                 endInput.value = '';
                 document.getElementById('btnFilterAll')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
@@ -2792,7 +2664,7 @@
                 return;
             }
 
-            tbody.innerHTML = filtered.map((t, idx) => `
+            tbody.innerHTML = filtered.map((t) => `
                 <tr class="hover:bg-orange-50/40 transition">
                     <td class="p-3 pl-4">
                         <div class="font-black text-bakery-dark">${t.id}</div>
@@ -2801,7 +2673,7 @@
                     </td>
                     <td class="p-3">
                         <div class="text-stone-700 font-extrabold">${t.date}</div>
-                        <div class="text-stone-400 text-[10px]">${t.time || ''}</div>
+                        <div class="text-stone-400 text-[10px]">${sanitizeTime(t.time)}</div>
                     </td>
                     <td class="p-3 font-bold max-w-[200px] truncate" title="${t.itemsSummary || ''}">
                         ${t.itemsSummary || (t.itemsCount + ' មុខ')}
@@ -2810,10 +2682,10 @@
                         <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${String(t.method).includes('KHQR') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">
                             ${t.method}
                         </span>
-                        ${t.remainingKHR > 0
-                    ? `<div class="mt-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md inline-block">ខ្វះ: ${Number(t.remainingKHR).toLocaleString()}៛</div>`
-                    : `<div class="mt-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-check"></i> បង់គ្រប់</div>`
-                }
+                        ${Number(t.remainingKHR) > 0
+                            ? `<div class="mt-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md inline-block">ខ្វះ: ${Number(t.remainingKHR).toLocaleString()}៛</div>`
+                            : `<div class="mt-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-check"></i> បង់គ្រប់</div>`
+                        }
                     </td>
                     <td class="p-3 font-black text-bakery-caramel">${(Number(t.totalKHR) || 0).toLocaleString()} ៛</td>
                     <td class="p-3 text-center">
@@ -2833,7 +2705,6 @@
             `).join('');
         }
 
-        // ================= 📤 EXPORT TO CSV / EXCEL =================
         function exportTransactionsToCSV() {
             if (transactions.length === 0) {
                 showToast('មិនមានទិន្នន័យសម្រាប់ទាញយកទេ!', 'warning');
@@ -2842,7 +2713,7 @@
             let csv = "\uFEFFលេខវិក្កយបត្រ,កាលបរិច្ឆេទ,ម៉ោង,ឈ្មោះអតិថិជន,លេខទូរស័ព្ទ,មុខទំនិញ,វិធីទូទាត់,សរុប(៛),បានបង់(៛),នៅខ្វះ(៛),ស្ថានភាព\n";
             transactions.forEach(t => {
                 const cleanSummary = (t.itemsSummary || '').replace(/"/g, '""');
-                csv += `"${t.id}","${t.date}","${t.time || ''}","${t.customerName || 'ទូទៅ'}","${t.customerPhone || ''}","${cleanSummary}","${t.method}",${t.totalKHR || 0},${t.depositKHR || 0},${t.remainingKHR || 0},"${t.status || ''}"\n`;
+                csv += `"${t.id}","${t.date}","${sanitizeTime(t.time)}","${t.customerName || 'ទូទៅ'}","${t.customerPhone || ''}","${cleanSummary}","${t.method}",${t.totalKHR || 0},${t.depositKHR || 0},${t.remainingKHR || 0},"${t.status || ''}"\n`;
             });
 
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -2865,7 +2736,6 @@
             }
         }
 
-        // ================= ✏️ EDIT TRANSACTION MODAL =================
         function openEditTxModal(invId) {
             const tx = transactions.find(t => t.id === invId);
             if (!tx) return;
@@ -2938,7 +2808,6 @@
             });
         }
 
-        // ================= 🧾 RECEIPT MODAL (បើកមើលវិក្កយបត្រ & បោះពុម្ព) =================
         function openReceiptModal(txOrId) {
             let tx = typeof txOrId === 'object' ? txOrId : transactions.find(t => t.id === txOrId);
             if (!tx) {
