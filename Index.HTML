@@ -179,10 +179,12 @@
                         <span class="hidden md:inline">KHQR ហាង</span>
                     </button>
 
+                    <!-- 📥 ប៊ូតុងទាញទិន្នន័យ (មុខនំ រូបភាព និងការលក់) ពី Sheet -->
                     <button onclick="pullProductsFromGoogleSheet()"
-                        class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 text-emerald-800 hover:bg-emerald-100 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition">
+                        class="p-2 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold text-xs border border-emerald-300 flex items-center gap-1.5 shadow-sm transition"
+                        title="ទាញទិន្នន័យមុខនំ រូបភាព និងការលក់ពី Google Sheet">
                         <i class="fa-solid fa-rotate text-xs sm:text-sm" id="syncSpinIcon"></i>
-                        <span class="hidden lg:inline">ទាញពី Sheet</span>
+                        <span class="hidden sm:inline">ទាញពី Sheet</span>
                     </button>
 
                     <button onclick="openSettingsModal()"
@@ -277,7 +279,7 @@
                             <span class="font-extrabold font-en text-bakery-dark" id="summarySubtotalKHR">0 ៛</span>
                         </div>
 
-                        <!-- Discount Row (ចុចលើវាដើម្បីកែប្រែបញ្ចុះតម្លៃ) -->
+                        <!-- Discount Row -->
                         <div class="flex justify-between text-emerald-700 font-bold items-center">
                             <span class="flex items-center gap-1">
                                 <span>បញ្ចុះតម្លៃ (Discount)</span>
@@ -557,7 +559,8 @@
 
                 <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
                     <button onclick="syncStockToGoogleSheet()"
-                        class="px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust font-extrabold text-xs border border-amber-200 flex items-center gap-1.5 shadow-xs">
+                        class="px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust font-extrabold text-xs border border-amber-200 flex items-center gap-1.5 shadow-xs"
+                        title="បញ្ជូនមុខនំ និងស្តុកទៅ Google Sheet">
                         <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> Sync ស្តុក
                     </button>
                     <button onclick="openMultiUploadModal()"
@@ -617,7 +620,6 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2">
-                        <!-- 📥 ប៊ូតុងទាញការលក់ពី Google Sheet -->
                         <button onclick="pullProductsFromGoogleSheet()"
                             class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
                             <i class="fa-solid fa-cloud-arrow-down"></i> <span>📥 ទាញពី Sheet</span>
@@ -729,7 +731,7 @@
         </button>
     </nav>
 
-    <!-- ================= 📸 MODAL: MULTI-IMAGE UPLOAD (UPLOAD រូបភាព) ================= -->
+    <!-- ================= 📸 MODAL: MULTI-IMAGE UPLOAD ================= -->
     <div id="multiUploadModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div
@@ -873,7 +875,7 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: SETTINGS (មាន TELEGRAM BOT) ================= -->
+    <!-- ================= MODAL: SETTINGS (GOOGLE SHEET & TELEGRAM) ================= -->
     <div id="settingsModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] overflow-y-auto custom-scroll">
@@ -906,7 +908,6 @@
                         placeholder="8970210109">
                 </div>
 
-                <!-- Test Telegram Notification Button -->
                 <button type="button" onclick="testTelegramNotification()"
                     class="w-full py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-xl font-bold border border-sky-200 transition flex items-center justify-center gap-2">
                     <i class="fa-brands fa-telegram text-base"></i> <span>🔔 សាកល្បងផ្ញើសារ Test ទៅ Telegram</span>
@@ -1077,20 +1078,17 @@
             }
         }
 
-        // ================= SWITCH VIEW (អាប់ដេតទាំង Desktop និង Mobile Menu) =================
         function switchView(viewName) {
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
                 if (sec) sec.classList.add('hidden');
 
-                // Desktop Menu
                 const navBtn = document.getElementById(`nav-${v}`);
                 if (navBtn) {
                     navBtn.classList.remove('bg-white', 'text-bakery-caramel', 'shadow-sm');
                     navBtn.classList.add('text-stone-700');
                 }
 
-                // Mobile Menu
                 const mobBtn = document.getElementById(`mob-nav-${v}`);
                 if (mobBtn) {
                     mobBtn.classList.remove('text-bakery-caramel', 'font-black');
@@ -1101,14 +1099,12 @@
             const targetSec = document.getElementById(`view-${viewName}`);
             if (targetSec) targetSec.classList.remove('hidden');
 
-            // Active Desktop Menu
             const activeNav = document.getElementById(`nav-${viewName}`);
             if (activeNav) {
                 activeNav.classList.remove('text-stone-700');
                 activeNav.classList.add('bg-white', 'text-bakery-caramel', 'shadow-sm');
             }
 
-            // Active Mobile Menu
             const activeMobNav = document.getElementById(`mob-nav-${viewName}`);
             if (activeMobNav) {
                 activeMobNav.classList.remove('text-stone-500', 'font-bold');
@@ -1120,7 +1116,6 @@
             if (viewName === 'inventory') renderInventory();
             if (viewName === 'showcase') renderShowcase();
 
-            // Scroll ទៅលើគេវិញស្វ័យប្រវត្តិ
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -1481,14 +1476,14 @@
             transactions.unshift(newTx);
             saveState();
 
-            // 🌟 ១. បញ្ជូនទៅ Google Sheet
+            // ១. បញ្ជូនទៅ Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
                 sale: newTx
             });
 
-            // 🌟 ២. ផ្ញើសារជូនដំណឹងទៅ Telegram Bot
+            // ២. ផ្ញើសារជូនដំណឹងទៅ Telegram Bot
             sendTelegramNotification(newTx);
 
             closePaymentModal();
@@ -1570,7 +1565,7 @@
             }
         }
 
-        // ================= GOOGLE SHEET SYNC =================
+        // ================= GOOGLE SHEET SYNC (ទាញទាំងមុខនំ រូបភាព & ការលក់) =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) return;
@@ -1593,6 +1588,7 @@
             }
         }
 
+        // 🌟 មុខងារពិសេស៖ ទាញទាំងមុខនំ រូបភាព និងការលក់ពី Google Sheet ចូលទូរស័ព្ទ
         async function pullProductsFromGoogleSheet() {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) {
@@ -1601,22 +1597,63 @@
             }
             const spinIcon = document.getElementById('syncSpinIcon');
             if (spinIcon) spinIcon.classList.add('fa-spin');
-            showToast('កំពុងទាញទិន្នន័យពី Google Sheet...', 'info');
+            showToast('កំពុងទាញទិន្នន័យពី Google Sheet... ⏳', 'info');
 
             try {
-                const response = await fetch(`${targetUrl}?action=get_sales&t=${Date.now()}`);
+                // សាកល្បងទាញទិន្នន័យទាំងអស់ (ទាំងនំ និងការលក់)
+                const response = await fetch(`${targetUrl}?action=get_all&t=${Date.now()}`);
                 const result = await response.json();
 
-                if (result && result.success && result.sales) {
+                let updatedItems = [];
+
+                // ១. ប្រសិនបើមានទិន្នន័យមុខនំ & រូបភាព
+                if (result && result.products && result.products.length > 0) {
+                    products = result.products.map(p => ({
+                        id: p.id || p.ID || Date.now(),
+                        name: p.name || p.Name || 'ទំនិញ',
+                        cat: (p.cat || p.Category || 'cakes').toLowerCase(),
+                        priceKHR: Number(p.priceKHR || p.Price || p.price || 0),
+                        stock: Number(p.stock || p.Stock || 0),
+                        img: formatImgUrl(p.img || p.Image || p.imageUrl || ''),
+                        images: p.images || [formatImgUrl(p.img || p.Image || '')],
+                        badge: p.badge || ''
+                    }));
+                    updatedItems.push(`${products.length} មុខទំនិញ`);
+                }
+
+                // ២. ប្រសិនបើមានទិន្នន័យការលក់
+                if (result && result.sales && result.sales.length > 0) {
                     transactions = result.sales;
-                    saveState();
-                    renderAnalytics();
-                    confetti({ particleCount: 50, spread: 60 });
-                    showToast(`🎉 បានទាញការលក់ជោគជ័យចំនួន ${transactions.length} វិក្កយបត្រ!`, 'success');
+                    updatedItems.push(`${transactions.length} វិក្កយបត្រ`);
+                }
+
+                saveState();
+                renderProducts();
+                renderInventory();
+                renderShowcase();
+                renderQuickAddons();
+                renderAnalytics();
+
+                confetti({ particleCount: 50, spread: 60 });
+                if (updatedItems.length > 0) {
+                    showToast(`🎉 បានទាញជោគជ័យ: ${updatedItems.join(' និង ')}!`, 'success');
+                } else {
+                    showToast(`🎉 បានទាញទិន្នន័យពី Google Sheet រួចរាល់!`, 'success');
                 }
             } catch (err) {
-                console.error(err);
-                showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
+                console.warn('Get_all failed, trying get_sales fallback:', err);
+                try {
+                    const fallbackRes = await fetch(`${targetUrl}?action=get_sales&t=${Date.now()}`);
+                    const fallbackData = await fallbackRes.json();
+                    if (fallbackData && fallbackData.sales) {
+                        transactions = fallbackData.sales;
+                        saveState();
+                        renderAnalytics();
+                        showToast(`🎉 បានទាញការលក់ ${transactions.length} វិក្កយបត្រ!`, 'success');
+                    }
+                } catch (err2) {
+                    showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
+                }
             } finally {
                 if (spinIcon) spinIcon.classList.remove('fa-spin');
             }
