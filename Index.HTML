@@ -183,7 +183,7 @@
                     </button>
 
                     <button onclick="openKhqrSetupModal()"
-                        class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-[11px] sm:text-xs shadow-sm transition flex items-center gap-1.5">
+                        class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-[11px] sm:text-xs shadow-sm transition flex items-center gap-1.5">
                         <i class="fa-solid fa-qrcode text-xs sm:text-sm"></i>
                         <span class="hidden md:inline">KHQR ហាង</span>
                     </button>
@@ -620,7 +620,7 @@
             </div>
         </section>
 
-        <!-- ================= VIEW 6: ANALYTICS & STATS ================= -->
+        <!-- ================= VIEW 6: ANALYTICS & STATS (កែលម្អថ្មី ទាញ និងមើលរបាយការណ៍បាន ១០០%) ================= -->
         <section id="view-analytics" class="hidden space-y-6">
             <div class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
                 <div
@@ -643,26 +643,57 @@
                             class="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
                             <i class="fa-solid fa-cloud-arrow-down"></i> <span>📥 ទាញពី Sheet</span>
                         </button>
+                        <button onclick="exportTransactionsToCSV()"
+                            class="px-3.5 py-1.5 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs shadow-xs transition flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-excel"></i> <span>ទាញយក Excel</span>
+                        </button>
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row items-center gap-3 pt-1 text-xs">
-                    <div
-                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
-                        <span class="font-extrabold text-stone-800 pl-1">ពី:</span>
-                        <input type="date" id="analyticsStartDate" onchange="renderAnalytics()"
-                            class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+                <!-- 🌟 ប៊ូតុងជ្រើសរើសកាលបរិច្ឆេទរហ័ស & Search 🌟 -->
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-1 text-xs">
+                    <!-- Quick Date Filter Chips -->
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <span class="font-extrabold text-stone-700 text-xs">រើសរហ័ស:</span>
+                        <button type="button" onclick="setAnalyticsQuickFilter('all')" id="btnFilterAll"
+                            class="px-3 py-1.5 rounded-xl font-extrabold bg-bakery-caramel text-white shadow-xs transition">
+                            ទាំងអស់ (All)
+                        </button>
+                        <button type="button" onclick="setAnalyticsQuickFilter('month')" id="btnFilterMonth"
+                            class="px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition">
+                            ខែនេះ
+                        </button>
+                        <button type="button" onclick="setAnalyticsQuickFilter('7days')" id="btnFilter7days"
+                            class="px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition">
+                            ៧ ថ្ងៃ
+                        </button>
+                        <button type="button" onclick="setAnalyticsQuickFilter('yesterday')" id="btnFilterYesterday"
+                            class="px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition">
+                            ម្សិលមិញ
+                        </button>
+                        <button type="button" onclick="setAnalyticsQuickFilter('today')" id="btnFilterToday"
+                            class="px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition">
+                            ថ្ងៃនេះ
+                        </button>
                     </div>
-                    <div
-                        class="w-full sm:w-auto flex items-center gap-2 bg-orange-50/70 p-2 rounded-2xl border border-orange-200">
-                        <span class="font-extrabold text-stone-800 pl-1">ដល់:</span>
-                        <input type="date" id="analyticsEndDate" onchange="renderAnalytics()"
-                            class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+
+                    <!-- Date Pickers -->
+                    <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
+                        <div class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
+                            <span class="font-extrabold text-stone-800 pl-1 text-[11px]">ពី:</span>
+                            <input type="date" id="analyticsStartDate" onchange="renderAnalytics()"
+                                class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+                        </div>
+                        <div class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
+                            <span class="font-extrabold text-stone-800 pl-1 text-[11px]">ដល់:</span>
+                            <input type="date" id="analyticsEndDate" onchange="renderAnalytics()"
+                                class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
+                        </div>
+                        <button onclick="renderAnalytics()"
+                            class="px-3.5 py-1.5 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition text-xs">
+                            ត្រងមើល
+                        </button>
                     </div>
-                    <button onclick="renderAnalytics()"
-                        class="w-full sm:w-auto px-4 py-2 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition">
-                        ត្រងមើល
-                    </button>
                 </div>
             </div>
 
@@ -695,7 +726,20 @@
             </div>
 
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 overflow-hidden">
-                <div class="overflow-x-auto custom-scroll">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-orange-100">
+                    <div class="font-extrabold text-sm text-bakery-dark flex items-center gap-2">
+                        <i class="fa-solid fa-receipt text-bakery-caramel"></i>
+                        <span>បញ្ជីប្រតិបត្តិការលក់ទាំងអស់ (<span id="analyticsCountDisplay">0</span>)</span>
+                    </div>
+                    <!-- ប្រអប់ស្វែងរកក្នុងតារាង -->
+                    <div class="relative w-full sm:w-64">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+                        <input type="text" id="analyticsSearchInput" oninput="renderAnalytics()"
+                            placeholder="ស្វែងរកឈ្មោះ, លេខទូរស័ព្ទ, លេខកូដ..."
+                            class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-bakery-vanilla/60 border border-orange-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-bakery-caramel">
+                    </div>
+                </div>
+                <div class="overflow-x-auto custom-scroll mt-2">
                     <table class="w-full text-left text-xs sm:text-sm min-w-[650px]">
                         <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                             <tr>
@@ -840,7 +884,8 @@
                     </div>
                     <div>
                         <h3 class="font-extrabold text-base text-bakery-dark">បញ្ចូលការទិញរបស់ភ្ញៀវមុនៗតាមថ្ងៃ</h3>
-                        <p class="text-[10px] text-stone-500 font-medium">កត់ត្រាការលក់ចាស់ៗដែលមិនទាន់បានបញ្ចូលចូលក្នុងប្រព័ន្ធ</p>
+                        <p class="text-[10px] text-stone-500 font-medium">
+                            កត់ត្រាការលក់ចាស់ៗដែលមិនទាន់បានបញ្ចូលចូលក្នុងប្រព័ន្ធ</p>
                     </div>
                 </div>
                 <button onclick="closePastSaleModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i
@@ -1429,8 +1474,7 @@
             renderInventory();
             renderExpenses();
             initKhqrImg();
-            initAnalyticsDates();
-            renderAnalytics();
+            initAnalyticsDates(); // នឹងកំណត់ទៅ "ទាំងអស់ (All)" ជាលំនាំដើម
             updateCustomerDatalist();
         });
 
@@ -2316,7 +2360,7 @@
             }
         }
 
-        // ================= GOOGLE SHEET SYNC =================
+        // ================= GOOGLE SHEET SYNC (ទាញ & បញ្ជូនទិន្នន័យ) =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) return;
@@ -2355,6 +2399,7 @@
 
                 let updatedItems = [];
 
+                // ១. ទាញទំនិញ
                 if (result && result.products && result.products.length > 0) {
                     products = result.products.map(p => {
                         const existing = products.find(ep => String(ep.id) === String(p.id) || ep.name === p.name);
@@ -2389,8 +2434,34 @@
                     updatedItems.push(`${products.length} មុខទំនិញ`);
                 }
 
-                if (result && result.sales && result.sales.length > 0) {
-                    transactions = result.sales;
+                // ២. ទាញការលក់ (Transactions)
+                if (result && result.sales && Array.isArray(result.sales) && result.sales.length > 0) {
+                    const txMap = new Map();
+                    // រក្សាទុកការលក់ក្នុងម៉ាស៊ីនមុន
+                    transactions.forEach(t => txMap.set(String(t.id), t));
+                    // បញ្ចូលការលក់ដែលទាញពី Sheet មក
+                    result.sales.forEach(s => {
+                        const id = s.id || s.ID || ('BK-' + Math.floor(1000 + Math.random() * 9000));
+                        txMap.set(String(id), {
+                            id: id,
+                            date: s.date || s.Date || (new Date().toISOString().split('T')[0]),
+                            time: s.time || s.Time || '',
+                            customerName: s.customerName || s.CustomerName || s.Customer || 'អតិថិជនទូទៅ',
+                            customerPhone: s.customerPhone || s.CustomerPhone || s.Phone || 'គ្មាន',
+                            itemsCount: Number(s.itemsCount) || 1,
+                            itemsSummary: s.itemsSummary || s.ItemsSummary || s.items || '',
+                            method: s.method || s.Method || 'ប្រាក់សុទ្ធ (៛)',
+                            totalKHR: Number(s.totalKHR || s.TotalKHR || s.total || 0),
+                            depositKHR: Number(s.depositKHR || s.DepositKHR || s.deposit || (s.totalKHR || 0)),
+                            remainingKHR: Number(s.remainingKHR || s.RemainingKHR || s.remaining || 0),
+                            totalUSD: parseFloat(s.totalUSD || ((Number(s.totalKHR || 0) / KHR_RATE).toFixed(2))),
+                            status: s.status || s.Status || ((Number(s.remainingKHR || 0) > 0) ? `Deposit (នៅខ្វះ ${Number(s.remainingKHR || 0).toLocaleString()} ៛)` : 'Paid (គ្រប់)'),
+                            cartItems: s.cartItems || []
+                        });
+                    });
+
+                    transactions = Array.from(txMap.values());
+                    transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
                     updatedItems.push(`${transactions.length} វិក្កយបត្រ`);
                 }
 
@@ -2399,7 +2470,7 @@
                 renderInventory();
                 renderShowcase();
                 renderQuickAddons();
-                renderAnalytics();
+                setAnalyticsQuickFilter('all'); // បង្ហាញទាំងអស់ដើម្បីឱ្យឃើញភ្លាមៗ
                 updateCustomerDatalist();
 
                 confetti({ particleCount: 50, spread: 60 });
@@ -2413,15 +2484,37 @@
                 try {
                     const fallbackRes = await fetch(`${targetUrl}?action=get_sales&t=${Date.now()}`);
                     const fallbackData = await fallbackRes.json();
-                    if (fallbackData && fallbackData.sales) {
-                        transactions = fallbackData.sales;
+                    if (fallbackData && fallbackData.sales && Array.isArray(fallbackData.sales)) {
+                        const txMap = new Map();
+                        transactions.forEach(t => txMap.set(String(t.id), t));
+                        fallbackData.sales.forEach(s => {
+                            const id = s.id || s.ID || ('BK-' + Math.floor(1000 + Math.random() * 9000));
+                            txMap.set(String(id), {
+                                id: id,
+                                date: s.date || s.Date || (new Date().toISOString().split('T')[0]),
+                                time: s.time || s.Time || '',
+                                customerName: s.customerName || s.CustomerName || 'អតិថិជនទូទៅ',
+                                customerPhone: s.customerPhone || s.CustomerPhone || 'គ្មាន',
+                                itemsCount: Number(s.itemsCount) || 1,
+                                itemsSummary: s.itemsSummary || s.ItemsSummary || '',
+                                method: s.method || s.Method || 'ប្រាក់សុទ្ធ (៛)',
+                                totalKHR: Number(s.totalKHR || s.TotalKHR || 0),
+                                depositKHR: Number(s.depositKHR || s.totalKHR || 0),
+                                remainingKHR: Number(s.remainingKHR || 0),
+                                totalUSD: parseFloat(((Number(s.totalKHR || 0) / KHR_RATE).toFixed(2))),
+                                status: s.status || 'Paid (គ្រប់)',
+                                cartItems: []
+                            });
+                        });
+                        transactions = Array.from(txMap.values());
+                        transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
                         saveState();
-                        renderAnalytics();
+                        setAnalyticsQuickFilter('all');
                         updateCustomerDatalist();
                         showToast(`🎉 បានទាញការលក់ ${transactions.length} វិក្កយបត្រ!`, 'success');
                     }
                 } catch (err2) {
-                    showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
+                    showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ! សូមពិនិត្យមើល URL', 'error');
                 }
             } finally {
                 if (spinIcon) spinIcon.classList.remove('fa-spin');
@@ -2601,22 +2694,75 @@
             showToast('បានបញ្ចូលនំកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
         }
 
-        // ================= ANALYTICS & TRANSACTIONS =================
+        // ================= ANALYTICS & TRANSACTIONS (កែលម្អថ្មី) =================
         function initAnalyticsDates() {
+            // កំណត់ទៅមើលទាំងអស់ (All) ជាលំនាំដើម
+            setAnalyticsQuickFilter('all');
+        }
+
+        function setAnalyticsQuickFilter(range) {
             const today = new Date().toISOString().split('T')[0];
-            document.getElementById('analyticsStartDate').value = today;
-            document.getElementById('analyticsEndDate').value = today;
+            const startInput = document.getElementById('analyticsStartDate');
+            const endInput = document.getElementById('analyticsEndDate');
+
+            ['All', 'Month', '7days', 'Yesterday', 'Today'].forEach(k => {
+                const btn = document.getElementById('btnFilter' + k);
+                if (btn) {
+                    btn.className = "px-3 py-1.5 rounded-xl font-bold bg-orange-50 text-stone-700 hover:bg-orange-100 transition";
+                }
+            });
+
+            if (range === 'today') {
+                startInput.value = today;
+                endInput.value = today;
+                document.getElementById('btnFilterToday')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
+            } else if (range === 'yesterday') {
+                const yest = new Date();
+                yest.setDate(yest.getDate() - 1);
+                const yStr = yest.toISOString().split('T')[0];
+                startInput.value = yStr;
+                endInput.value = yStr;
+                document.getElementById('btnFilterYesterday')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
+            } else if (range === '7days') {
+                const past7 = new Date();
+                past7.setDate(past7.getDate() - 7);
+                startInput.value = past7.toISOString().split('T')[0];
+                endInput.value = today;
+                document.getElementById('btnFilter7days')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
+            } else if (range === 'month') {
+                startInput.value = today.slice(0, 7) + '-01';
+                endInput.value = today;
+                document.getElementById('btnFilterMonth')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
+            } else { // 'all'
+                startInput.value = '';
+                endInput.value = '';
+                document.getElementById('btnFilterAll')?.classList.add('bg-bakery-caramel', 'text-white', 'shadow-xs');
+            }
+
+            renderAnalytics();
         }
 
         function renderAnalytics() {
-            const startDate = document.getElementById('analyticsStartDate').value;
-            const endDate = document.getElementById('analyticsEndDate').value;
+            const startDate = document.getElementById('analyticsStartDate')?.value || '';
+            const endDate = document.getElementById('analyticsEndDate')?.value || '';
+            const searchQuery = (document.getElementById('analyticsSearchInput')?.value || '').toLowerCase().trim();
 
             let filtered = transactions.filter(t => {
                 if (startDate && t.date < startDate) return false;
                 if (endDate && t.date > endDate) return false;
+
+                if (searchQuery) {
+                    const matchName = (t.customerName || '').toLowerCase().includes(searchQuery);
+                    const matchPhone = (t.customerPhone || '').toLowerCase().includes(searchQuery);
+                    const matchId = (t.id || '').toLowerCase().includes(searchQuery);
+                    const matchItem = (t.itemsSummary || '').toLowerCase().includes(searchQuery);
+                    if (!matchName && !matchPhone && !matchId && !matchItem) return false;
+                }
                 return true;
             });
+
+            const countDisplay = document.getElementById('analyticsCountDisplay');
+            if (countDisplay) countDisplay.innerText = filtered.length;
 
             const totalKHR = filtered.reduce((sum, t) => sum + (Number(t.totalKHR) || 0), 0);
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
@@ -2632,7 +2778,17 @@
             const tbody = document.getElementById('recentOrdersBody');
             if (!tbody) return;
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-10 text-stone-500 font-bold">មិនមានទិន្នន័យលក់ក្នុងចន្លោះកាលបរិច្ឆេទនេះទេ</td></tr>`;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-10 text-stone-500 font-bold">
+                            <i class="fa-solid fa-folder-open text-3xl mb-2 text-stone-400 block"></i>
+                            មិនមានទិន្នន័យលក់ក្នុងចន្លោះកាលបរិច្ឆេទនេះទេ<br/>
+                            <button onclick="setAnalyticsQuickFilter('all')" class="mt-3 px-3.5 py-1.5 bg-bakery-caramel text-white rounded-xl text-xs font-extrabold shadow-sm">
+                                <i class="fa-solid fa-eye mr-1"></i> ចុចទីនេះដើម្បីមើលទិន្នន័យទាំងអស់ (All Time)
+                            </button>
+                        </td>
+                    </tr>
+                `;
                 return;
             }
 
@@ -2675,6 +2831,28 @@
                     </td>
                 </tr>
             `).join('');
+        }
+
+        // ================= 📤 EXPORT TO CSV / EXCEL =================
+        function exportTransactionsToCSV() {
+            if (transactions.length === 0) {
+                showToast('មិនមានទិន្នន័យសម្រាប់ទាញយកទេ!', 'warning');
+                return;
+            }
+            let csv = "\uFEFFលេខវិក្កយបត្រ,កាលបរិច្ឆេទ,ម៉ោង,ឈ្មោះអតិថិជន,លេខទូរស័ព្ទ,មុខទំនិញ,វិធីទូទាត់,សរុប(៛),បានបង់(៛),នៅខ្វះ(៛),ស្ថានភាព\n";
+            transactions.forEach(t => {
+                const cleanSummary = (t.itemsSummary || '').replace(/"/g, '""');
+                csv += `"${t.id}","${t.date}","${t.time || ''}","${t.customerName || 'ទូទៅ'}","${t.customerPhone || ''}","${cleanSummary}","${t.method}",${t.totalKHR || 0},${t.depositKHR || 0},${t.remainingKHR || 0},"${t.status || ''}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", `របាយការណ៍លក់_វិជ្ជដា_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('🎉 បានទាញយកឯកសារ Excel/CSV ជោគជ័យ!', 'success');
         }
 
         function deleteInvoice(invId) {
