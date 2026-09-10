@@ -1352,7 +1352,6 @@
             });
         }
 
-        // មុខងារកែម៉ោងកុំឱ្យចេញ Sat Dec 30 1899...
         function sanitizeTime(rawTime) {
             if (!rawTime) return '';
             const str = String(rawTime);
@@ -1511,7 +1510,7 @@
             if (prodSelect) {
                 prodSelect.innerHTML = '<option value="">-- រើសនំពីស្តុកហាង --</option>' +
                     products.filter(p => p.cat !== 'ingredients').map(p => `
-                        <option value="${p.id}" data-name="${p.name}" data-price="${p.priceKHR}">${p.name} - ${p.priceKHR.toLocaleString()} ៛</option>
+                        <option value="${p.id}" data-name="${p.name}" data-price="${p.priceKHR}" data-img="${p.img}">${p.name} - ${p.priceKHR.toLocaleString()} ៛</option>
                     `).join('');
             }
 
@@ -1558,12 +1557,15 @@
             }
         }
 
+        let pastSaleSelectedImage = null;
+
         function addPastSaleProduct() {
             const select = document.getElementById('pastSaleProductSelect');
             if (!select || !select.value) return;
             const opt = select.options[select.selectedIndex];
             const name = opt.getAttribute('data-name');
             const price = parseInt(opt.getAttribute('data-price')) || 0;
+            pastSaleSelectedImage = opt.getAttribute('data-img') || null;
 
             const textarea = document.getElementById('pastSaleItemsSummaryInput');
             const totalInput = document.getElementById('pastSaleTotalKHRInput');
@@ -1648,24 +1650,26 @@
                 remainingKHR: remainingKHR,
                 totalUSD: parseFloat(totalUSD),
                 status: statusStr,
-                cartItems: []
+                cartItems: pastSaleSelectedImage ? [{ name: itemsSummary, img: pastSaleSelectedImage, qty: 1 }] : []
             };
 
             transactions.unshift(newTx);
             transactions.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
             saveState();
 
-            // បញ្ជូនទៅ Google Sheet ដោយរៀបចំជួរឈរត្រឹមត្រូវ
+            // បញ្ជូនទៅ Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
                 sale: newTx
             }, true);
 
+            // ផ្ញើសារជូនដំណឹងទៅ Telegram ជាមួយរូបនំពិត
             sendTelegramNotification(newTx);
 
             closePastSaleModal();
             document.getElementById('pastSaleForm').reset();
+            pastSaleSelectedImage = null;
             renderAnalytics();
             renderExpenses();
             updateCustomerDatalist();
@@ -2148,6 +2152,7 @@
                 sale: newTx
             });
 
+            // ផ្ញើសារជូនដំណឹង + រូបនំពិតទៅ Telegram Bot
             sendTelegramNotification(newTx);
 
             closePaymentModal();
@@ -2163,31 +2168,42 @@
             showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ & បាញ់សារទៅ Telegram!', 'success');
         }
 
+        // ================= 🚀 TELEGRAM NOTIFICATIONS (ទាញរូបនំពិត ១០០%) =================
         async function sendTelegramNotification(tx) {
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
             if (!token || !chatId) return;
 
-            let photoUrl = null;
+            // ស្វែងរករូបភាពនំពិត
+            let photoSource = null;
+
+            // ១. ឆែកមើលក្នុងកន្ត្រកទំនិញ (cartItems)
             if (tx.cartItems && tx.cartItems.length > 0) {
                 for (const item of tx.cartItems) {
-                    if (item.img && (item.img.startsWith('http://') || item.img.startsWith('https://')) && !item.img.includes('flaticon.com') && !item.img.includes('data:image')) {
-                        photoUrl = item.img;
+                    if (item.img && !item.img.includes('flaticon.com')) {
+                        photoSource = item.img;
                         break;
                     }
                 }
             }
-            if (!photoUrl && products && products.length > 0) {
-                const firstItemName = tx.itemsSummary ? tx.itemsSummary.split(' x')[0].trim() : '';
-                const matchProd = products.find(p => p.name === firstItemName);
-                if (matchProd && matchProd.img && matchProd.img.startsWith('http')) {
-                    photoUrl = matchProd.img;
+
+            // ២. បើអត់ទាន់ឃើញ ឆែកស្វែងរកក្នុងស្តុកនំតាមឈ្មោះនំ
+            if (!photoSource && products && products.length > 0) {
+                const summary = (tx.itemsSummary || '').toLowerCase();
+                const matchProd = products.find(p => {
+                    const pName = (p.name || '').toLowerCase();
+                    return summary.includes(pName) || pName.includes(summary.split(' ')[0]);
+                });
+                if (matchProd && matchProd.img && !matchProd.img.includes('flaticon.com')) {
+                    photoSource = matchProd.img;
                 }
             }
-            if (!photoUrl) photoUrl = FALLBACK_BAKERY_SVG;
+
+            // ៣. បើគ្មានទៀត ទើបយករូបនំស្ដង់ដារ
+            if (!photoSource) photoSource = FALLBACK_BAKERY_SVG;
 
             const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
-            const depositText = (tx.remainingKHR > 0)
+            const depositText = (Number(tx.remainingKHR) > 0)
                 ? `💵 *បានបង់ (កក់):* *${Number(tx.depositKHR).toLocaleString()} ៛*\n⚠️ *នៅខ្វះ:* *${Number(tx.remainingKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* នៅជំពាក់ (Deposit)\n`
                 : `💵 *បានបង់គ្រប់:* *${Number(tx.totalKHR).toLocaleString()} ៛*\n📌 *ស្ថានភាព:* បង់គ្រប់ (Paid)\n`;
 
@@ -2207,18 +2223,47 @@
                 `🙏 _សូមអរគុណចំពោះការគាំទ្រ!_`;
 
             try {
-                const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        photo: photoUrl,
-                        caption: msg,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                const photoData = await photoRes.json();
-                if (!photoData.ok) {
+                let photoData = null;
+
+                // ប្រសិនបើរូបជារូបថតផ្ទាល់ ឬ Base64 (ដែលបានថត ឬ Upload ពីទូរសព្ទ)
+                if (photoSource.startsWith('data:image')) {
+                    // បម្លែង Base64 ទៅជា Blob File រួចផ្ញើតាម FormData
+                    const blob = await fetch(photoSource).then(r => r.blob());
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'cake.jpg');
+                    formData.append('caption', msg);
+                    formData.append('parse_mode', 'Markdown');
+
+                    const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    photoData = await photoRes.json();
+                } else {
+                    // ប្រសិនបើរូបជា Web URL
+                    let finalUrl = photoSource;
+                    if (finalUrl.includes('drive.google.com/file/d/')) {
+                        const match = finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
+                        if (match && match[1]) finalUrl = `https://lh3.googleusercontent.com/d/${match[1]}`;
+                    }
+
+                    const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            photo: finalUrl,
+                            caption: msg,
+                            parse_mode: 'Markdown'
+                        })
+                    });
+                    photoData = await photoRes.json();
+                }
+
+                // ប្រសិនបើផ្ញើរូបអត់ជោគជ័យ ទើបផ្ញើជាអក្សរធម្មតា (Fallback)
+                if (!photoData || !photoData.ok) {
+                    console.warn('sendPhoto failed, sending text only:', photoData ? photoData.description : 'Unknown');
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2245,38 +2290,38 @@
 
             showToast('កំពុងសាកល្បងផ្ញើសារ...', 'info');
             try {
-                const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        chat_id: chatId,
-                        photo: FALLBACK_BAKERY_SVG,
-                        caption: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram របស់លោកអ្នករួចរាល់ហើយ។ ពេលមានការលក់ថ្មី រូបភាពនំ និងវិក្កយបត្រនឹងលោតមកទីនេះស្វ័យប្រវត្តិ!`,
-                        parse_mode: 'Markdown'
-                    })
-                });
-                const data = await res.json();
-                if (data.ok) {
-                    showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
+                // យករូបនំដំបូងគេក្នុងស្តុកមកសាកល្បង
+                let testPhoto = (products && products[0] && products[0].img) ? products[0].img : FALLBACK_BAKERY_SVG;
+
+                if (testPhoto.startsWith('data:image')) {
+                    const blob = await fetch(testPhoto).then(r => r.blob());
+                    const formData = new FormData();
+                    formData.append('chat_id', chatId);
+                    formData.append('photo', blob, 'cake_test.jpg');
+                    formData.append('caption', `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា (រូបនំពិត) ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram របស់លោកអ្នករួចរាល់ហើយ!`);
+                    formData.append('parse_mode', 'Markdown');
+
+                    const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: formData });
+                    const data = await res.json();
+                    if (data.ok) showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
+                    else throw new Error(data.description);
                 } else {
-                    const resText = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: chatId,
-                            text: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram រួចរាល់!`,
+                            photo: testPhoto,
+                            caption: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram រួចរាល់!`,
                             parse_mode: 'Markdown'
                         })
                     });
-                    const dataText = await resText.json();
-                    if (dataText.ok) {
-                        showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
-                    } else {
-                        showToast('❌ បរាជ័យ: ' + (dataText.description || 'ពិនិត្យ Chat ID'), 'error');
-                    }
+                    const data = await res.json();
+                    if (data.ok) showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
+                    else throw new Error(data.description);
                 }
             } catch (e) {
-                showToast('❌ មិនអាចភ្ជាប់ទៅកាន់ Telegram បានទេ!', 'error');
+                showToast('❌ បរាជ័យ: ' + e.message, 'error');
             }
         }
 
