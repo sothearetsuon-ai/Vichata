@@ -1209,7 +1209,7 @@
             <i class="fa-solid fa-camera text-3xl text-bakery-caramel mb-2"></i>
             <p class="font-extrabold text-stone-800 text-sm">ចុចទីនេះ ដើម្បីជ្រើសរើសរូប ឬ ថតរូប</p>
             <span class="inline-block mt-1.5 px-3 py-1 bg-amber-100 text-bakery-crust rounded-full text-[11px] font-bold">
-              <i class="fa-solid fa-bolt text-amber-600"></i> ប្រព័ន្ធបង្រួមរូបស្វ័យប្រវត្ត (Auto Compress)
+              <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> បង្កើត Link លើ Google Drive ស្វ័យប្រវត្តិ
             </span>
           </label>
           <input type="file" id="batchFileInput" multiple accept="image/*" class="hidden"
@@ -1264,7 +1264,10 @@
         </div>
 
         <div class="pt-2 flex gap-2">
-          <button type="submit" class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក & Sync ទៅ Sheet</button>
+          <button type="submit" id="saveProdSubmitBtn" class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs shadow transition flex items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>រក្សាទុក & បង្កើត Link ចូល Sheet</span>
+          </button>
           <button type="button" onclick="closeMultiUploadModal()"
             class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">បោះបង់</button>
         </div>
@@ -1392,11 +1395,16 @@
       rawUrl = rawUrl.trim();
       if (rawUrl.startsWith('data:image')) return rawUrl;
 
+      // Google Drive Direct Link format: https://lh3.googleusercontent.com/d/ID
+      if (rawUrl.includes('googleusercontent.com/d/')) {
+        return rawUrl;
+      }
+
       const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
         rawUrl.match(/id=([a-zA-Z0-9_-]+)/) ||
         rawUrl.match(/drive\.google\.com\/open\?id=([a-zA-Z0-9_-]+)/);
       if (driveMatch && driveMatch[1]) {
-        return `https://wsrv.nl/?url=drive.google.com/thumbnail?id=${driveMatch[1]}%26sz=w800`;
+        return `https://lh3.googleusercontent.com/d/${driveMatch[1]}`;
       }
 
       if (rawUrl.includes('googleusercontent.com') || rawUrl.includes('unsplash.com')) {
@@ -1417,7 +1425,7 @@
             if (w > h) {
               if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
             } else {
-              if (h > maxHeight) { w = Math.round((w * maxHeight) / h); h = maxHeight; }
+              if (h > maxHeight) { w = Math.round((h * maxHeight) / h); h = maxHeight; }
             }
             const canvas = document.createElement('canvas');
             canvas.width = w;
@@ -1432,6 +1440,35 @@
         reader.onerror = () => resolve(FALLBACK_BAKERY_SVG);
         reader.readAsDataURL(file);
       });
+    }
+
+    /* --- 🌟 មុខងារ UPLOAD រូបភាពទៅ GOOGLE DRIVE ដើម្បីបង្កើត LINK សាធារណៈ --- */
+    async function uploadImageToGoogleDrive(base64Data, fileName = 'cake') {
+      const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
+      const targetUrl = settings.googleSheetUrl || integrationSettings.googleSheetUrl;
+
+      if (!targetUrl || !base64Data || !base64Data.startsWith('data:image')) {
+        return base64Data; // បើជា link ស្រាប់ មិនបាច់ upload ទៀតទេ
+      }
+
+      try {
+        const res = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'upload_image',
+            image: base64Data,
+            fileName: fileName.replace(/[^a-zA-Z0-9_\u1780-\u17FF]/g, '_')
+          })
+        });
+        const result = await res.json();
+        if (result && result.status === 'success' && result.imageUrl) {
+          return result.imageUrl; // បាន Google Drive Direct Link ស្អាត
+        }
+      } catch (err) {
+        console.warn('Drive upload fallback to local Base64:', err);
+      }
+      return base64Data;
     }
 
     /* --- 🌟 បម្លែងរូបភាព Base64 ឱ្យទៅជា Blob File សម្រាប់ផ្ញើ Telegram --- */
@@ -1451,7 +1488,7 @@
       }
     }
 
-    // Default Store Profile (ឈ្មោះហាង «ហាងនំខេកវិជ្ជដា» ទីតាំង «កោះរ៉ុងសន្លឹម» ទូរស័ព្ទ «0978707000»)
+    // Default Store Profile
     let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
       name: 'ហាងនំខេកវិជ្ជដា',
       tagline: 'កោះរ៉ុងសន្លឹម • 0978707000',
@@ -1652,14 +1689,11 @@
       }).join('');
     }
 
-    // ================= TELEGRAM BOT NOTIFICATIONS (WITH CAKE PHOTO) =================
+    // ================= TELEGRAM BOT NOTIFICATIONS =================
     async function sendTelegramInvoice(order) {
       const token = integrationSettings.telegramBotToken;
       const chatId = integrationSettings.telegramChatId;
-      if (!token || !chatId) {
-        console.warn('Telegram token or chat ID is missing');
-        return;
-      }
+      if (!token || !chatId) return;
 
       try {
         const totalUSD = (order.totalKHR / KHR_RATE).toFixed(2);
@@ -2095,15 +2129,12 @@
       showToast(`🎉 បានកត់ត្រាការលក់ថ្ងៃ ${date} ចំនួន ${totalKHR.toLocaleString()}៛ ជោគជ័យ!`, 'success');
     }
 
-    // ================= 🌟 GOOGLE SHEET SYNC ENGINE (SMART & COMPLETE) =================
+    // ================= 🌟 GOOGLE SHEET SYNC ENGINE =================
     async function sendGoogleSheetPayload(payload, showToastNotice = false) {
       const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
       const targetUrl = settings.googleSheetUrl || integrationSettings.googleSheetUrl;
 
-      if (!targetUrl) {
-        console.warn('Google Sheet URL is not configured');
-        return;
-      }
+      if (!targetUrl) return;
 
       const spinIcon = document.getElementById('syncSpinIcon');
       if (spinIcon) spinIcon.classList.add('fa-spin');
@@ -2193,7 +2224,7 @@
       }
       const spinIcon = document.getElementById('syncSpinIcon');
       if (spinIcon) spinIcon.classList.add('fa-spin');
-      showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
+      showToast('កំពុងទាញទិន្នន័យពី Google Sheet...', 'info');
 
       try {
         const response = await fetch(`${settings.googleSheetUrl}?action=sync_all`);
@@ -2233,7 +2264,7 @@
         if (typeof renderAnalytics === 'function') renderAnalytics();
 
         confetti({ particleCount: 60, spread: 70 });
-        showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
+        showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់!`, 'success');
 
       } catch (err) {
         console.error(err);
@@ -2339,7 +2370,7 @@
       try {
         const backupPayload = {
           appName: storeInfo.name,
-          backupVersion: "2.7",
+          backupVersion: "2.8",
           exportDate: new Date().toISOString(),
           storeInfo, KHR_RATE, customKhqrImage, customMerchantName,
           integrationSettings, products, transactions, expenses, customerLoyalty
@@ -2536,7 +2567,7 @@
       }
     }
 
-    // ================= MULTI-UPLOAD & STOCK =================
+    // ================= MULTI-UPLOAD & STOCK WITH GOOGLE DRIVE AUTO-LINK =================
     function openMultiUploadModal(id = null) {
       batchUploadedImages = [];
       document.getElementById('multiUploadForm').reset();
@@ -2584,7 +2615,7 @@
       }
       container.innerHTML = batchUploadedImages.map((src, idx) => `
         <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-stone-300">
-            <img src="${src}" class="w-full h-full object-cover">
+            <img src="${formatImgUrl(src)}" class="w-full h-full object-cover">
             <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px]">
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -2594,8 +2625,14 @@
 
     function clearBatchImages() { batchUploadedImages = []; renderBatchPreviews(); }
 
-    function saveBatchProduct(event) {
+    async function saveBatchProduct(event) {
       event.preventDefault();
+      const submitBtn = document.getElementById('saveProdSubmitBtn');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> កំពុង Upload ទៅ Drive...';
+      }
+
       const id = document.getElementById('multiUploadProdId').value;
       const name = document.getElementById('batchProdName').value.trim();
       const cat = document.getElementById('batchProdCat').value;
@@ -2604,7 +2641,25 @@
       const stock = parseInt(document.getElementById('batchProdStock').value) || 0;
 
       const fallbackImg = 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
-      const images = batchUploadedImages.length > 0 ? [...batchUploadedImages] : [fallbackImg];
+      let images = batchUploadedImages.length > 0 ? [...batchUploadedImages] : [fallbackImg];
+
+      // 🌟 បម្លែងរូបភាព Base64 ទៅជា Google Drive Link ដោយស្វ័យប្រវត្តិ
+      try {
+        const driveLinks = [];
+        for (let i = 0; i < images.length; i++) {
+          const img = images[i];
+          if (img && img.startsWith('data:image')) {
+            showToast(`☁️ កំពុងបង្កើត Link លើ Drive សម្រាប់រូបទី ${i + 1}...`, 'info');
+            const uploadedUrl = await uploadImageToGoogleDrive(img, `${name}_${Date.now()}_${i + 1}`);
+            driveLinks.push(uploadedUrl);
+          } else {
+            driveLinks.push(img);
+          }
+        }
+        images = driveLinks;
+      } catch (uploadErr) {
+        console.warn('Upload to drive failed:', uploadErr);
+      }
 
       if (id) {
         const idx = products.findIndex(p => p.id == id);
@@ -2619,12 +2674,17 @@
       renderShowcase();
       renderQuickAddons();
 
-      // Sync ទៅ Sheet ភ្លាមៗ
+      // Sync ទៅ Sheet ភ្លាមៗ (ជាមួយនឹង Link Drive ថ្មី)
       syncStockToGoogleSheet();
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i><span>រក្សាទុក & បង្កើត Link ចូល Sheet</span>';
+      }
 
       closeMultiUploadModal();
       confetti({ particleCount: 50, spread: 60 });
-      showToast(`បានរក្សាទុក "${name}" ជោគជ័យ!`, 'success');
+      showToast(`🎉 បានរក្សាទុក "${name}" និងបង្កើត Link រូបភាពជោគជ័យ!`, 'success');
     }
 
     function adjustProductStock(id, delta) {
@@ -2634,8 +2694,6 @@
         saveState();
         renderInventory();
         renderProducts();
-
-        // Sync ស្តុកថ្មីទៅ Sheet ភ្លាមៗ
         syncStockToGoogleSheet();
         showToast(`បានបន្ថែមស្តុក ${p.name} ចំនួន ${delta}`, 'info');
       }
@@ -2649,8 +2707,6 @@
         renderInventory();
         renderShowcase();
         renderQuickAddons();
-
-        // Sync ការលុបទំនិញទៅ Sheet
         syncStockToGoogleSheet();
         showToast('បានលុបទំនិញរួចរាល់', 'info');
       }
