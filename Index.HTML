@@ -106,7 +106,7 @@
     </style>
 </head>
 
-<body class="min-h-screen flex flex-col bg-bakery-cream select-none pb-20 xl:pb-0">
+<body class="min-h-screen flex flex-col bg-bakery-cream select-none pb-24 xl:pb-0">
 
     <!-- ================= TOP NAVIGATION BAR ================= -->
     <header class="bg-white/95 backdrop-blur-md sticky top-0 z-40 border-b border-orange-200/70 shadow-sm">
@@ -136,7 +136,7 @@
                     </div>
                 </div>
 
-                <!-- DESKTOP NAVIGATION TABS -->
+                <!-- DESKTOP NAVIGATION TABS (កុំព្យូទ័រ) -->
                 <nav
                     class="hidden xl:flex items-center gap-1.5 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner">
                     <button id="nav-pos" onclick="switchView('pos')"
@@ -186,7 +186,8 @@
                     </button>
 
                     <button onclick="openSettingsModal()"
-                        class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition">
+                        class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition"
+                        title="ការកំណត់ & Telegram">
                         <i class="fa-solid fa-gear text-sm sm:text-base"></i>
                     </button>
                 </div>
@@ -549,7 +550,8 @@
             <div
                 class="bg-white p-4 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                 <div>
-                    <h2 class="text-xl sm:text-2xl font-extrabold text-bakery-dark">ការគ្រប់គ្រងស្តុកនំ និង គ្រឿងផ្សំ</h2>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-bakery-dark">ការគ្រប់គ្រងស្តុកនំ និង គ្រឿងផ្សំ
+                    </h2>
                     <p class="text-xs sm:text-sm text-stone-600 font-medium">តាមដានស្តុកទំនិញលក់ និងគ្រឿងផ្សំធ្វើនំ</p>
                 </div>
 
@@ -566,16 +568,19 @@
             </div>
 
             <!-- 🌟 SUB-TABS: ប៊ូតុងប្តូររវាងស្តុកនំ & ស្តុកគ្រឿងផ្សំ 🌟 -->
-            <div class="flex items-center gap-2 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner w-full sm:w-fit">
+            <div
+                class="flex items-center gap-2 bg-bakery-vanilla p-1.5 rounded-2xl border border-orange-200 shadow-inner w-full sm:w-fit">
                 <button id="tab-stock-products" onclick="switchStockSubTab('products')"
                     class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 bg-white text-bakery-caramel shadow-sm">
                     <i class="fa-solid fa-cake-candles"></i> <span>🎂 ស្តុកនំ & ទំនិញលក់</span>
-                    <span id="stockProductsBadge" class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-orange-100 text-bakery-caramel font-black">0</span>
+                    <span id="stockProductsBadge"
+                        class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-orange-100 text-bakery-caramel font-black">0</span>
                 </button>
                 <button id="tab-stock-ingredients" onclick="switchStockSubTab('ingredients')"
                     class="flex-1 sm:flex-none px-5 py-2.5 rounded-xl font-extrabold text-xs sm:text-sm transition-all flex items-center justify-center gap-2 text-stone-700 hover:text-bakery-dark">
                     <i class="fa-solid fa-wheat-awn text-amber-600"></i> <span>🌾 ស្តុកគ្រឿងផ្សំ</span>
-                    <span id="stockIngredientsBadge" class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-stone-200 text-stone-700 font-black">0</span>
+                    <span id="stockIngredientsBadge"
+                        class="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-stone-200 text-stone-700 font-black">0</span>
                 </button>
             </div>
 
@@ -689,6 +694,40 @@
         </section>
 
     </main>
+
+    <!-- ================= 📱 របារ MENU ខាងក្រោមសម្រាប់ទូរស័ព្ទដៃ (MOBILE BOTTOM MENU) 📱 ================= -->
+    <nav class="xl:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-orange-200 px-2 py-2 shadow-lg flex items-center justify-around">
+        <button onclick="switchView('pos')" id="mob-nav-pos"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-bakery-caramel font-black text-[10px] transition-all">
+            <i class="fa-solid fa-cash-register text-lg"></i>
+            <span>POS</span>
+        </button>
+        <button onclick="switchView('expenses')" id="mob-nav-expenses"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-stone-500 font-bold text-[10px] transition-all hover:text-bakery-dark">
+            <i class="fa-solid fa-receipt text-lg text-rose-500"></i>
+            <span>ចំណាយ</span>
+        </button>
+        <button onclick="switchView('showcase')" id="mob-nav-showcase"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-stone-500 font-bold text-[10px] transition-all hover:text-bakery-dark">
+            <i class="fa-solid fa-images text-lg text-amber-500"></i>
+            <span>បង្ហាញ</span>
+        </button>
+        <button onclick="switchView('custom')" id="mob-nav-custom"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-stone-500 font-bold text-[10px] transition-all hover:text-bakery-dark">
+            <i class="fa-solid fa-wand-magic-sparkles text-lg text-purple-500"></i>
+            <span>Studio</span>
+        </button>
+        <button onclick="switchView('inventory')" id="mob-nav-inventory"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-stone-500 font-bold text-[10px] transition-all hover:text-bakery-dark">
+            <i class="fa-solid fa-boxes-stacked text-lg text-emerald-600"></i>
+            <span>ស្តុក</span>
+        </button>
+        <button onclick="switchView('analytics')" id="mob-nav-analytics"
+            class="flex flex-col items-center gap-1 py-1 px-2 text-stone-500 font-bold text-[10px] transition-all hover:text-bakery-dark">
+            <i class="fa-solid fa-chart-pie text-lg text-sky-500"></i>
+            <span>ស្ថិតិ</span>
+        </button>
+    </nav>
 
     <!-- ================= 📸 MODAL: MULTI-IMAGE UPLOAD (UPLOAD រូបភាព) ================= -->
     <div id="multiUploadModal"
@@ -834,22 +873,47 @@
         </div>
     </div>
 
-    <!-- ================= MODAL: SETTINGS ================= -->
+    <!-- ================= MODAL: SETTINGS (មាន TELEGRAM BOT) ================= -->
     <div id="settingsModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 border border-orange-100">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 max-h-[90vh] overflow-y-auto custom-scroll">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
-                <h3 class="font-extrabold text-base text-bakery-dark">ការកំណត់ Google Sheets</h3>
-                <button onclick="closeSettingsModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="font-extrabold text-base text-bakery-dark">ការកំណត់ Google Sheets & Telegram</h3>
+                <button onclick="closeSettingsModal()" class="text-stone-400 hover:text-stone-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="mt-4 space-y-3 text-xs">
+            <div class="mt-4 space-y-3.5 text-xs">
                 <div>
-                    <label class="block font-bold text-stone-700 mb-1">Web App URL</label>
+                    <label class="block font-bold text-stone-700 mb-1">Web App URL (Google Sheet)</label>
                     <input type="text" id="googleSheetUrl"
-                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs">
+                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs focus:ring-2 focus:ring-bakery-caramel">
                 </div>
+
+                <div class="pt-2 border-t border-orange-100">
+                    <label class="block font-bold text-stone-700 mb-1 flex items-center gap-1">
+                        <i class="fa-brands fa-telegram text-sky-500 text-sm"></i> Telegram Bot Token
+                    </label>
+                    <input type="text" id="telegramBotTokenInput"
+                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs focus:ring-2 focus:ring-bakery-caramel"
+                        placeholder="8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1 flex items-center gap-1">
+                        <i class="fa-solid fa-hashtag text-stone-500"></i> Telegram Chat ID
+                    </label>
+                    <input type="text" id="telegramChatIdInput"
+                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-300 font-mono text-xs focus:ring-2 focus:ring-bakery-caramel"
+                        placeholder="8970210109">
+                </div>
+
+                <!-- Test Telegram Notification Button -->
+                <button type="button" onclick="testTelegramNotification()"
+                    class="w-full py-2.5 bg-sky-50 hover:bg-sky-100 text-sky-700 rounded-xl font-bold border border-sky-200 transition flex items-center justify-center gap-2">
+                    <i class="fa-brands fa-telegram text-base"></i> <span>🔔 សាកល្បងផ្ញើសារ Test ទៅ Telegram</span>
+                </button>
+
                 <button onclick="saveIntegrationSettings()"
-                    class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs shadow">
+                    class="w-full py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs shadow transition">
                     💾 រក្សាទុកការកំណត់
                 </button>
             </div>
@@ -882,7 +946,7 @@
         </div>
     </div>
 
-    <div id="toastContainer" class="fixed bottom-20 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
+    <div id="toastContainer" class="fixed bottom-24 xl:bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none">
     </div>
 
     <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
@@ -894,7 +958,6 @@
             return rawUrl.trim();
         }
 
-        // 🌟 មុខងារបង្រួមរូបភាពកុំឱ្យធ្ងន់ម៉ាស៊ីន (Auto-compress Image)
         function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.75) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
@@ -939,7 +1002,6 @@
             { id: 'acc-4', name: 'ទៀនផាវភ្លើង Sparklers (កញ្ចប់ 6ដើម)', cat: 'accessories', priceKHR: 6000, stock: 20, img: 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?w=400', badge: 'Hot' }
         ];
 
-        // 🌾 គ្រឿងផ្សំដើម (Default Raw Ingredients)
         const defaultIngredients = [
             { id: 'ing-1', name: 'ម្សៅមីខេក (Cake Flour)', cat: 'ingredients', priceKHR: 15000, stock: 25, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?w=400', badge: 'គ្រឿងផ្សំ' },
             { id: 'ing-2', name: 'ប័រស្រស់ (Pure Butter)', cat: 'ingredients', priceKHR: 28000, stock: 15, img: 'https://images.unsplash.com/photo-1589985270826-4b7bb135bc9d?w=400', badge: 'គ្រឿងផ្សំ' },
@@ -960,8 +1022,7 @@
         ];
 
         let products = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || [...initialProducts];
-        
-        // ធានាថាមានគ្រឿងផ្សំក្នុងទិន្នន័យ
+
         if (!products.some(p => p.cat === 'ingredients')) {
             products = [...products, ...defaultIngredients];
         }
@@ -970,13 +1031,18 @@
         let expenses = JSON.parse(localStorage.getItem('BAKERY_EXPENSES')) || [];
         let transactions = JSON.parse(localStorage.getItem('BAKERY_TRANSACTIONS')) || [];
         let activeCategory = 'all';
-        let activeStockSubTab = 'products'; // 'products' ឬ 'ingredients'
+        let activeStockSubTab = 'products';
         let currentDiscountKHR = 0;
         let batchUploadedImages = [];
 
         let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
-            googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec'
+            googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec',
+            telegramBotToken: '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4',
+            telegramChatId: '8970210109'
         };
+
+        if (!integrationSettings.telegramBotToken) integrationSettings.telegramBotToken = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+        if (!integrationSettings.telegramChatId) integrationSettings.telegramChatId = '8970210109';
 
         const categories = [
             { id: 'all', label: 'ទាំងអស់' },
@@ -1011,32 +1077,54 @@
             }
         }
 
+        // ================= SWITCH VIEW (អាប់ដេតទាំង Desktop និង Mobile Menu) =================
         function switchView(viewName) {
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
                 if (sec) sec.classList.add('hidden');
+
+                // Desktop Menu
                 const navBtn = document.getElementById(`nav-${v}`);
                 if (navBtn) {
                     navBtn.classList.remove('bg-white', 'text-bakery-caramel', 'shadow-sm');
                     navBtn.classList.add('text-stone-700');
                 }
+
+                // Mobile Menu
+                const mobBtn = document.getElementById(`mob-nav-${v}`);
+                if (mobBtn) {
+                    mobBtn.classList.remove('text-bakery-caramel', 'font-black');
+                    mobBtn.classList.add('text-stone-500', 'font-bold');
+                }
             });
 
             const targetSec = document.getElementById(`view-${viewName}`);
             if (targetSec) targetSec.classList.remove('hidden');
+
+            // Active Desktop Menu
             const activeNav = document.getElementById(`nav-${viewName}`);
             if (activeNav) {
                 activeNav.classList.remove('text-stone-700');
                 activeNav.classList.add('bg-white', 'text-bakery-caramel', 'shadow-sm');
             }
 
+            // Active Mobile Menu
+            const activeMobNav = document.getElementById(`mob-nav-${viewName}`);
+            if (activeMobNav) {
+                activeMobNav.classList.remove('text-stone-500', 'font-bold');
+                activeMobNav.classList.add('text-bakery-caramel', 'font-black');
+            }
+
             if (viewName === 'analytics') renderAnalytics();
             if (viewName === 'expenses') renderExpenses();
             if (viewName === 'inventory') renderInventory();
             if (viewName === 'showcase') renderShowcase();
+
+            // Scroll ទៅលើគេវិញស្វ័យប្រវត្តិ
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ================= 📸 មុខងារ UPLOAD រូបភាពច្រើនសន្លឹក =================
+        // ================= 📸 MULTI-IMAGE UPLOAD =================
         function openMultiUploadModal(id = null) {
             batchUploadedImages = [];
             const form = document.getElementById('multiUploadForm');
@@ -1053,7 +1141,6 @@
                 document.getElementById('batchProdStock').value = prod.stock;
                 batchUploadedImages = prod.images ? [...prod.images] : [prod.img];
             } else {
-                // ប្រសិនបើកំពុងនៅផ្ទាំងស្តុកគ្រឿងផ្សំ ឱ្យរើស 'ingredients' ស្វ័យប្រវត្តិ
                 if (activeStockSubTab === 'ingredients') {
                     document.getElementById('batchProdCat').value = 'ingredients';
                 } else {
@@ -1217,7 +1304,6 @@
             if (!grid) return;
 
             const filtered = products.filter(p => {
-                // 🌾 មិនបង្ហាញគ្រឿងផ្សំក្នុង POS ឡើយ (សម្រាប់តែទំនិញលក់ប៉ុណ្ណោះ)
                 if (p.cat === 'ingredients') return false;
 
                 const matchCat = (activeCategory === 'all' || p.cat === activeCategory);
@@ -1305,8 +1391,6 @@
                                 <img src="${formatImgUrl(item.img)}" class="w-8 h-8 rounded-lg object-cover bg-stone-100 flex-shrink-0">
                                 <div class="min-w-0 flex-1">
                                     <div class="text-xs font-bold text-bakery-dark truncate">${item.name}</div>
-                                    
-                                    <!-- តម្លៃ និង ប៊ូតុងកែប្រែតម្លៃ ✏️ -->
                                     <div class="flex items-center gap-1.5 mt-0.5">
                                         <span class="text-[11px] font-black text-bakery-caramel font-en">${(item.priceKHR * item.qty).toLocaleString()} ៛</span>
                                         <button onclick="editCartItemPrice(${idx})" class="text-[9px] bg-orange-100 hover:bg-orange-200 text-bakery-caramel px-1.5 py-0.5 rounded font-extrabold border border-orange-200" title="ចុចដើម្បីកែតម្លៃ">
@@ -1397,11 +1481,15 @@
             transactions.unshift(newTx);
             saveState();
 
+            // 🌟 ១. បញ្ជូនទៅ Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: newTx,
                 sale: newTx
             });
+
+            // 🌟 ២. ផ្ញើសារជូនដំណឹងទៅ Telegram Bot
+            sendTelegramNotification(newTx);
 
             closePaymentModal();
             clearCart();
@@ -1412,7 +1500,74 @@
 
             openReceiptModal(invId, method, totalKHR);
             confetti({ particleCount: 80, spread: 70 });
-            showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ!', 'success');
+            showToast('🎉 ទូទាត់ប្រាក់ជោគជ័យ & បាញ់សារទៅ Telegram!', 'success');
+        }
+
+        // ================= 🚀 TELEGRAM BOT NOTIFICATIONS =================
+        async function sendTelegramNotification(tx) {
+            const token = integrationSettings.telegramBotToken;
+            const chatId = integrationSettings.telegramChatId;
+            if (!token || !chatId) return;
+
+            const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
+            const msg = `🎂 *ហាងនំខេកវិជ្ជដា - ការលក់ថ្មី!* 🎂\n` +
+                        `━━━━━━━━━━━━━━━━━━━━\n` +
+                        `🧾 *វិក្កយបត្រ:* \`${tx.id}\`\n` +
+                        `📅 *កាលបរិច្ឆេទ:* ${tx.date} (${tx.time})\n` +
+                        `👤 *អតិថិជន:* ${tx.customerName || 'ទូទៅ'}\n` +
+                        `━━━━━━━━━━━━━━━━━━━━\n` +
+                        `🛒 *មុខទំនិញ:*\n${itemsText}\n` +
+                        `━━━━━━━━━━━━━━━━━━━━\n` +
+                        `💰 *សរុប (KHR):* *${Number(tx.totalKHR).toLocaleString()} ៛*\n` +
+                        `💵 *សរុប (USD):* *$${Number(tx.totalUSD).toFixed(2)}*\n` +
+                        `💳 *វិធីទូទាត់:* ${tx.method}\n` +
+                        `━━━━━━━━━━━━━━━━━━━━\n` +
+                        `🙏 _សូមអរគុណចំពោះការគាំទ្រ!_`;
+
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: msg,
+                        parse_mode: 'Markdown'
+                    })
+                });
+            } catch (err) {
+                console.warn('Telegram send failed:', err);
+            }
+        }
+
+        async function testTelegramNotification() {
+            const token = document.getElementById('telegramBotTokenInput').value.trim() || integrationSettings.telegramBotToken;
+            const chatId = document.getElementById('telegramChatIdInput').value.trim() || integrationSettings.telegramChatId;
+
+            if (!token || !chatId) {
+                showToast('សូមបញ្ចូល Bot Token និង Chat ID!', 'warning');
+                return;
+            }
+
+            showToast('កំពុងសាកល្បងផ្ញើសារ...', 'info');
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: `🎉 *តេស្ត Telegram Bot ហាងនំខេកវិជ្ជដា ជោគជ័យ!* 🎉\n━━━━━━━━━━━━━━━━━━━━\nប្រព័ន្ធបានភ្ជាប់ជាមួយ Telegram របស់លោកអ្នករួចរាល់ហើយ។ ពេលមានការលក់ថ្មី សារនឹងលោតមកទីនេះស្វ័យប្រវត្តិ!`,
+                        parse_mode: 'Markdown'
+                    })
+                });
+                const data = await res.json();
+                if (data.ok) {
+                    showToast('✅ ផ្ញើសារ Test ទៅ Telegram ជោគជ័យ!', 'success');
+                } else {
+                    showToast('❌ បរាជ័យ: ' + (data.description || 'ពិនិត្យ Chat ID'), 'error');
+                }
+            } catch (e) {
+                showToast('❌ មិនអាចភ្ជាប់ទៅកាន់ Telegram បានទេ!', 'error');
+            }
         }
 
         // ================= GOOGLE SHEET SYNC =================
@@ -1547,7 +1702,7 @@
             `).join('');
         }
 
-        // ================= INVENTORY (កែសម្រួលបែងចែកស្តុក) =================
+        // ================= INVENTORY (បែងចែកស្តុក) =================
         function switchStockSubTab(tab) {
             activeStockSubTab = tab;
             const btnProd = document.getElementById('tab-stock-products');
@@ -1576,13 +1731,11 @@
             const prodItems = products.filter(p => p.cat !== 'ingredients');
             const ingItems = products.filter(p => p.cat === 'ingredients');
 
-            // អាប់ដេតចំនួនលេខលើ badge
             const badgeProd = document.getElementById('stockProductsBadge');
             const badgeIng = document.getElementById('stockIngredientsBadge');
             if (badgeProd) badgeProd.innerText = prodItems.length;
             if (badgeIng) badgeIng.innerText = ingItems.length;
 
-            // ជ្រើសរើសបញ្ជីតាមផ្ទាំងដែលកំពុងបើក
             const currentList = (activeStockSubTab === 'products') ? prodItems : ingItems;
 
             if (currentList.length === 0) {
@@ -1745,7 +1898,9 @@
         }
 
         function openSettingsModal() {
-            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl;
+            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl || '';
+            document.getElementById('telegramBotTokenInput').value = integrationSettings.telegramBotToken || '';
+            document.getElementById('telegramChatIdInput').value = integrationSettings.telegramChatId || '';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -1753,9 +1908,11 @@
 
         function saveIntegrationSettings() {
             integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
+            integrationSettings.telegramBotToken = document.getElementById('telegramBotTokenInput').value.trim();
+            integrationSettings.telegramChatId = document.getElementById('telegramChatIdInput').value.trim();
             saveState();
             closeSettingsModal();
-            showToast('💾 បានរក្សាទុកការកំណត់!', 'success');
+            showToast('💾 បានរក្សាទុកការកំណត់ និង Telegram Bot!', 'success');
         }
 
         function showToast(msg, type = 'info') {
