@@ -767,10 +767,10 @@
                     <table class="w-full text-left text-xs sm:text-sm min-w-[550px]">
                         <thead class="bg-bakery-vanilla/70 text-stone-700 font-extrabold border-b border-orange-200">
                             <tr>
-                                <th class="p-3 pl-4">វិក្កយបត្រ</th>
+                                <th class="p-3 pl-4">វិក្កយបត្រ & អតិថិជន</th>
                                 <th class="p-3">កាលបរិច្ឆេទ</th>
                                 <th class="p-3">ម៉ោង</th>
-                                <th class="p-3">ចំនួន</th>
+                                <th class="p-3">មុខទំនិញ & ចំនួន</th>
                                 <th class="p-3">វិធីទូទាត់</th>
                                 <th class="p-3">សរុប (KHR)</th>
                                 <th class="p-3 text-center">សកម្មភាព</th>
@@ -1582,7 +1582,66 @@
             ...defaultIngredients
         ];
 
-        let products = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || initialProducts;
+        /* --- 📦 តម្រឹម និងសម្អាតទិន្នន័យទំនិញ (Auto-fix Product Column Shifts) --- */
+        function normalizeProduct(p, localProducts = []) {
+            if (!p) return p;
+            let copy = { ...p };
+
+            const localList = (localProducts && localProducts.length > 0) ? localProducts : (typeof initialProducts !== 'undefined' ? initialProducts : []);
+            const localItem = localList.find(lp => String(lp.id) === String(copy.id) || lp.name === copy.name);
+
+            const isCatNumeric = !isNaN(parseInt(copy.cat)) && parseInt(copy.cat) >= 500;
+            const isPriceZero = !copy.priceKHR || parseInt(copy.priceKHR) === 0;
+
+            if (isCatNumeric && isPriceZero) {
+                // តម្លៃត្រូវបានរុញចូលទៅក្នុង cat
+                copy.priceKHR = parseInt(copy.cat);
+
+                // ស្តុកត្រូវបានរុញចូលទៅក្នុង img
+                if (copy.img && !isNaN(parseInt(copy.img)) && !String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:')) {
+                    copy.stock = parseInt(copy.img);
+                    copy.img = (localItem && localItem.img) ? localItem.img : '';
+                } else if (copy.stock === null || copy.stock === undefined) {
+                    copy.stock = (localItem && localItem.stock !== undefined) ? localItem.stock : 10;
+                }
+
+                // ស្តារប្រភេទពិតប្រាកដ
+                if (String(copy.id).startsWith('acc-')) {
+                    copy.cat = 'accessories';
+                } else if (String(copy.id).startsWith('ing-')) {
+                    copy.cat = 'ingredients';
+                } else if (localItem && localItem.cat) {
+                    copy.cat = localItem.cat;
+                } else {
+                    const n = (copy.name || '').toLowerCase();
+                    if (n.includes('ខេក') || n.includes('cake')) copy.cat = 'cakes';
+                    else if (n.includes('នំប៉័ង') || n.includes('bread') || n.includes('croissant')) copy.cat = 'breads';
+                    else if (n.includes('កាហ្វេ') || n.includes('ភេសជ្ជ') || n.includes('coffee') || n.includes('tea')) copy.cat = 'drinks';
+                    else if (n.includes('ផេស្ទ្រី') || n.includes('pastry') || n.includes('macaron')) copy.cat = 'pastries';
+                    else if (n.includes('ទៀន') || n.includes('មួក') || n.includes('ស្ប្រាយ') || n.includes('ស្ព្រាយ')) copy.cat = 'accessories';
+                    else copy.cat = 'cakes';
+                }
+            } else {
+                if (!copy.cat || copy.cat === 'null' || !isNaN(Number(copy.cat))) {
+                    copy.cat = (localItem && localItem.cat) ? localItem.cat : 'cakes';
+                }
+                if (copy.stock === null || copy.stock === undefined) {
+                    copy.stock = (localItem && localItem.stock !== undefined) ? localItem.stock : 0;
+                }
+            }
+
+            if (!copy.img || (!String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:'))) {
+                if (localItem && localItem.img) copy.img = localItem.img;
+            }
+
+            if (!copy.images || !Array.isArray(copy.images) || copy.images.length === 0) {
+                copy.images = copy.img ? [copy.img] : [];
+            }
+
+            return copy;
+        }
+
+        let products = (JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || initialProducts).map(p => normalizeProduct(p, initialProducts));
 
         defaultAccessories.forEach(acc => {
             if (!products.some(p => p.name === acc.name || p.id === acc.id)) products.push(acc);
@@ -1630,7 +1689,79 @@
             message: 'រីករាយថ្ងៃខួបកំណើត!'
         };
 
-        let transactions = JSON.parse(localStorage.getItem('BAKERY_TRANSACTIONS')) || [];
+        /* --- 🕒 បម្លែងម៉ោងឱ្យស្អាត (HH:mm) --- */
+        function formatCleanTime(timeStr) {
+            if (!timeStr) return '--:--';
+            if (/^\d{1,2}:\d{2}$/.test(String(timeStr).trim())) return String(timeStr).trim();
+            const match = String(timeStr).match(/(\d{1,2}:\d{2})(?::\d{2})?/);
+            if (match) return match[1];
+            return String(timeStr);
+        }
+
+        /* --- 🔄 តម្រឹម និងសម្អាតទិន្នន័យការលក់ (Auto-fix Column Shifts & Format) --- */
+        function normalizeTransaction(t) {
+            if (!t) return t;
+            let copy = { ...t };
+
+            // 1. សម្អាតម៉ោង (HH:mm)
+            copy.time = formatCleanTime(copy.time);
+
+            // 2. ស្រាវជ្រាវ និងកែសម្រួលទិន្នន័យដែលខុសជួរឈរពី Google Sheet
+            let detectedTotal = parseInt(copy.totalKHR) || 0;
+            let remKHR = parseInt(copy.remainingKHR) || 0;
+            let statusNum = (!isNaN(parseInt(copy.status)) && !String(copy.status).includes('#')) ? parseInt(copy.status) : 0;
+            let isShifted = false;
+
+            if (detectedTotal === 0 && (remKHR > 0 || statusNum > 0)) {
+                isShifted = true;
+                detectedTotal = remKHR > 0 ? remKHR : statusNum;
+            }
+
+            // 3. ស្ថានភាពលក់ និងកំណត់ចំណាំពិតប្រាកដ
+            let realStatus = copy.status || 'Paid (គ្រប់)';
+            let realNote = copy.note || '';
+
+            if (isShifted) {
+                if (copy.note && (copy.note.includes('Paid') || copy.note.includes('គ្រប់') || copy.note.includes('កក់'))) {
+                    realStatus = copy.note;
+                    realNote = '';
+                }
+            } else if (String(realStatus).startsWith('#NUM') || (!isNaN(Number(realStatus)) && Number(realStatus) > 0)) {
+                realStatus = (remKHR > 0) ? `ខ្វះ ${remKHR.toLocaleString()}៛` : 'Paid (គ្រប់)';
+            }
+
+            // 4. ចំនួនមុខទំនិញ
+            let itemsCount = parseInt(copy.itemsCount) || 1;
+            if (copy.itemsSummary) {
+                let sumQty = 0;
+                const matches = [...copy.itemsSummary.matchAll(/x(\d+)/g)];
+                if (matches.length > 0) {
+                    matches.forEach(m => sumQty += parseInt(m[1]));
+                    if (sumQty > 0) itemsCount = sumQty;
+                }
+            } else if (isShifted && parseInt(copy.depositKHR) > 0 && parseInt(copy.depositKHR) < 50) {
+                itemsCount = parseInt(copy.depositKHR);
+            }
+
+            // 5. លុយកក់ និងលុយខ្វះ
+            let depositKHR = detectedTotal;
+            let remainingKHR = 0;
+            if (realStatus.includes('កក់') || (remKHR > 0 && !isShifted)) {
+                remainingKHR = remKHR;
+                depositKHR = Math.max(0, detectedTotal - remainingKHR);
+            }
+
+            copy.totalKHR = detectedTotal;
+            copy.depositKHR = depositKHR;
+            copy.remainingKHR = remainingKHR;
+            copy.status = realStatus;
+            copy.note = realNote;
+            copy.itemsCount = itemsCount;
+
+            return copy;
+        }
+
+        let transactions = (JSON.parse(localStorage.getItem('BAKERY_TRANSACTIONS')) || []).map(normalizeTransaction);
         let customerLoyalty = JSON.parse(localStorage.getItem('BAKERY_LOYALTY')) || {};
 
         let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
@@ -2146,19 +2277,18 @@
                 invoice: {
                     id: invId,
                     date: date,
-                    time: time,
+                    time: formatCleanTime(time),
                     customerName: custName,
                     customerPhone: phone,
                     itemsSummary: newTx.itemsSummary,
-                    cakeFlavors: newTx.cakeFlavors,
-                    addOns: newTx.addOns,
-                    totalQty: totalQty,
+                    itemsCount: totalQty,
                     totalKHR: totalKHR,
                     depositKHR: depositKHR,
                     remainingKHR: remainingKHR,
-                    totalUSD: parseFloat(totalUSD),
+                    status: status,
                     method: method,
-                    status: status
+                    note: note ? `[កត់ត្រាពីមុន] ${note}` : '',
+                    photoLink: ''
                 }
             });
 
@@ -2231,6 +2361,7 @@
             const prodList = products.filter(p => p.cat !== 'ingredients');
             const ingList = products.filter(p => p.cat === 'ingredients');
 
+            transactions = transactions.map(normalizeTransaction);
             sendGoogleSheetPayload({
                 action: 'sync_all',
                 products: prodList,
@@ -2246,19 +2377,18 @@
             const testSale = {
                 id: 'TEST-' + Math.floor(1000 + Math.random() * 9000),
                 date: new Date().toISOString().split('T')[0],
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                time: formatCleanTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })),
                 customerName: 'តេស្តសាកល្បង',
                 customerPhone: '012345678',
                 itemsSummary: 'នំខេកតេស្ត x1',
-                cakeFlavors: 'វ៉ានីឡា',
-                addOns: 'ទៀន',
-                totalQty: 1,
+                itemsCount: 1,
                 totalKHR: 10000,
                 depositKHR: 10000,
                 remainingKHR: 0,
-                totalUSD: 2.44,
+                status: 'Paid (តេស្ត)',
                 method: 'KHQR (៛)',
-                status: 'Paid (តេស្ត)'
+                note: 'តេស្តប្រព័ន្ធ',
+                photoLink: ''
             };
             sendGoogleSheetPayload({ action: 'new_sale', invoice: testSale }, true);
         }
@@ -2291,16 +2421,17 @@
                 }
 
                 if (remoteProducts.length > 0) {
+                    remoteProducts = remoteProducts.map(p => normalizeProduct(p, initialProducts));
                     remoteProducts.forEach(remoteItem => {
                         const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
-                        if (localItem && localItem.img && !remoteItem.img) {
+                        if (localItem && localItem.img && (!remoteItem.img || !remoteItem.img.startsWith('http'))) {
                             remoteItem.img = localItem.img;
                         }
                     });
                     products = remoteProducts;
                 }
 
-                if (remoteSales.length > 0) transactions = remoteSales;
+                if (remoteSales.length > 0) transactions = remoteSales.map(normalizeTransaction);
                 if (remoteExpenses.length > 0) expenses = remoteExpenses;
 
                 saveState();
@@ -2445,8 +2576,8 @@
                     const data = JSON.parse(e.target.result);
                     if (!confirm('តើអ្នកពិតជាចង់បញ្ចូលទិន្នន័យពី Backup នេះមែនទេ?')) return;
                     if (data.storeInfo) storeInfo = data.storeInfo;
-                    if (data.products) products = data.products;
-                    if (data.transactions) transactions = data.transactions;
+                    if (data.products) products = data.products.map(p => normalizeProduct(p, initialProducts));
+                    if (data.transactions) transactions = data.transactions.map(normalizeTransaction);
                     if (data.expenses) expenses = data.expenses;
                     if (data.customerLoyalty) customerLoyalty = data.customerLoyalty;
                     if (data.KHR_RATE) KHR_RATE = data.KHR_RATE;
@@ -2508,16 +2639,18 @@
             const startDate = document.getElementById('analyticsStartDate').value;
             const endDate = document.getElementById('analyticsEndDate').value;
 
+            transactions = transactions.map(normalizeTransaction);
+
             let filtered = transactions.filter(t => {
                 if (startDate && t.date < startDate) return false;
                 if (endDate && t.date > endDate) return false;
                 return true;
             });
 
-            const totalKHR = filtered.reduce((sum, t) => sum + t.totalKHR, 0);
+            const totalKHR = filtered.reduce((sum, t) => sum + (t.totalKHR || 0), 0);
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
-            const cashSales = filtered.filter(t => t.method && t.method.includes('ប្រាក់សុទ្ធ')).reduce((sum, t) => sum + t.totalKHR, 0);
-            const khqrSales = filtered.filter(t => t.method && t.method.includes('KHQR')).reduce((sum, t) => sum + t.totalKHR, 0);
+            const cashSales = filtered.filter(t => t.method && (t.method.includes('ប្រាក់សុទ្ធ') || t.method.toLowerCase().includes('cash'))).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const khqrSales = filtered.filter(t => t.method && (t.method.includes('KHQR') || t.method.toLowerCase().includes('bank') || t.method.toLowerCase().includes('qr'))).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
 
             document.getElementById('statTodayRevenueKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
             document.getElementById('statTodayRevenueUSD').innerText = `≈ $${totalUSD}`;
@@ -2532,31 +2665,54 @@
                 return;
             }
 
-            tbody.innerHTML = filtered.map(t => `
+            tbody.innerHTML = filtered.map(t => {
+                const isPaid = !t.status || t.status.includes('Paid') || t.status.includes('គ្រប់');
+                const cleanTime = formatCleanTime(t.time);
+                const custDisplay = (t.customerName && t.customerName !== 'អតិថិជនទូទៅ' && t.customerName !== 'គ្មាន')
+                    ? `<div class="text-xs font-bold text-bakery-caramel truncate max-w-[160px]"><i class="fa-solid fa-user text-[10px] mr-1"></i>${t.customerName}</div>`
+                    : `<div class="text-xs font-semibold text-stone-400">អតិថិជនទូទៅ</div>`;
+                const statusBadge = `<span class="inline-block mt-0.5 px-2 py-0.5 rounded text-[10px] font-extrabold ${isPaid ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}">${t.status || 'Paid (គ្រប់)'}</span>`;
+                const isKhqr = t.method && (t.method.includes('KHQR') || t.method.toLowerCase().includes('bank') || t.method.toLowerCase().includes('qr'));
+
+                return `
         <tr class="hover:bg-orange-50/40 transition">
-            <td class="p-3 pl-4 font-black text-bakery-dark">
-                ${t.id}
-                ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer">${t.note}</div>` : ''}
+            <td class="p-3 pl-4">
+                <div class="font-black text-bakery-dark font-en">${t.id}</div>
+                ${custDisplay}
+                <div>${statusBadge}</div>
+                ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer mt-0.5">${t.note}</div>` : ''}
             </td>
-            <td class="p-3 text-stone-700 font-extrabold">${t.date}</td>
-            <td class="p-3 text-stone-500 text-xs font-semibold">${t.time}</td>
-            <td class="p-3 font-bold">${t.itemsCount} មុខ</td>
-            <td class="p-3">
-                <span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold ${t.method.includes('KHQR') ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-800'}">
-                    ${t.method}
+            <td class="p-3 text-stone-700 font-extrabold whitespace-nowrap">${t.date}</td>
+            <td class="p-3 whitespace-nowrap">
+                <span class="inline-flex items-center gap-1 bg-stone-100 text-stone-700 px-2 py-1 rounded-md font-en font-bold text-xs">
+                    <i class="fa-regular fa-clock text-bakery-caramel text-[11px]"></i>
+                    ${cleanTime}
                 </span>
             </td>
-            <td class="p-3 font-black text-bakery-caramel">${t.totalKHR.toLocaleString()} ៛</td>
-            <td class="p-3 text-center">
-                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel transition" title="បោះពុម្ពវិក្កយបត្រ">
+            <td class="p-3">
+                <div class="font-black text-bakery-dark font-en">${t.itemsCount || 1} មុខ</div>
+                ${t.itemsSummary ? `<div class="text-[10px] text-stone-500 font-khmer max-w-[220px] truncate" title="${t.itemsSummary}">${t.itemsSummary}</div>` : ''}
+            </td>
+            <td class="p-3 whitespace-nowrap">
+                <span class="px-2.5 py-1 rounded-full text-xs font-extrabold inline-block ${isKhqr ? 'bg-red-100 text-red-700 border border-red-200' : 'bg-emerald-100 text-emerald-800 border border-emerald-200'}">
+                    ${t.method || 'ប្រាក់សុទ្ធ (៛)'}
+                </span>
+            </td>
+            <td class="p-3 whitespace-nowrap">
+                <div class="font-black text-bakery-caramel text-sm font-en">${(t.totalKHR || 0).toLocaleString()} ៛</div>
+                <div class="text-[10px] text-stone-500 font-en">≈ $${(((t.totalKHR || 0)) / KHR_RATE).toFixed(2)}</div>
+            </td>
+            <td class="p-3 text-center whitespace-nowrap">
+                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel hover:bg-orange-100 rounded-lg transition" title="បោះពុម្ពវិក្កយបត្រ">
                     <i class="fa-solid fa-print"></i>
                 </button>
-                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600 transition" title="លុប">
+                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-red-50 rounded-lg transition ml-1" title="លុប">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
         </tr>
-      `).join('');
+      `;
+            }).join('');
         }
 
         function reprintInvoice(invId) {
@@ -2751,6 +2907,8 @@
             const tbody = document.getElementById('inventoryTableBody');
             if (!tbody) return;
 
+            products = products.map(p => normalizeProduct(p, initialProducts));
+
             const prodList = products.filter(p => p.cat !== 'ingredients');
             const ingList = products.filter(p => p.cat === 'ingredients');
 
@@ -2763,22 +2921,36 @@
                 return;
             }
 
+            const catKhmerMap = {
+                all: 'ទាំងអស់',
+                cakes: '🎂 នំខេក',
+                breads: '🥖 នំប៉័ង',
+                pastries: '🥐 នំផេស្ទ្រី',
+                drinks: '☕ ភេសជ្ជៈ',
+                accessories: '🎉 គ្រឿងបន្ថែម',
+                ingredients: '🌾 គ្រឿងផ្សំ'
+            };
+
             tbody.innerHTML = displayList.map(p => {
                 const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                const catLabel = catKhmerMap[p.cat] || p.cat;
+                const stockVal = (p.stock !== null && p.stock !== undefined) ? p.stock : 0;
                 return `
           <tr class="hover:bg-orange-50/40 transition">
               <td class="p-3.5 pl-4 sm:pl-6 flex items-center gap-2.5">
                   <img src="${img}" class="w-10 h-10 rounded-xl object-cover border border-orange-100 shadow-sm" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
                   <span class="font-extrabold text-stone-800">${p.name}</span>
               </td>
-              <td class="p-3.5 uppercase text-xs font-bold text-stone-600">${p.cat}</td>
-              <td class="p-3.5 font-black font-en text-bakery-caramel">${p.priceKHR.toLocaleString()} ៛</td>
-              <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
-              <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
-              <td class="p-3.5 text-center">
+              <td class="p-3.5 font-bold text-stone-700 text-xs">${catLabel}</td>
+              <td class="p-3.5 font-black font-en text-bakery-caramel">${(p.priceKHR || 0).toLocaleString()} ៛</td>
+              <td class="p-3.5 font-bold font-en text-stone-600">$${((p.priceKHR || 0) / KHR_RATE).toFixed(2)}</td>
+              <td class="p-3.5 font-black font-en">
+                  <span class="px-2.5 py-1 rounded-lg font-black text-xs ${stockVal <= 5 ? 'bg-rose-100 text-rose-700' : 'bg-stone-100 text-stone-800'}">${stockVal}</span>
+              </td>
+              <td class="p-3.5 text-center whitespace-nowrap">
                   <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">+10</button>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold hover:bg-orange-100 transition"><i class="fa-solid fa-pen"></i></button>
-                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100 transition"><i class="fa-solid fa-trash"></i></button>
+                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold hover:bg-orange-100 transition ml-1"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100 transition ml-1"><i class="fa-solid fa-trash"></i></button>
               </td>
           </tr>
         `;
@@ -3098,19 +3270,18 @@
                 invoice: {
                     id: invId,
                     date: todayStr,
-                    time: timeStr,
+                    time: formatCleanTime(timeStr),
                     customerName: custName,
                     customerPhone: phone,
                     itemsSummary: newTx.itemsSummary,
-                    cakeFlavors: newTx.cakeFlavors,
-                    addOns: newTx.addOns,
-                    totalQty: totalQty,
+                    itemsCount: totalQty,
                     totalKHR: totalKHR,
                     depositKHR: depositKHR,
                     remainingKHR: remainingKHR,
-                    totalUSD: parseFloat(totalUSD),
+                    status: status,
                     method: method,
-                    status: status
+                    note: '',
+                    photoLink: ''
                 }
             });
 
