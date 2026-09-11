@@ -1647,8 +1647,8 @@
             return rawUrl;
         }
 
-        /* --- 🌟 IMAGE AUTO-COMPRESSOR (RESIZES PHONE PHOTOS TO ~50KB) --- */
-        function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.75) {
+        /* --- 🌟 IMAGE AUTO-COMPRESSOR (RESIZES PHONE PHOTOS TO ~25KB) --- */
+        function compressImageFile(file, maxWidth = 480, maxHeight = 480, quality = 0.65) {
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.onload = (e) => {
@@ -1692,6 +1692,18 @@
             }
         }
 
+        /* --- 🌟 ជំនួយការផ្ទៀងផ្ទាត់រូបភាពពិត (Check Real Valid Image) --- */
+        function isValidProductImage(src) {
+            if (!src || typeof src !== 'string') return false;
+            src = src.trim();
+            if (!src || src === 'null' || src === 'undefined') return false;
+            if (src === FALLBACK_BAKERY_SVG || src.startsWith('data:image/svg+xml')) return false;
+            if (!isNaN(Number(src)) && !src.startsWith('http') && !src.startsWith('data:')) return false;
+            if (src.startsWith('http://') || src.startsWith('https://')) return true;
+            if (src.startsWith('data:image/')) return true;
+            return false;
+        }
+
         /* --- 🌟 PERSISTENT PRODUCT IMAGE VAULT & CACHE (ការពារការបាត់រូបពេល Sync Sheet) --- */
         function getProductImageCache() {
             try {
@@ -1702,12 +1714,18 @@
         }
 
         function cacheProductImage(id, name, img, images) {
-            if (!img && (!images || !images.length)) return;
+            const validImg = isValidProductImage(img) ? img : null;
+            const validImages = Array.isArray(images) ? images.filter(isValidProductImage) : [];
+            const bestImg = validImg || (validImages.length ? validImages[0] : null);
+
+            // មិនអនុញ្ញាតឱ្យសរសេរជាន់ដោយរូបទទេ ឬរូប SVG Fallback ឡើយ
+            if (!bestImg) return;
+
             try {
                 const cache = getProductImageCache();
                 const payload = {
-                    img: img || (images && images.length ? images[0] : ''),
-                    images: (images && images.length) ? images : (img ? [img] : [])
+                    img: bestImg,
+                    images: validImages.length ? validImages : [bestImg]
                 };
                 if (id) cache[String(id)] = payload;
                 if (name && name.trim()) cache[name.trim().toLowerCase()] = payload;
@@ -1719,15 +1737,17 @@
 
         function getCachedProductImage(id, name) {
             const cache = getProductImageCache();
-            if (id && cache[String(id)]) return cache[String(id)];
-            if (name && cache[name.trim().toLowerCase()]) return cache[name.trim().toLowerCase()];
+            let entry = null;
+            if (id && cache[String(id)]) entry = cache[String(id)];
+            if (!entry && name && cache[name.trim().toLowerCase()]) entry = cache[name.trim().toLowerCase()];
+            if (entry && isValidProductImage(entry.img)) return entry;
             return null;
         }
 
         function cacheAllCurrentProductImages() {
             if (typeof products === 'undefined' || !Array.isArray(products)) return;
             products.forEach(p => {
-                if (p.img || (p.images && p.images.length)) {
+                if (isValidProductImage(p.img) || (p.images && p.images.some(isValidProductImage))) {
                     cacheProductImage(p.id, p.name, p.img, p.images);
                 }
             });
@@ -1736,8 +1756,12 @@
         function prepareProductsForSheet(list) {
             return (list || []).map(p => {
                 let sheetImg = '';
-                if (p.img && typeof p.img === 'string' && (p.img.startsWith('http://') || p.img.startsWith('https://'))) {
-                    sheetImg = p.img;
+                if (p.img && typeof p.img === 'string') {
+                    if (p.img.startsWith('http://') || p.img.startsWith('https://')) {
+                        sheetImg = p.img;
+                    } else if (p.img.startsWith('data:image/') && p.img.length <= 48000) {
+                        sheetImg = p.img;
+                    }
                 }
                 return {
                     id: p.id,
@@ -1843,7 +1867,7 @@
                 // ស្តុកត្រូវបានរុញចូលទៅក្នុង img
                 if (copy.img && !isNaN(parseInt(copy.img)) && !String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:')) {
                     copy.stock = parseInt(copy.img);
-                    copy.img = (cached && cached.img) ? cached.img : ((localItem && localItem.img) ? localItem.img : '');
+                    copy.img = '';
                 } else if (copy.stock === null || copy.stock === undefined) {
                     copy.stock = (localItem && localItem.stock !== undefined) ? localItem.stock : 10;
                 }
@@ -1873,22 +1897,28 @@
                 }
             }
 
-            if (!copy.img || (!String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:'))) {
-                if (cached && cached.img) copy.img = cached.img;
-                else if (localItem && localItem.img) copy.img = localItem.img;
-            }
-
-            if (!copy.images || !Array.isArray(copy.images) || copy.images.length === 0) {
-                if (cached && cached.images && cached.images.length) {
-                    copy.images = [...cached.images];
-                } else if (localItem && localItem.images && localItem.images.length) {
-                    copy.images = [...localItem.images];
-                } else {
-                    copy.images = copy.img ? [copy.img] : [];
+            // ស្តាររូបភាពពិតប្រាកដដោយមិនឱ្យបាត់
+            if (!isValidProductImage(copy.img)) {
+                if (cached && isValidProductImage(cached.img)) {
+                    copy.img = cached.img;
+                } else if (localItem && isValidProductImage(localItem.img)) {
+                    copy.img = localItem.img;
                 }
             }
 
-            if (copy.img) {
+            if (!copy.images || !Array.isArray(copy.images) || copy.images.filter(isValidProductImage).length === 0) {
+                if (cached && cached.images && cached.images.filter(isValidProductImage).length) {
+                    copy.images = cached.images.filter(isValidProductImage);
+                } else if (localItem && localItem.images && localItem.images.filter(isValidProductImage).length) {
+                    copy.images = localItem.images.filter(isValidProductImage);
+                } else if (isValidProductImage(copy.img)) {
+                    copy.images = [copy.img];
+                } else {
+                    copy.images = [];
+                }
+            }
+
+            if (isValidProductImage(copy.img)) {
                 cacheProductImage(copy.id, copy.name, copy.img, copy.images);
             }
 
@@ -2692,7 +2722,7 @@
                     // ២. តម្រឹមទិន្នន័យពី Sheet ដោយប្រើប្រាស់ទំនិញក្នុងកម្មវិធីផ្ទាល់ (Products)
                     let normalizedRemote = remoteProducts.map(p => normalizeProduct(p, products));
 
-                    // ៣. ពិនិត្យ និងស្តាររូបភាពដើម ឬរូបភាពដែលបាន Upload មកវិញ
+                    // ៣. ពិនិត្យ និងស្តាររូបភាពដើម ឬរូបភាពដែលបាន Upload មកវិញ ១០០%
                     normalizedRemote.forEach(remoteItem => {
                         const localItem = (products || []).find(p => 
                             String(p.id) === String(remoteItem.id) || 
@@ -2700,19 +2730,17 @@
                         );
                         const cached = getCachedProductImage(remoteItem.id, remoteItem.name);
 
-                        if ((!remoteItem.img || !remoteItem.img.startsWith('http')) && cached && cached.img) {
-                            remoteItem.img = cached.img;
-                        } else if (localItem && localItem.img && (!remoteItem.img || !remoteItem.img.startsWith('http'))) {
-                            remoteItem.img = localItem.img;
-                        }
-
-                        if (!remoteItem.images || !Array.isArray(remoteItem.images) || remoteItem.images.length === 0) {
-                            if (cached && cached.images && cached.images.length) {
-                                remoteItem.images = [...cached.images];
-                            } else if (localItem && localItem.images && localItem.images.length) {
-                                remoteItem.images = [...localItem.images];
-                            } else {
-                                remoteItem.images = remoteItem.img ? [remoteItem.img] : [];
+                        if (!isValidProductImage(remoteItem.img)) {
+                            if (localItem && isValidProductImage(localItem.img)) {
+                                remoteItem.img = localItem.img;
+                                remoteItem.images = (localItem.images && localItem.images.length) ? [...localItem.images] : [localItem.img];
+                            } else if (cached && isValidProductImage(cached.img)) {
+                                remoteItem.img = cached.img;
+                                remoteItem.images = (cached.images && cached.images.length) ? [...cached.images] : [cached.img];
+                            }
+                        } else {
+                            if (!remoteItem.images || !Array.isArray(remoteItem.images) || remoteItem.images.length === 0) {
+                                remoteItem.images = [remoteItem.img];
                             }
                         }
                     });
@@ -3241,8 +3269,6 @@
         function renderInventory() {
             const tbody = document.getElementById('inventoryTableBody');
             if (!tbody) return;
-
-            products = products.map(p => normalizeProduct(p, initialProducts));
 
             const prodList = products.filter(p => p.cat !== 'ingredients');
             const ingList = products.filter(p => p.cat === 'ingredients');
