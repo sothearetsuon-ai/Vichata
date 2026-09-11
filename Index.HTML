@@ -1092,7 +1092,7 @@
                     <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5">
                         <i class="fa-solid fa-table text-emerald-600"></i> Google Sheet Web App URL
                     </h4>
-                    <input type="text" id="googleSheetUrl"
+                    <input type="text" id="googleSheetUrl" value="https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec"
                         class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono font-bold">
 
                     <div class="grid grid-cols-2 gap-2 pt-1">
@@ -1549,6 +1549,7 @@
         let expenses = JSON.parse(localStorage.getItem('BAKERY_EXPENSES')) || [];
         let KHR_RATE = parseInt(localStorage.getItem('BAKERY_EXCHANGE_RATE')) || 4100;
         const DEFAULT_QR_URL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://bakong.nbc.gov.kh';
+        const DEFAULT_GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
         let customKhqrImage = localStorage.getItem('BAKERY_CUSTOM_KHQR') || null;
         let customMerchantName = localStorage.getItem('BAKERY_MERCHANT_NAME') || storeInfo.name;
 
@@ -2309,7 +2310,7 @@
         // ================= GOOGLE SHEET SYNC ENGINE =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
-            const targetUrl = settings.googleSheetUrl || integrationSettings.googleSheetUrl;
+            const targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
 
             if (!targetUrl) {
                 console.warn('Google Sheet URL is not configured');
@@ -2350,7 +2351,8 @@
         function syncAllToGoogleSheet() {
             saveIntegrationSettings();
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
-            if (!settings.googleSheetUrl) {
+            const targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
+            if (!targetUrl) {
                 alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
                 openSettingsModal();
                 return;
@@ -2395,7 +2397,9 @@
 
         async function pullProductsFromGoogleSheet() {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
-            if (!settings.googleSheetUrl) {
+            const targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
+
+            if (!targetUrl) {
                 alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
                 openSettingsModal();
                 return;
@@ -2405,7 +2409,14 @@
             showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
 
             try {
-                const response = await fetch(`${settings.googleSheetUrl}?action=sync_all`);
+                const response = await fetch(`${targetUrl}?action=sync_all`, {
+                    method: 'GET',
+                    redirect: 'follow',
+                    cache: 'no-cache'
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
                 const result = await response.json();
 
                 let remoteProducts = [];
@@ -3592,9 +3603,9 @@
             document.getElementById('settingStorePhone').value = storeInfo.phone || '0978707000';
             document.getElementById('settingStoreAddress').value = storeInfo.address || 'កោះរ៉ុងសន្លឹម';
             document.getElementById('settingStoreTagline').value = storeInfo.tagline || 'កោះរ៉ុងសន្លឹម • 0978707000';
-            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl || '';
-            document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '';
-            document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '';
+            document.getElementById('googleSheetUrl').value = (integrationSettings.googleSheetUrl && integrationSettings.googleSheetUrl.trim()) ? integrationSettings.googleSheetUrl : DEFAULT_GOOGLE_SHEET_URL;
+            document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+            document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '8970210109';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -3609,9 +3620,9 @@
             const tagline = document.getElementById('settingStoreTagline').value.trim() || `${address} • ${phone}`;
 
             storeInfo = { name, phone, address, tagline };
-            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
-            integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim();
-            integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim();
+            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim() || DEFAULT_GOOGLE_SHEET_URL;
+            integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim() || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+            integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim() || '8970210109';
 
             saveState();
             renderStoreInfo();
