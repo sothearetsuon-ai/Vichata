@@ -1385,6 +1385,20 @@
                         <button type="button" onclick="clearBatchImages()"
                             class="text-rose-600 font-bold hover:underline">សម្អាតរូប</button>
                     </div>
+
+                    <div class="mt-2.5 pt-2.5 border-t border-orange-200/70 text-left">
+                        <label class="block font-bold text-stone-600 mb-1 text-[11px]">
+                            <i class="fa-solid fa-link text-bakery-caramel mr-1"></i> ឬ បិទភ្ជាប់លីងរូបភាព (Image URL)៖
+                        </label>
+                        <div class="flex gap-1.5">
+                            <input type="url" id="batchProdImgUrlInput" placeholder="https://... (Link ពី Google Drive, Facebook, Web)"
+                                class="flex-1 p-2 rounded-xl border border-stone-300 font-en text-xs focus:ring-1 focus:ring-bakery-caramel focus:outline-none">
+                            <button type="button" onclick="addBatchImageUrl()"
+                                class="px-3 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-xl text-xs transition shadow-xs whitespace-nowrap">
+                                <i class="fa-solid fa-plus"></i> ថែមលីង
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div>
@@ -1678,6 +1692,65 @@
             }
         }
 
+        /* --- 🌟 PERSISTENT PRODUCT IMAGE VAULT & CACHE (ការពារការបាត់រូបពេល Sync Sheet) --- */
+        function getProductImageCache() {
+            try {
+                return JSON.parse(localStorage.getItem('BAKERY_SAVED_PRODUCT_IMAGES')) || {};
+            } catch (e) {
+                return {};
+            }
+        }
+
+        function cacheProductImage(id, name, img, images) {
+            if (!img && (!images || !images.length)) return;
+            try {
+                const cache = getProductImageCache();
+                const payload = {
+                    img: img || (images && images.length ? images[0] : ''),
+                    images: (images && images.length) ? images : (img ? [img] : [])
+                };
+                if (id) cache[String(id)] = payload;
+                if (name && name.trim()) cache[name.trim().toLowerCase()] = payload;
+                localStorage.setItem('BAKERY_SAVED_PRODUCT_IMAGES', JSON.stringify(cache));
+            } catch (e) {
+                console.warn('Image cache save warning:', e);
+            }
+        }
+
+        function getCachedProductImage(id, name) {
+            const cache = getProductImageCache();
+            if (id && cache[String(id)]) return cache[String(id)];
+            if (name && cache[name.trim().toLowerCase()]) return cache[name.trim().toLowerCase()];
+            return null;
+        }
+
+        function cacheAllCurrentProductImages() {
+            if (typeof products === 'undefined' || !Array.isArray(products)) return;
+            products.forEach(p => {
+                if (p.img || (p.images && p.images.length)) {
+                    cacheProductImage(p.id, p.name, p.img, p.images);
+                }
+            });
+        }
+
+        function prepareProductsForSheet(list) {
+            return (list || []).map(p => {
+                let sheetImg = '';
+                if (p.img && typeof p.img === 'string' && (p.img.startsWith('http://') || p.img.startsWith('https://'))) {
+                    sheetImg = p.img;
+                }
+                return {
+                    id: p.id,
+                    name: p.name,
+                    cat: p.cat,
+                    badge: p.badge || '',
+                    priceKHR: p.priceKHR || 0,
+                    stock: p.stock || 0,
+                    img: sheetImg
+                };
+            });
+        }
+
         // Default Store Profile
         let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
             name: 'ហាងនំខេកវិជ្ជដា',
@@ -1730,13 +1803,35 @@
             ...defaultIngredients
         ];
 
-        /* --- 📦 តម្រឹម និងសម្អាតទិន្នន័យទំនិញ (Auto-fix Product Column Shifts) --- */
+        var products = [];
+
+        /* --- 📦 តម្រឹម និងសម្អាតទិន្នន័យទំនិញ (Auto-fix Product Column Shifts & Image Protection) --- */
         function normalizeProduct(p, localProducts = []) {
             if (!p) return p;
             let copy = { ...p };
 
-            const localList = (localProducts && localProducts.length > 0) ? localProducts : (typeof initialProducts !== 'undefined' ? initialProducts : []);
-            const localItem = localList.find(lp => String(lp.id) === String(copy.id) || lp.name === copy.name);
+            // ស្វែងរកទំនិញក្នុងមូលដ្ឋាន (Local Products) ទាំងតាម ID និងតាមឈ្មោះ
+            const searchLists = [];
+            if (Array.isArray(localProducts) && localProducts.length > 0) {
+                searchLists.push(localProducts);
+            }
+            if (Array.isArray(products) && products.length > 0 && products !== localProducts) {
+                searchLists.push(products);
+            }
+            if (typeof initialProducts !== 'undefined' && Array.isArray(initialProducts)) {
+                searchLists.push(initialProducts);
+            }
+
+            let localItem = null;
+            for (const list of searchLists) {
+                const found = list.find(lp => 
+                    String(lp.id) === String(copy.id) || 
+                    (lp.name && copy.name && lp.name.trim().toLowerCase() === copy.name.trim().toLowerCase())
+                );
+                if (found) { localItem = found; break; }
+            }
+
+            const cached = getCachedProductImage(copy.id, copy.name);
 
             const isCatNumeric = !isNaN(parseInt(copy.cat)) && parseInt(copy.cat) >= 500;
             const isPriceZero = !copy.priceKHR || parseInt(copy.priceKHR) === 0;
@@ -1748,7 +1843,7 @@
                 // ស្តុកត្រូវបានរុញចូលទៅក្នុង img
                 if (copy.img && !isNaN(parseInt(copy.img)) && !String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:')) {
                     copy.stock = parseInt(copy.img);
-                    copy.img = (localItem && localItem.img) ? localItem.img : '';
+                    copy.img = (cached && cached.img) ? cached.img : ((localItem && localItem.img) ? localItem.img : '');
                 } else if (copy.stock === null || copy.stock === undefined) {
                     copy.stock = (localItem && localItem.stock !== undefined) ? localItem.stock : 10;
                 }
@@ -1779,17 +1874,28 @@
             }
 
             if (!copy.img || (!String(copy.img).startsWith('http') && !String(copy.img).startsWith('data:'))) {
-                if (localItem && localItem.img) copy.img = localItem.img;
+                if (cached && cached.img) copy.img = cached.img;
+                else if (localItem && localItem.img) copy.img = localItem.img;
             }
 
             if (!copy.images || !Array.isArray(copy.images) || copy.images.length === 0) {
-                copy.images = copy.img ? [copy.img] : [];
+                if (cached && cached.images && cached.images.length) {
+                    copy.images = [...cached.images];
+                } else if (localItem && localItem.images && localItem.images.length) {
+                    copy.images = [...localItem.images];
+                } else {
+                    copy.images = copy.img ? [copy.img] : [];
+                }
+            }
+
+            if (copy.img) {
+                cacheProductImage(copy.id, copy.name, copy.img, copy.images);
             }
 
             return copy;
         }
 
-        let products = (JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || initialProducts).map(p => normalizeProduct(p, initialProducts));
+        products = (JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || initialProducts).map(p => normalizeProduct(p, initialProducts));
 
         defaultAccessories.forEach(acc => {
             if (!products.some(p => p.name === acc.name || p.id === acc.id)) products.push(acc);
@@ -2486,8 +2592,9 @@
         }
 
         function syncStockToGoogleSheet() {
-            const prodList = products.filter(p => p.cat !== 'ingredients');
-            const ingList = products.filter(p => p.cat === 'ingredients');
+            cacheAllCurrentProductImages();
+            const prodList = prepareProductsForSheet(products.filter(p => p.cat !== 'ingredients'));
+            const ingList = prepareProductsForSheet(products.filter(p => p.cat === 'ingredients'));
 
             sendGoogleSheetPayload({
                 action: 'sync_all',
@@ -2499,6 +2606,7 @@
 
         function syncAllToGoogleSheet() {
             saveIntegrationSettings();
+            cacheAllCurrentProductImages();
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
             const targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
             if (!targetUrl) {
@@ -2509,8 +2617,8 @@
 
             showToast('⏳ កំពុងធ្វើសមកាលកម្មទិន្នន័យទាំងអស់ទៅ Google Sheet...', 'info');
 
-            const prodList = products.filter(p => p.cat !== 'ingredients');
-            const ingList = products.filter(p => p.cat === 'ingredients');
+            const prodList = prepareProductsForSheet(products.filter(p => p.cat !== 'ingredients'));
+            const ingList = prepareProductsForSheet(products.filter(p => p.cat === 'ingredients'));
 
             transactions = transactions.map(normalizeTransaction);
             sendGoogleSheetPayload({
@@ -2578,14 +2686,50 @@
                 }
 
                 if (remoteProducts.length > 0) {
-                    remoteProducts = remoteProducts.map(p => normalizeProduct(p, initialProducts));
-                    remoteProducts.forEach(remoteItem => {
-                        const localItem = (products || []).find(p => String(p.id) === String(remoteItem.id));
-                        if (localItem && localItem.img && (!remoteItem.img || !remoteItem.img.startsWith('http'))) {
+                    // ១. រក្សាទុករូបភាពទំនិញបច្ចុប្បន្នទាំងអស់ចូល Vault/Cache ការពារកុំឱ្យបាត់
+                    cacheAllCurrentProductImages();
+
+                    // ២. តម្រឹមទិន្នន័យពី Sheet ដោយប្រើប្រាស់ទំនិញក្នុងកម្មវិធីផ្ទាល់ (Products)
+                    let normalizedRemote = remoteProducts.map(p => normalizeProduct(p, products));
+
+                    // ៣. ពិនិត្យ និងស្តាររូបភាពដើម ឬរូបភាពដែលបាន Upload មកវិញ
+                    normalizedRemote.forEach(remoteItem => {
+                        const localItem = (products || []).find(p => 
+                            String(p.id) === String(remoteItem.id) || 
+                            (p.name && remoteItem.name && p.name.trim().toLowerCase() === remoteItem.name.trim().toLowerCase())
+                        );
+                        const cached = getCachedProductImage(remoteItem.id, remoteItem.name);
+
+                        if ((!remoteItem.img || !remoteItem.img.startsWith('http')) && cached && cached.img) {
+                            remoteItem.img = cached.img;
+                        } else if (localItem && localItem.img && (!remoteItem.img || !remoteItem.img.startsWith('http'))) {
                             remoteItem.img = localItem.img;
                         }
+
+                        if (!remoteItem.images || !Array.isArray(remoteItem.images) || remoteItem.images.length === 0) {
+                            if (cached && cached.images && cached.images.length) {
+                                remoteItem.images = [...cached.images];
+                            } else if (localItem && localItem.images && localItem.images.length) {
+                                remoteItem.images = [...localItem.images];
+                            } else {
+                                remoteItem.images = remoteItem.img ? [remoteItem.img] : [];
+                            }
+                        }
                     });
-                    products = remoteProducts;
+
+                    // ៤. រក្សាទុកទំនិញដែលបានបន្ថែមក្នុងម៉ាស៊ីន (បើ Sheet មិនទាន់មាន)
+                    const remoteIdSet = new Set(normalizedRemote.map(r => String(r.id)));
+                    const remoteNameSet = new Set(normalizedRemote.map(r => (r.name || '').trim().toLowerCase()));
+                    (products || []).forEach(localItem => {
+                        const hasId = remoteIdSet.has(String(localItem.id));
+                        const hasName = localItem.name && remoteNameSet.has(localItem.name.trim().toLowerCase());
+                        if (!hasId && !hasName) {
+                            normalizedRemote.push(localItem);
+                        }
+                    });
+
+                    products = normalizedRemote;
+                    cacheAllCurrentProductImages();
                 }
 
                 if (remoteSales.length > 0) transactions = remoteSales.map(normalizeTransaction);
@@ -2600,7 +2744,7 @@
                 renderAnalytics();
 
                 confetti({ particleCount: 60, spread: 70 });
-                showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
+                showToast(`🎉 បានទាញជោគជ័យ៖ ${products.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
 
             } catch (err) {
                 console.error('Google Sheet Pull Error:', err);
@@ -2932,9 +3076,10 @@
             batchUploadedImages = [];
             document.getElementById('multiUploadForm').reset();
             document.getElementById('multiUploadProdId').value = '';
+            if (document.getElementById('batchProdImgUrlInput')) document.getElementById('batchProdImgUrlInput').value = '';
 
             if (id) {
-                const prod = products.find(p => p.id == id);
+                const prod = products.find(p => String(p.id) === String(id));
                 if (!prod) return;
                 document.getElementById('multiUploadProdId').value = prod.id;
                 document.getElementById('batchProdName').value = prod.name;
@@ -2942,7 +3087,15 @@
                 document.getElementById('batchProdBadge').value = prod.badge || '';
                 document.getElementById('batchProdPriceKHR').value = prod.priceKHR;
                 document.getElementById('batchProdStock').value = prod.stock;
-                batchUploadedImages = prod.images ? [...prod.images] : [prod.img];
+
+                const cached = getCachedProductImage(prod.id, prod.name);
+                if (cached && cached.images && cached.images.length) {
+                    batchUploadedImages = [...cached.images];
+                } else if (prod.images && prod.images.length) {
+                    batchUploadedImages = [...prod.images];
+                } else if (prod.img) {
+                    batchUploadedImages = [prod.img];
+                }
             } else {
                 if (activeInventoryTab === 'ingredients') document.getElementById('batchProdCat').value = 'ingredients';
             }
@@ -2951,6 +3104,23 @@
         }
 
         function closeMultiUploadModal() { document.getElementById('multiUploadModal').classList.add('hidden'); }
+
+        function addBatchImageUrl() {
+            const input = document.getElementById('batchProdImgUrlInput');
+            const url = input ? input.value.trim() : '';
+            if (!url) {
+                showToast('សូមបញ្ចូលលីងរូបភាព (URL)!', 'warning');
+                return;
+            }
+            if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:image')) {
+                showToast('លីងរូបភាពត្រូវតែចាប់ផ្តើមដោយ https://', 'warning');
+                return;
+            }
+            batchUploadedImages.push(url);
+            renderBatchPreviews();
+            input.value = '';
+            showToast('បានបន្ថែមលីងរូបភាពរួចរាល់!', 'success');
+        }
 
         async function handleBatchFileSelect(event) {
             const files = Array.from(event.target.files);
@@ -2996,13 +3166,21 @@
 
             const fallbackImg = 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
             const images = batchUploadedImages.length > 0 ? [...batchUploadedImages] : [fallbackImg];
+            const mainImg = images[0] || fallbackImg;
 
+            let finalId = id;
             if (id) {
-                const idx = products.findIndex(p => p.id == id);
-                if (idx !== -1) products[idx] = { ...products[idx], name, cat, badge, priceKHR, stock, img: images[0], images };
+                const idx = products.findIndex(p => String(p.id) === String(id));
+                if (idx !== -1) {
+                    products[idx] = { ...products[idx], name, cat, badge, priceKHR, stock, img: mainImg, images };
+                }
             } else {
-                products.unshift({ id: Date.now(), name, cat, badge, priceKHR, stock, img: images[0], images });
+                finalId = Date.now();
+                products.unshift({ id: finalId, name, cat, badge, priceKHR, stock, img: mainImg, images });
             }
+
+            // រក្សាទុកចូល Image Vault / Cache ភ្លាមៗ (ធានាមិនបាត់ពេល Sync ឬទាញពី Sheet)
+            cacheProductImage(finalId, name, mainImg, images);
 
             saveState();
             renderProducts();
