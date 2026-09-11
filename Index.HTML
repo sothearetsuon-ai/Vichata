@@ -2288,7 +2288,7 @@
                     status: status,
                     method: method,
                     note: note ? `[កត់ត្រាពីមុន] ${note}` : '',
-                    photoLink: ''
+                    photoLink: (firstImg && String(firstImg).startsWith('http')) ? firstImg : ''
                 }
             });
 
@@ -3281,7 +3281,7 @@
                     status: status,
                     method: method,
                     note: '',
-                    photoLink: ''
+                    photoLink: (firstCakePhoto && String(firstCakePhoto).startsWith('http')) ? firstCakePhoto : ''
                 }
             });
 
