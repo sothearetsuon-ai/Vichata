@@ -434,7 +434,14 @@
                                 <i class="fa-solid fa-list-check text-bakery-caramel"></i>
                                 <span>ប្រវត្តិការចំណាយរបស់ហាង</span>
                             </h3>
-                            <span class="text-xs text-stone-500 font-en font-bold" id="expenseCountText">0 items</span>
+                            <div class="flex items-center gap-2">
+                                <button onclick="pullProductsFromGoogleSheet()"
+                                    class="px-2.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 rounded-xl font-bold text-xs border border-emerald-300 flex items-center gap-1 shadow-xs transition"
+                                    title="ទាញទិន្នន័យចំណាយពី Google Sheet">
+                                    <i class="fa-solid fa-rotate text-xs"></i> <span>ទាញពី Sheet</span>
+                                </button>
+                                <span class="text-xs text-stone-500 font-en font-bold" id="expenseCountText">0 items</span>
+                            </div>
                         </div>
 
                         <div class="overflow-x-auto mt-3 custom-scroll">
@@ -664,12 +671,14 @@
                     </div>
 
                     <div class="flex flex-wrap items-center gap-2 w-full md:w-auto">
-                        <div class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
+                        <div
+                            class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
                             <span class="font-extrabold text-stone-800 pl-1 text-[11px]">ពី:</span>
                             <input type="date" id="analyticsStartDate" onchange="renderAnalytics()"
                                 class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
                         </div>
-                        <div class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
+                        <div
+                            class="flex items-center gap-1.5 bg-orange-50/70 p-1.5 rounded-2xl border border-orange-200">
                             <span class="font-extrabold text-stone-800 pl-1 text-[11px]">ដល់:</span>
                             <input type="date" id="analyticsEndDate" onchange="renderAnalytics()"
                                 class="bg-white border border-stone-300 rounded-xl px-2 py-1 text-xs font-en font-bold text-bakery-dark">
@@ -711,13 +720,15 @@
             </div>
 
             <div class="bg-white rounded-3xl shadow-soft border border-orange-100 p-4 sm:p-6 overflow-hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-orange-100">
+                <div
+                    class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pb-3 border-b border-orange-100">
                     <div class="font-extrabold text-sm text-bakery-dark flex items-center gap-2">
                         <i class="fa-solid fa-receipt text-bakery-caramel"></i>
                         <span>បញ្ជីប្រតិបត្តិការលក់ទាំងអស់ (<span id="analyticsCountDisplay">0</span>)</span>
                     </div>
                     <div class="relative w-full sm:w-64">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+                        <i
+                            class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
                         <input type="text" id="analyticsSearchInput" oninput="renderAnalytics()"
                             placeholder="ស្វែងរកឈ្មោះ, លេខទូរស័ព្ទ, លេខកូដ..."
                             class="w-full pl-8 pr-3 py-1.5 rounded-xl bg-bakery-vanilla/60 border border-orange-200 text-xs font-semibold focus:outline-none focus:ring-2 focus:ring-bakery-caramel">
@@ -1324,6 +1335,23 @@
                 return existingFallback || FALLBACK_BAKERY_SVG;
             }
             return rawUrl.trim();
+        }
+
+        // បម្លែង Base64 ទៅជា Blob ដោយផ្ទាល់ (ធានាថា Telegram ទទួលយករូបបាន ១០០%)
+        function dataURItoBlob(dataURI) {
+            try {
+                const byteString = atob(dataURI.split(',')[1]);
+                const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+                const ab = new ArrayBuffer(byteString.length);
+                const ia = new Uint8Array(ab);
+                for (let i = 0; i < byteString.length; i++) {
+                    ia[i] = byteString.charCodeAt(i);
+                }
+                return new Blob([ab], { type: mimeString });
+            } catch (e) {
+                console.warn('Base64 decode error:', e);
+                return null;
+            }
         }
 
         function compressImageFile(file, maxWidth = 800, maxHeight = 800, quality = 0.75) {
@@ -2177,7 +2205,6 @@
             // ស្វែងរករូបភាពនំពិត
             let photoSource = null;
 
-            // ១. ឆែកមើលក្នុងកន្ត្រកទំនិញ (cartItems)
             if (tx.cartItems && tx.cartItems.length > 0) {
                 for (const item of tx.cartItems) {
                     if (item.img && !item.img.includes('flaticon.com')) {
@@ -2187,7 +2214,6 @@
                 }
             }
 
-            // ២. បើអត់ទាន់ឃើញ ឆែកស្វែងរកក្នុងស្តុកនំតាមឈ្មោះនំ
             if (!photoSource && products && products.length > 0) {
                 const summary = (tx.itemsSummary || '').toLowerCase();
                 const matchProd = products.find(p => {
@@ -2199,7 +2225,6 @@
                 }
             }
 
-            // ៣. បើគ្មានទៀត ទើបយករូបនំស្ដង់ដារ
             if (!photoSource) photoSource = FALLBACK_BAKERY_SVG;
 
             const itemsText = tx.itemsSummary ? tx.itemsSummary.split(', ').map(i => `   • ${i}`).join('\n') : `   • ${tx.itemsCount} មុខ`;
@@ -2225,23 +2250,22 @@
             try {
                 let photoData = null;
 
-                // ប្រសិនបើរូបជារូបថតផ្ទាល់ ឬ Base64 (ដែលបានថត ឬ Upload ពីទូរសព្ទ)
                 if (photoSource.startsWith('data:image')) {
-                    // បម្លែង Base64 ទៅជា Blob File រួចផ្ញើតាម FormData
-                    const blob = await fetch(photoSource).then(r => r.blob());
-                    const formData = new FormData();
-                    formData.append('chat_id', chatId);
-                    formData.append('photo', blob, 'cake.jpg');
-                    formData.append('caption', msg);
-                    formData.append('parse_mode', 'Markdown');
+                    const blob = dataURItoBlob(photoSource);
+                    if (blob) {
+                        const formData = new FormData();
+                        formData.append('chat_id', chatId);
+                        formData.append('photo', blob, 'cake.jpg');
+                        formData.append('caption', msg);
+                        formData.append('parse_mode', 'Markdown');
 
-                    const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    photoData = await photoRes.json();
+                        const photoRes = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        photoData = await photoRes.json();
+                    }
                 } else {
-                    // ប្រសិនបើរូបជា Web URL
                     let finalUrl = photoSource;
                     if (finalUrl.includes('drive.google.com/file/d/')) {
                         const match = finalUrl.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -2261,9 +2285,7 @@
                     photoData = await photoRes.json();
                 }
 
-                // ប្រសិនបើផ្ញើរូបអត់ជោគជ័យ ទើបផ្ញើជាអក្សរធម្មតា (Fallback)
                 if (!photoData || !photoData.ok) {
-                    console.warn('sendPhoto failed, sending text only:', photoData ? photoData.description : 'Unknown');
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2290,11 +2312,10 @@
 
             showToast('កំពុងសាកល្បងផ្ញើសារ...', 'info');
             try {
-                // យករូបនំដំបូងគេក្នុងស្តុកមកសាកល្បង
                 let testPhoto = (products && products[0] && products[0].img) ? products[0].img : FALLBACK_BAKERY_SVG;
 
                 if (testPhoto.startsWith('data:image')) {
-                    const blob = await fetch(testPhoto).then(r => r.blob());
+                    const blob = dataURItoBlob(testPhoto);
                     const formData = new FormData();
                     formData.append('chat_id', chatId);
                     formData.append('photo', blob, 'cake_test.jpg');
@@ -2348,6 +2369,7 @@
             }
         }
 
+        // ទាញទិន្នន័យពី Google Sheet (ទាញទាំង Products, Sales, និង Expenses)
         async function pullProductsFromGoogleSheet() {
             const targetUrl = integrationSettings.googleSheetUrl;
             if (!targetUrl) {
@@ -2364,6 +2386,7 @@
 
                 let updatedItems = [];
 
+                // ១. ទាញ Products
                 if (result && result.products && result.products.length > 0) {
                     products = result.products.map(p => {
                         const existing = products.find(ep => String(ep.id) === String(p.id) || ep.name === p.name);
@@ -2371,12 +2394,9 @@
                         let stock = Number(p.stock || p.Stock || 0);
 
                         if (price > 0 && price <= 50 && stock >= 500) {
-                            const temp = price;
-                            price = stock;
-                            stock = temp;
+                            const temp = price; price = stock; stock = temp;
                         } else if (price > 0 && price <= 50 && existing && existing.priceKHR >= 1000) {
-                            stock = price;
-                            price = existing.priceKHR;
+                            stock = price; price = existing.priceKHR;
                         } else if (price === 0 && existing) {
                             price = existing.priceKHR;
                         }
@@ -2398,6 +2418,7 @@
                     updatedItems.push(`${products.length} មុខទំនិញ`);
                 }
 
+                // ២. ទាញ Sales
                 if (result && result.sales && Array.isArray(result.sales) && result.sales.length > 0) {
                     const txMap = new Map();
                     transactions.forEach(t => txMap.set(String(t.id), t));
@@ -2426,11 +2447,32 @@
                     updatedItems.push(`${transactions.length} វិក្កយបត្រ`);
                 }
 
+                // ៣. ទាញ Expenses (ការចំណាយ)
+                if (result && result.expenses && Array.isArray(result.expenses) && result.expenses.length > 0) {
+                    const expMap = new Map();
+                    expenses.forEach(e => expMap.set(String(e.id), e));
+                    result.expenses.forEach(e => {
+                        const eid = e.id || ('EXP-' + Math.floor(1000 + Math.random() * 9000));
+                        expMap.set(String(eid), {
+                            id: eid,
+                            title: e.title || 'ចំណាយទូទៅ',
+                            cat: e.cat || 'other',
+                            date: e.date || (new Date().toISOString().split('T')[0]),
+                            amount: Number(e.amount) || 0,
+                            note: e.note || ''
+                        });
+                    });
+                    expenses = Array.from(expMap.values());
+                    expenses.sort((a, b) => (b.date > a.date ? 1 : b.date < a.date ? -1 : 0));
+                    updatedItems.push(`${expenses.length} ចំណាយ`);
+                }
+
                 saveState();
                 renderProducts();
                 renderInventory();
                 renderShowcase();
                 renderQuickAddons();
+                renderExpenses();
                 setAnalyticsQuickFilter('all');
                 updateCustomerDatalist();
 
@@ -2466,6 +2508,7 @@
             expenses.unshift(newExpense);
             saveState();
 
+            // បញ្ជូនទៅ Google Sheet ភ្លាមៗ
             sendGoogleSheetPayload({ action: 'new_expense', expense: newExpense }, true);
 
             document.getElementById('expenseTitleInput').value = '';
@@ -2484,6 +2527,9 @@
             document.getElementById('expenseTotalSpentKHR').innerText = `${totalExpense.toLocaleString()} ៛`;
             document.getElementById('expenseNetProfitKHR').innerText = `${netProfit.toLocaleString()} ៛`;
 
+            const countEl = document.getElementById('expenseCountText');
+            if (countEl) countEl.innerText = `${expenses.length} items`;
+
             if (!tbody) return;
             if (expenses.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="5" class="text-center py-8 text-stone-500 font-bold">មិនទាន់មានទិន្នន័យចំណាយទេ</td></tr>`;
@@ -2497,16 +2543,28 @@
                     <td class="p-3 font-bold text-stone-700">${exp.cat}</td>
                     <td class="p-3 font-black text-rose-600 font-en">-${exp.amount.toLocaleString()} ៛</td>
                     <td class="p-3 text-center">
-                        <button onclick="deleteExpense('${exp.id}')" class="text-stone-400 hover:text-rose-600"><i class="fa-solid fa-trash"></i></button>
+                        <button onclick="deleteExpense('${exp.id}')" class="text-stone-400 hover:text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 transition" title="លុបចំណាយទាំងលើ Web និង Google Sheet">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
                     </td>
                 </tr>
             `).join('');
         }
 
+        // លុបចំណាយ (លុបទាំងលើ Web និងរត់ទៅលុបលើ Google Sheet)
         function deleteExpense(id) {
-            expenses = expenses.filter(e => e.id !== id);
-            saveState();
-            renderExpenses();
+            if (confirm('តើអ្នកពិតជាចង់លុបចំណាយនេះមែនទេ? (នឹងលុបចេញពី Google Sheet ផងដែរ)')) {
+                expenses = expenses.filter(e => e.id !== id);
+                saveState();
+                renderExpenses();
+
+                // បញ្ជូនទៅលុបលើ Google Sheet
+                sendGoogleSheetPayload({ action: 'delete_expense', id: id }, true);
+                if (integrationSettings.googleSheetUrl) {
+                    fetch(`${integrationSettings.googleSheetUrl}?action=delete_expense&id=${encodeURIComponent(id)}`, { mode: 'no-cors' });
+                }
+                showToast('បានលុបចំណាយពី Web និង Google Sheet រួចរាល់', 'info');
+            }
         }
 
         // ================= SHOWCASE =================
@@ -2728,9 +2786,9 @@
                             ${t.method}
                         </span>
                         ${Number(t.remainingKHR) > 0
-                            ? `<div class="mt-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md inline-block">ខ្វះ: ${Number(t.remainingKHR).toLocaleString()}៛</div>`
-                            : `<div class="mt-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-check"></i> បង់គ្រប់</div>`
-                        }
+                    ? `<div class="mt-1 text-[10px] font-black text-rose-600 bg-rose-50 border border-rose-200 px-1.5 py-0.5 rounded-md inline-block">ខ្វះ: ${Number(t.remainingKHR).toLocaleString()}៛</div>`
+                    : `<div class="mt-1 text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-check"></i> បង់គ្រប់</div>`
+                }
                     </td>
                     <td class="p-3 font-black text-bakery-caramel">${(Number(t.totalKHR) || 0).toLocaleString()} ៛</td>
                     <td class="p-3 text-center">
@@ -2771,12 +2829,19 @@
             showToast('🎉 បានទាញយកឯកសារ Excel/CSV ជោគជ័យ!', 'success');
         }
 
+        // លុបវិក្កយបត្រលក់ (លុបទាំងលើ Web និង Google Sheet)
         function deleteInvoice(invId) {
-            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} មែនទេ?`)) {
+            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} មែនទេ? (នឹងលុបចេញពី Google Sheet ផងដែរ)`)) {
                 transactions = transactions.filter(t => t.id !== invId);
                 saveState();
                 renderAnalytics();
                 updateCustomerDatalist();
+
+                // បញ្ជូនទៅលុបលើ Google Sheet
+                sendGoogleSheetPayload({ action: 'delete_sale', id: invId });
+                if (integrationSettings.googleSheetUrl) {
+                    fetch(`${integrationSettings.googleSheetUrl}?action=delete_sale&id=${encodeURIComponent(invId)}`, { mode: 'no-cors' });
+                }
                 showToast('បានលុបវិក្កយបត្ររួចរាល់', 'info');
             }
         }
