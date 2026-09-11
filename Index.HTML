@@ -456,19 +456,24 @@
                         </div>
                         <div class="pt-2 sm:pt-3 border-t border-orange-200 flex justify-between items-baseline">
                             <div>
-                                <div class="font-black text-sm sm:text-base text-bakery-dark">ទឹកប្រាក់ត្រូវបង់</div>
-                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount
+                                <div class="font-black text-sm sm:text-base text-bakery-dark flex items-center gap-1.5">
+                                    <span>ទឹកប្រាក់ត្រូវបង់</span>
+                                    <button type="button" onclick="openAdjustTotalModal()" title="កែប្រែតម្លៃតាមចិត្តភ្ញៀវ"
+                                        class="px-1.5 py-0.5 rounded-md bg-amber-100 hover:bg-amber-200 text-amber-900 text-[10px] font-bold border border-amber-300 flex items-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer">
+                                        <i class="fa-solid fa-pen-to-square text-[9px] text-amber-600"></i> កែតម្លៃ
+                                    </button>
                                 </div>
+                                <div class="text-[10px] sm:text-[11px] text-stone-500 font-en font-bold">Total Amount</div>
                             </div>
-                            <div class="text-right">
-                                <div class="text-xl sm:text-3xl font-black text-bakery-caramel tracking-tight font-en"
+                            <div class="text-right cursor-pointer group" onclick="openAdjustTotalModal()" title="ចុចត្រង់នេះដើម្បីកែតម្លៃ">
+                                <div class="text-xl sm:text-3xl font-black text-bakery-caramel group-hover:text-orange-600 tracking-tight font-en transition flex items-center justify-end gap-1"
                                     id="summaryTotalKHR">0 ៛</div>
                                 <div
                                     class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en flex items-center justify-end gap-1.5 mt-0.5">
                                     <span id="summaryTotalUSD">≈ $0.00</span>
-                                    <button type="button" onclick="openRateModal()" title="ប្តូរអត្រាប្រាក់"
+                                    <button type="button" onclick="event.stopPropagation(); openRateModal()" title="ប្តូរអត្រាប្តូរប្រាក់ដុល្លារ"
                                         class="inline-flex items-center gap-1 text-[10px] text-amber-800 hover:text-bakery-caramel bg-amber-100/90 hover:bg-amber-200 px-1.5 py-0.5 rounded-md font-bold transition border border-amber-300 shadow-xs cursor-pointer">
-                                        <i class="fa-solid fa-pen-to-square text-[9px]"></i> <span
+                                        <i class="fa-solid fa-money-bill-transfer text-[9px]"></i> <span
                                             id="cartRateBadge">1$=4,100៛</span>
                                     </button>
                                 </div>
@@ -476,13 +481,26 @@
                         </div>
                     </div>
 
+                    <!-- Direct Price Adjustment Action Bar -->
+                    <div class="mt-2 flex gap-1.5">
+                        <button type="button" onclick="openAdjustTotalModal()"
+                            class="flex-1 py-2 px-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-900 font-bold text-xs flex items-center justify-center gap-1.5 shadow-2xs active:scale-95 transition cursor-pointer">
+                            <i class="fa-solid fa-wand-magic-sparkles text-amber-600"></i>
+                            <span>កែតម្លៃសរុបតាមភ្ញៀវចង់បាន</span>
+                        </button>
+                        <button type="button" onclick="openCustomCakePriceModal()"
+                            class="py-2 px-2.5 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-orange-900 font-bold text-xs flex items-center justify-center gap-1 shadow-2xs active:scale-95 transition cursor-pointer" title="បន្ថែមនំកុម្ម៉ង់ពិសេសថ្មី">
+                            <i class="fa-solid fa-plus text-orange-600"></i> នំកុម្ម៉ង់
+                        </button>
+                    </div>
+
                     <div class="mt-3 grid grid-cols-2 gap-2.5 sm:gap-3">
-                        <button onclick="openPaymentModal('khqr')"
-                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs sm:text-sm shadow-md hover:opacity-95 transition flex items-center justify-center gap-1.5 sm:gap-2">
+                        <button type="button" onclick="openPaymentModal('khqr')"
+                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs sm:text-sm shadow-md hover:opacity-95 active:scale-95 transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer select-none">
                             <i class="fa-solid fa-qrcode text-base"></i> KHQR រៀល
                         </button>
-                        <button onclick="openPaymentModal('cash')"
-                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-bakery-dark text-white font-black text-xs sm:text-sm shadow-md hover:bg-black transition flex items-center justify-center gap-1.5 sm:gap-2">
+                        <button type="button" onclick="openPaymentModal('cash')"
+                            class="py-3 sm:py-3.5 px-3 rounded-2xl bg-bakery-dark text-white font-black text-xs sm:text-sm shadow-md hover:bg-black active:scale-95 transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer select-none">
                             <i class="fa-solid fa-money-bill-wave text-base"></i> ប្រាក់សុទ្ធ (Cash)
                         </button>
                     </div>
@@ -1451,6 +1469,90 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- ================= MODAL: ADJUST TOTAL / CUSTOM PRICE ================= -->
+        <div id="adjustTotalModal"
+            class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+            <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 flex flex-col">
+                <div class="flex justify-between items-center pb-3 border-b border-orange-100">
+                    <div class="flex items-center gap-2.5">
+                        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-white flex items-center justify-center text-lg shadow-sm">
+                            <i class="fa-solid fa-calculator"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-black text-base text-bakery-dark">កែប្រែតម្លៃតាមចិត្តភ្ញៀវ</h3>
+                            <p class="text-[11px] text-stone-500 font-medium">កំណត់តម្លៃចរចា ឬបញ្ចុះតម្លៃពិសេសលើកន្ត្រក</p>
+                        </div>
+                    </div>
+                    <button type="button" onclick="closeAdjustTotalModal()"
+                        class="w-8 h-8 rounded-full hover:bg-stone-100 text-stone-400 hover:text-stone-600 flex items-center justify-center cursor-pointer">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+
+                <div class="mt-4 space-y-4 text-xs">
+                    <!-- Current Overview -->
+                    <div class="p-3 bg-amber-50/70 rounded-2xl border border-amber-200 flex justify-between items-center">
+                        <div>
+                            <span class="text-[11px] text-stone-500 font-bold block">សរុបដើម (Subtotal)</span>
+                            <span class="text-sm font-black text-stone-700 font-en" id="adjustModalSubtotal">0 ៛</span>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-[11px] text-stone-500 font-bold block">តម្លៃបច្ចុប្បន្នត្រូវបង់</span>
+                            <span class="text-base font-black text-bakery-caramel font-en" id="adjustModalCurrentTotal">0 ៛</span>
+                        </div>
+                    </div>
+
+                    <!-- Target Total Input -->
+                    <div>
+                        <label class="block font-bold text-stone-700 mb-1">បញ្ចូលទឹកប្រាក់ត្រូវបង់ថ្មី (រៀល ៛) *</label>
+                        <div class="relative">
+                            <input type="number" id="adjustTargetTotalInput" step="500" min="0"
+                                oninput="onAdjustTotalInputChange()"
+                                placeholder="ឧ. 18000"
+                                class="w-full p-3 pr-12 rounded-xl border-2 border-amber-400 text-base font-black font-en text-bakery-caramel focus:ring-2 focus:ring-bakery-caramel focus:outline-none">
+                            <span class="absolute right-3.5 top-1/2 -translate-y-1/2 font-black text-stone-500 text-sm">៛</span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Preset Amount Buttons -->
+                    <div>
+                        <span class="text-[11px] font-bold text-stone-600 block mb-1.5">ជ្រើសរើសរហ័ស (Quick Presets)៖</span>
+                        <div class="grid grid-cols-3 gap-1.5">
+                            <button type="button" onclick="setAdjustDiscountAmount(2000)"
+                                class="py-1.5 px-2 bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 rounded-xl text-[11px] font-bold text-stone-700 transition cursor-pointer active:scale-95">-2,000៛</button>
+                            <button type="button" onclick="setAdjustDiscountAmount(5000)"
+                                class="py-1.5 px-2 bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 rounded-xl text-[11px] font-bold text-stone-700 transition cursor-pointer active:scale-95">-5,000៛</button>
+                            <button type="button" onclick="setAdjustDiscountAmount(10000)"
+                                class="py-1.5 px-2 bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 rounded-xl text-[11px] font-bold text-stone-700 transition cursor-pointer active:scale-95">-10,000៛</button>
+                            <button type="button" onclick="setAdjustDiscountPercent(5)"
+                                class="py-1.5 px-2 bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 rounded-xl text-[11px] font-bold text-stone-700 transition cursor-pointer active:scale-95">ចុះ 5%</button>
+                            <button type="button" onclick="setAdjustDiscountPercent(10)"
+                                class="py-1.5 px-2 bg-stone-50 hover:bg-amber-50 border border-stone-200 hover:border-amber-300 rounded-xl text-[11px] font-bold text-stone-700 transition cursor-pointer active:scale-95">ចុះ 10%</button>
+                            <button type="button" onclick="resetAdjustToOriginal()"
+                                class="py-1.5 px-2 bg-orange-50 hover:bg-orange-100 border border-orange-200 rounded-xl text-[11px] font-bold text-orange-800 transition cursor-pointer active:scale-95">យកតម្លៃដើម</button>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Difference Preview -->
+                    <div id="adjustDiffPreview" class="p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-[11px] flex justify-between items-center text-stone-600 font-bold">
+                        <span>ចំនួនទឹកប្រាក់បញ្ចុះ (Discount):</span>
+                        <span id="adjustCalculatedDiscount" class="font-black text-emerald-600 font-en text-xs">0 ៛</span>
+                    </div>
+
+                    <div class="pt-2 flex gap-2">
+                        <button type="button" onclick="closeAdjustTotalModal()"
+                            class="flex-1 py-2.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl font-bold transition cursor-pointer">
+                            បោះបង់
+                        </button>
+                        <button type="button" onclick="applyAdjustTargetTotal()"
+                            class="flex-1 py-2.5 bg-gradient-to-r from-bakery-caramel to-amber-600 hover:from-orange-600 hover:to-amber-700 text-white rounded-xl font-black shadow-soft transition flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer">
+                            <i class="fa-solid fa-check"></i> យល់ព្រមតម្លៃថ្មី
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -3953,7 +4055,11 @@
                 document.getElementById('customCartItemPrice').value = '';
                 document.getElementById('customCartItemNote').value = '';
                 document.getElementById('customCartItemQty').value = '1';
-                document.getElementById('customCakePriceModal').classList.remove('hidden');
+                const modal = document.getElementById('customCakePriceModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.style.display = 'flex';
+                }
                 setTimeout(() => {
                     const input = document.getElementById('customCartItemPrice');
                     if (input) input.focus();
@@ -3961,7 +4067,11 @@
             }
 
             function closeCustomCakePriceModal() {
-                document.getElementById('customCakePriceModal').classList.add('hidden');
+                const modal = document.getElementById('customCakePriceModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.style.display = 'none';
+                }
             }
 
             function setQuickCustomPrice(amount) {
@@ -4028,6 +4138,117 @@
                 item.priceKHR = clean;
                 renderCart();
                 showToast(`បានកែប្រែតម្លៃ "${item.name}" ទៅ ${clean.toLocaleString()} ៛!`, 'success');
+            }
+
+            /* --- 🧮 មុខងារកែប្រែតម្លៃសរុបតាមការចង់បានរបស់ភ្ញៀវ (Adjust Target Total & Custom Negotiation) --- */
+            function openAdjustTotalModal() {
+                if (cart.length === 0) {
+                    showToast('សូមបញ្ចូលមុខទំនិញក្នុងកន្ត្រកជាមុនសិន!', 'warning');
+                    return;
+                }
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const totalKHR = Math.max(0, subtotalKHR - currentDiscountKHR);
+
+                const subEl = document.getElementById('adjustModalSubtotal');
+                const curTotEl = document.getElementById('adjustModalCurrentTotal');
+                const inpEl = document.getElementById('adjustTargetTotalInput');
+                const diffEl = document.getElementById('adjustCalculatedDiscount');
+
+                if (subEl) subEl.innerText = `${subtotalKHR.toLocaleString()} ៛`;
+                if (curTotEl) curTotEl.innerText = `${totalKHR.toLocaleString()} ៛`;
+                if (inpEl) inpEl.value = totalKHR;
+                if (diffEl) diffEl.innerText = `${currentDiscountKHR.toLocaleString()} ៛`;
+
+                const modal = document.getElementById('adjustTotalModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.style.display = 'flex';
+                }
+                setTimeout(() => {
+                    const input = document.getElementById('adjustTargetTotalInput');
+                    if (input) { input.focus(); input.select(); }
+                }, 100);
+            }
+
+            function closeAdjustTotalModal() {
+                const modal = document.getElementById('adjustTotalModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.style.display = 'none';
+                }
+            }
+
+            function onAdjustTotalInputChange() {
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const inputVal = parseInt(document.getElementById('adjustTargetTotalInput').value) || 0;
+                const diff = Math.max(0, subtotalKHR - inputVal);
+                const diffEl = document.getElementById('adjustCalculatedDiscount');
+                if (diffEl) diffEl.innerText = `${diff.toLocaleString()} ៛`;
+            }
+
+            function setAdjustDiscountAmount(amount) {
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const newTotal = Math.max(0, subtotalKHR - amount);
+                const inp = document.getElementById('adjustTargetTotalInput');
+                if (inp) {
+                    inp.value = newTotal;
+                    onAdjustTotalInputChange();
+                }
+            }
+
+            function setAdjustDiscountPercent(percent) {
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const discount = Math.round((subtotalKHR * (percent / 100)) / 500) * 500;
+                const newTotal = Math.max(0, subtotalKHR - discount);
+                const inp = document.getElementById('adjustTargetTotalInput');
+                if (inp) {
+                    inp.value = newTotal;
+                    onAdjustTotalInputChange();
+                }
+            }
+
+            function resetAdjustToOriginal() {
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const inp = document.getElementById('adjustTargetTotalInput');
+                if (inp) {
+                    inp.value = subtotalKHR;
+                    onAdjustTotalInputChange();
+                }
+            }
+
+            function applyAdjustTargetTotal() {
+                const subtotalKHR = cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0);
+                const inputEl = document.getElementById('adjustTargetTotalInput');
+                const inputVal = parseInt(inputEl ? inputEl.value : 0);
+                if (isNaN(inputVal) || inputVal < 0) {
+                    showToast('សូមបញ្ចូលចំនួនទឹកប្រាក់ជាលេខត្រឹមត្រូវ!', 'warning');
+                    return;
+                }
+
+                if (inputVal <= subtotalKHR) {
+                    currentDiscountKHR = subtotalKHR - inputVal;
+                } else {
+                    const extra = inputVal - subtotalKHR;
+                    if (cart.length === 1) {
+                        cart[0].priceKHR += Math.round(extra / cart[0].qty);
+                        currentDiscountKHR = 0;
+                    } else {
+                        cart.push({
+                            id: 'extra-' + Date.now(),
+                            name: 'ថ្លៃកែច្នៃបន្ថែម / តម្លៃពិសេស',
+                            cat: 'accessories',
+                            priceKHR: extra,
+                            qty: 1,
+                            isCustom: true
+                        });
+                        currentDiscountKHR = 0;
+                    }
+                }
+
+                renderCart();
+                closeAdjustTotalModal();
+                if (typeof confetti === 'function') confetti({ particleCount: 40, spread: 50 });
+                showToast(`💰 បានកំណត់ទឹកប្រាក់ត្រូវបង់ ${inputVal.toLocaleString()} ៛ រួចរាល់!`, 'success');
             }
 
             function lookupCustomerPoints() {
@@ -4147,17 +4368,26 @@
             }
 
             function openPaymentModal(method) {
-                if (cart.length === 0) { showToast('សូមបញ្ចូលមុខទំនិញជាមុនសិន!', 'warning'); return; }
+                if (cart.length === 0) { 
+                    showToast('សូមបញ្ចូលមុខទំនិញក្នុងកន្ត្រកជាមុនសិន!', 'warning'); 
+                    return; 
+                }
                 setPaymentType('full');
-                document.getElementById('paymentModal').classList.remove('hidden');
+                const modal = document.getElementById('paymentModal');
+                if (modal) {
+                    modal.classList.remove('hidden');
+                    modal.style.display = 'flex';
+                }
+                const khqrEl = document.getElementById('khqrContent');
+                const cashEl = document.getElementById('cashContent');
                 if (method === 'khqr') {
-                    document.getElementById('khqrContent').classList.remove('hidden');
-                    document.getElementById('cashContent').classList.add('hidden');
+                    if (khqrEl) { khqrEl.classList.remove('hidden'); khqrEl.style.display = 'flex'; }
+                    if (cashEl) { cashEl.classList.add('hidden'); cashEl.style.display = 'none'; }
                     updatePaymentModalAmounts();
                     initKhqrImg();
                 } else {
-                    document.getElementById('khqrContent').classList.add('hidden');
-                    document.getElementById('cashContent').classList.remove('hidden');
+                    if (khqrEl) { khqrEl.classList.add('hidden'); khqrEl.style.display = 'none'; }
+                    if (cashEl) { cashEl.classList.remove('hidden'); cashEl.style.display = 'block'; }
                     if (document.getElementById('cashReceivedKHRInput')) document.getElementById('cashReceivedKHRInput').value = '';
                     if (document.getElementById('cashReceivedUSDInput')) document.getElementById('cashReceivedUSDInput').value = '';
                     setCashCurrencyMode('khr');
@@ -4165,7 +4395,13 @@
                 }
             }
 
-            function closePaymentModal() { document.getElementById('paymentModal').classList.add('hidden'); }
+            function closePaymentModal() { 
+                const modal = document.getElementById('paymentModal');
+                if (modal) {
+                    modal.classList.add('hidden');
+                    modal.style.display = 'none';
+                }
+            }
 
             function setPaymentType(type) {
                 currentPaymentType = type;
