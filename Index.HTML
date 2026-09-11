@@ -2397,25 +2397,22 @@
 
         async function pullProductsFromGoogleSheet() {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
-            const targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
+            let targetUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) ? settings.googleSheetUrl.trim() : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
 
-            if (!targetUrl) {
-                alert('សូមបញ្ចូល Google Apps Script Web App URL ក្នុងផ្ទាំងកំណត់ជាមុនសិន!');
-                openSettingsModal();
-                return;
+            if (!targetUrl || (!targetUrl.includes('script.google.com') && !targetUrl.includes('script.googleusercontent.com'))) {
+                targetUrl = DEFAULT_GOOGLE_SHEET_URL;
             }
+            targetUrl = targetUrl.replace(/\/+$/, '');
+
             const spinIcon = document.getElementById('syncSpinIcon');
             if (spinIcon) spinIcon.classList.add('fa-spin');
             showToast('កំពុងទាញទិន្នន័យ (ទំនិញ ការលក់ ចំណាយ) ពី Google Sheet...', 'info');
 
             try {
-                const response = await fetch(`${targetUrl}?action=sync_all`, {
-                    method: 'GET',
-                    redirect: 'follow',
-                    cache: 'no-cache'
-                });
+                const fetchUrl = `${targetUrl}?action=sync_all&_t=${Date.now()}`;
+                const response = await fetch(fetchUrl);
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
+                    throw new Error(`HTTP ${response.status} ${response.statusText}`);
                 }
                 const result = await response.json();
 
@@ -2457,8 +2454,8 @@
                 showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
 
             } catch (err) {
-                console.error(err);
-                showToast('មិនអាចទាញទិន្នន័យពី Sheet បានទេ!', 'error');
+                console.error('Google Sheet Pull Error:', err);
+                showToast(`មិនអាចទាញទិន្នន័យពី Sheet បានទេ! (${err.message || 'សូមពិនិត្យមើល URL'})`, 'error');
             } finally {
                 if (spinIcon) spinIcon.classList.remove('fa-spin');
             }
