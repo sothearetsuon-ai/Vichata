@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#E07A5F" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="ហាងនំខេកវិជ្ជាតា" />
+    <meta name="apple-mobile-web-app-title" content="ហាងនំខេកវិជ្ជដា" />
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/992/992714.png" />
 
     <link rel="manifest"
@@ -103,6 +103,22 @@
             opacity: 0 !important;
             height: 0 !important;
             width: 0 !important;
+        }
+
+        @keyframes floatCake {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-8px) rotate(1deg);
+            }
+        }
+
+        .floating-cake {
+            animation: floatCake 4s ease-in-out infinite;
         }
 
         @media print {
@@ -537,14 +553,13 @@
                                     class="text-2xl">🍓</span><span class="text-3xl">🕯️</span><span
                                     class="text-2xl">🍓</span></div>
                             <div id="visualTierTop"
-                                class="w-32 sm:w-36 h-16 sm:h-20 rounded-2xl shadow-md flex items-center justify-center p-2 z-20 border-4 border-white/60"
-                                style="background-color: #F8D7DA;">
-                                <span id="visualTierTopFlavor" class="text-xs font-bold text-stone-700/80">Vanilla
-                                    Top</span>
+                                class="w-32 sm:w-36 h-16 sm:h-20 rounded-2xl shadow-md flex items-center justify-center p-2 z-20 border-4 border-white/60 transition-all duration-300"
+                                style="background-color: #D8F3DC;">
+                                <span id="visualTierTopFlavor" class="text-xs font-bold text-stone-700/80">តយដូង</span>
                             </div>
                             <div id="visualTierBottom"
-                                class="w-48 sm:w-56 h-24 sm:h-28 rounded-3xl shadow-lg flex flex-col items-center justify-center p-4 z-10 border-4 border-white/70 -mt-2"
-                                style="background-color: #F8D7DA;">
+                                class="w-48 sm:w-56 h-24 sm:h-28 rounded-3xl shadow-lg flex flex-col items-center justify-center p-4 z-10 border-4 border-white/70 -mt-2 transition-all duration-300"
+                                style="background-color: #D8F3DC;">
                                 <div id="visualMessage"
                                     class="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white/60 text-xs font-bold text-rose-700 truncate max-w-[180px]">
                                     រីករាយថ្ងៃខួបកំណើត!</div>
@@ -592,7 +607,7 @@
                             </div>
                         </div>
                         <button onclick="addCustomCakeToCart()"
-                            class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-bakery-caramel to-amber-500 text-white font-extrabold text-sm sm:text-base shadow-glow flex items-center justify-center gap-2">
+                            class="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-bakery-caramel to-amber-500 text-white font-extrabold text-sm sm:text-base shadow-glow flex items-center justify-center gap-2 hover:opacity-95 transition">
                             <i class="fa-solid fa-cake-candles text-lg"></i> បញ្ចូលនំខេកនេះទៅកាន់កន្ត្រក POS
                         </button>
                     </div>
@@ -848,7 +863,7 @@
                     </div>
                 </div>
                 <button onclick="closeManualSalesModal()"
-                    class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-base">
+                    class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 flex items-center justify-center text-base hover:bg-stone-200 transition">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
@@ -992,7 +1007,7 @@
 
                 <div class="pt-2 flex gap-2">
                     <button type="submit"
-                        class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-xs shadow-glow transition flex items-center justify-center gap-1.5">
+                        class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-xs shadow-glow transition flex items-center justify-center gap-1.5 hover:opacity-95">
                         <i class="fa-solid fa-circle-check"></i> រក្សាទុក & Sync ចូល Sheet ភ្លាមៗ
                     </button>
                     <button type="button" onclick="closeManualSalesModal()"
@@ -1061,11 +1076,11 @@
                     </h4>
                     <div class="grid grid-cols-2 gap-2 pt-1">
                         <button type="button" onclick="exportBackupData()"
-                            class="py-2.5 px-3 bg-emerald-600 text-white rounded-xl text-xs font-bold">
+                            class="py-2.5 px-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition">
                             <i class="fa-solid fa-cloud-arrow-down"></i> 💾 ទាញយក Backup
                         </button>
                         <label
-                            class="py-2.5 px-3 bg-sky-600 text-white rounded-xl text-xs font-bold cursor-pointer text-center">
+                            class="py-2.5 px-3 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-bold cursor-pointer text-center transition">
                             <i class="fa-solid fa-cloud-arrow-up"></i> 📥 បញ្ចូល Restore
                             <input type="file" accept=".json" onchange="importBackupData(event)" class="hidden" />
                         </label>
@@ -1106,7 +1121,7 @@
                     <input type="text" id="telegramChatId" placeholder="Chat ID"
                         class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
                     <button onclick="testTelegramMessageWithPhoto()"
-                        class="px-3 py-1.5 bg-sky-500 text-white rounded-xl text-xs font-bold">
+                        class="px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold transition">
                         <i class="fa-solid fa-paper-plane mr-1"></i> តេស្តផ្ញើ Telegram
                     </button>
                 </div>
@@ -1114,11 +1129,11 @@
 
             <div class="pt-3 border-t border-orange-100 flex-shrink-0 flex gap-2">
                 <button onclick="saveIntegrationSettings()"
-                    class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-extrabold text-xs shadow">
+                    class="flex-1 py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-extrabold text-xs shadow transition">
                     💾 រក្សាទុកព័ត៌មាន & ការកំណត់ទាំងអស់
                 </button>
                 <button onclick="resetDefaultProducts()"
-                    class="px-3 py-3 rounded-2xl bg-stone-100 hover:bg-rose-50 hover:text-rose-600 text-stone-600 font-bold text-xs"
+                    class="px-3 py-3 rounded-2xl bg-stone-100 hover:bg-rose-50 hover:text-rose-600 text-stone-600 font-bold text-xs transition"
                     title="កំណត់រូបភាពដើមឡើងវិញ">
                     <i class="fa-solid fa-arrows-rotate"></i> កំណត់រូបដើម
                 </button>
@@ -1132,7 +1147,7 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark">ដាក់រូបភាព KHQR របស់ហាង</h3>
-                <button onclick="closeKhqrSetupModal()" class="text-stone-400"><i
+                <button onclick="closeKhqrSetupModal()" class="text-stone-400 hover:text-stone-600"><i
                         class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-4 text-xs">
@@ -1145,7 +1160,7 @@
                     <input type="file" id="khqrSetupFileInput" accept="image/*" class="hidden"
                         onchange="handleKhqrSetupFile(event)">
                     <label for="khqrSetupFileInput"
-                        class="px-4 py-2 bg-red-600 text-white font-bold rounded-xl cursor-pointer shadow-sm active:scale-95 transition inline-block">
+                        class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl cursor-pointer shadow-sm active:scale-95 transition inline-block">
                         <i class="fa-solid fa-camera mr-1"></i> ជ្រើសរើសរូបភាព QR
                     </label>
                 </div>
@@ -1156,9 +1171,10 @@
                 </div>
                 <div class="flex gap-2 pt-2">
                     <button onclick="saveKhqrSetup()"
-                        class="flex-1 py-3 rounded-2xl bg-red-600 text-white font-bold text-xs">រក្សាទុក KHQR</button>
+                        class="flex-1 py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition">រក្សាទុក
+                        KHQR</button>
                     <button onclick="resetDefaultKhqr()"
-                        class="px-3 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">កំណត់ឡើងវិញ</button>
+                        class="px-3 py-3 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-xs transition">កំណត់ឡើងវិញ</button>
                 </div>
             </div>
         </div>
@@ -1170,7 +1186,8 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark" id="paymentModalTitle">ទូទាត់ប្រាក់</h3>
-                <button onclick="closePaymentModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closePaymentModal()" class="text-stone-400 hover:text-stone-600"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 p-3 bg-orange-50/80 rounded-2xl border border-orange-200 space-y-2">
                 <div class="flex items-center justify-between text-xs">
@@ -1218,7 +1235,7 @@
                     <div class="text-2xl font-black text-red-600 font-en" id="khqrTotalKHR">0 ៛</div>
                     <div class="text-xs text-stone-500 font-en font-bold mb-3" id="khqrTotalUSD">≈ $0.00</div>
                     <button onclick="completeTransaction('KHQR (៛)')"
-                        class="w-full py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow">
+                        class="w-full py-3 rounded-2xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs shadow transition">
                         <i class="fa-solid fa-check"></i> ទទួលបានប្រាក់រួចរាល់
                     </button>
                 </div>
@@ -1230,7 +1247,7 @@
                         class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
                     <div class="text-emerald-700 font-black font-en text-lg text-center" id="cashChangeKHR">0 ៛</div>
                     <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')"
-                        class="w-full py-3 rounded-2xl bg-bakery-dark text-white font-bold text-sm shadow">
+                        class="w-full py-3 rounded-2xl bg-bakery-dark hover:bg-black text-white font-bold text-sm shadow transition">
                         គិតលុយ & ចេញវិក្កយបត្រ
                     </button>
                 </div>
@@ -1246,7 +1263,7 @@
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-extrabold text-base text-bakery-dark" id="multiUploadModalTitle">Upload
                     រូបភាពនំច្រើនសន្លឹក</h3>
-                <button onclick="closeMultiUploadModal()" class="text-stone-400"><i
+                <button onclick="closeMultiUploadModal()" class="text-stone-400 hover:text-stone-600"><i
                         class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -1317,10 +1334,10 @@
 
                 <div class="pt-2 flex gap-2">
                     <button type="submit"
-                        class="flex-1 py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក
+                        class="flex-1 py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs transition">រក្សាទុក
                         & Sync ទៅ Sheet</button>
                     <button type="button" onclick="closeMultiUploadModal()"
-                        class="px-4 py-3 rounded-2xl bg-stone-100 text-stone-600 font-bold text-xs">បោះបង់</button>
+                        class="px-4 py-3 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-xs transition">បោះបង់</button>
                 </div>
             </form>
         </div>
@@ -1363,10 +1380,10 @@
             </div>
             <div class="mt-4 flex gap-2">
                 <button onclick="window.print()"
-                    class="flex-1 py-2.5 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow"><i
+                    class="flex-1 py-2.5 rounded-xl bg-bakery-caramel hover:bg-orange-700 text-white font-extrabold text-xs shadow transition"><i
                         class="fa-solid fa-print"></i> បោះពុម្ព</button>
                 <button onclick="closeReceiptModal()"
-                    class="py-2.5 px-4 rounded-xl bg-stone-100 text-stone-700 font-bold text-xs">បិទ</button>
+                    class="py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition">បិទ</button>
             </div>
         </div>
     </div>
@@ -1374,7 +1391,8 @@
     <!-- ================= LIGHTBOX MODAL ================= -->
     <div id="photoLightboxModal"
         class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
-        <button onclick="closePhotoLightbox()" class="absolute top-5 right-5 text-white/80 text-3xl z-10"><i
+        <button onclick="closePhotoLightbox()"
+            class="absolute top-5 right-5 text-white/80 hover:text-white text-3xl z-10"><i
                 class="fa-solid fa-xmark"></i></button>
         <div class="max-w-3xl w-full flex flex-col items-center">
             <div
@@ -1397,13 +1415,14 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark">ប្តូរអត្រាប្រាក់</h3>
-                <button onclick="closeRateModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeRateModal()" class="text-stone-400 hover:text-stone-600"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3 text-xs">
                 <input type="number" id="inputExchangeRate" value="4100"
                     class="w-full p-3 rounded-2xl border border-stone-300 font-black text-lg text-bakery-caramel text-center">
                 <button onclick="saveExchangeRate()"
-                    class="w-full py-3 rounded-2xl bg-bakery-caramel text-white font-bold text-xs">រក្សាទុក</button>
+                    class="w-full py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs transition">រក្សាទុក</button>
             </div>
         </div>
     </div>
@@ -1414,7 +1433,8 @@
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <h3 class="font-bold text-base text-bakery-dark">បិទវេនលក់</h3>
-                <button onclick="closeShiftModal()" class="text-stone-400"><i class="fa-solid fa-xmark"></i></button>
+                <button onclick="closeShiftModal()" class="text-stone-400 hover:text-stone-600"><i
+                        class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="mt-4 space-y-3 text-xs">
                 <div class="p-3 bg-orange-50 rounded-2xl border border-orange-200 space-y-1 font-semibold">
@@ -1432,7 +1452,7 @@
                 <input type="number" id="shiftActualCashInput" placeholder="រាប់លុយជាក់ស្តែង..."
                     class="w-full p-3 rounded-xl border border-stone-300 font-black text-base">
                 <button onclick="confirmShiftClose()"
-                    class="w-full py-3 rounded-2xl bg-stone-800 text-white font-extrabold text-xs"><i
+                    class="w-full py-3 rounded-2xl bg-stone-800 hover:bg-black text-white font-extrabold text-xs transition"><i
                         class="fa-solid fa-check"></i> បញ្ជាក់ការបិទវេន</button>
             </div>
         </div>
@@ -1477,7 +1497,7 @@
                         if (w > h) {
                             if (w > maxWidth) { h = Math.round((h * maxWidth) / w); w = maxWidth; }
                         } else {
-                            if (h > maxHeight) { w = Math.round((w * maxHeight) / h); h = maxHeight; }
+                            if (h > maxHeight) { w = Math.round((h * maxHeight) / h); h = maxHeight; }
                         }
                         const canvas = document.createElement('canvas');
                         canvas.width = w;
@@ -1511,7 +1531,7 @@
             }
         }
 
-        // Default Store Profile (ឈ្មោះហាង «ហាងនំខេកវិជ្ជដា» ទីតាំង «កោះរ៉ុងសន្លឹម» ទូរស័ព្ទ «0978707000»)
+        // Default Store Profile
         let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
             name: 'ហាងនំខេកវិជ្ជដា',
             tagline: 'កោះរ៉ុងសន្លឹម • 0978707000',
@@ -1712,7 +1732,7 @@
             }).join('');
         }
 
-        // ================= TELEGRAM BOT NOTIFICATIONS (WITH CAKE PHOTO) =================
+        // ================= TELEGRAM BOT NOTIFICATIONS =================
         async function sendTelegramInvoice(order) {
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
@@ -1893,6 +1913,7 @@
             if (viewName === 'expenses') renderExpenses();
             if (viewName === 'pos') renderQuickAddons();
             if (viewName === 'inventory') renderInventory();
+            if (viewName === 'showcase') renderShowcase();
         }
 
         function scrollToCartOnMobile() {
@@ -2155,7 +2176,7 @@
             showToast(`🎉 បានកត់ត្រាការលក់ថ្ងៃ ${date} ចំនួន ${totalKHR.toLocaleString()}៛ ជោគជ័យ!`, 'success');
         }
 
-        // ================= 🌟 GOOGLE SHEET SYNC ENGINE (SMART & COMPLETE) =================
+        // ================= GOOGLE SHEET SYNC ENGINE =================
         async function sendGoogleSheetPayload(payload, showToastNotice = false) {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
             const targetUrl = settings.googleSheetUrl || integrationSettings.googleSheetUrl;
@@ -2184,7 +2205,6 @@
             }
         }
 
-        // មុខងារ Sync ស្តុកនំ និងគ្រឿងផ្សំទៅ Sheet
         function syncStockToGoogleSheet() {
             const prodList = products.filter(p => p.cat !== 'ingredients');
             const ingList = products.filter(p => p.cat === 'ingredients');
@@ -2197,7 +2217,6 @@
             confetti({ particleCount: 40, spread: 60 });
         }
 
-        // មុខងារ Sync ទិន្នន័យទាំងអស់ (ស្តុក គ្រឿងផ្សំ ចំណាយ និងការលក់) ក្នុងពេលតែមួយ
         function syncAllToGoogleSheet() {
             saveIntegrationSettings();
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
@@ -2285,12 +2304,12 @@
                 if (remoteExpenses.length > 0) expenses = remoteExpenses;
 
                 saveState();
-                if (typeof renderProducts === 'function') renderProducts();
-                if (typeof renderInventory === 'function') renderInventory();
-                if (typeof renderShowcase === 'function') renderShowcase();
-                if (typeof renderQuickAddons === 'function') renderQuickAddons();
-                if (typeof renderExpenses === 'function') renderExpenses();
-                if (typeof renderAnalytics === 'function') renderAnalytics();
+                renderProducts();
+                renderInventory();
+                renderShowcase();
+                renderQuickAddons();
+                renderExpenses();
+                renderAnalytics();
 
                 confetti({ particleCount: 60, spread: 70 });
                 showToast(`🎉 បានទាញជោគជ័យ៖ ${remoteProducts.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
@@ -2325,7 +2344,6 @@
             expenses.unshift(newExpense);
             saveState();
 
-            // បញ្ជូនចូល Google Sheet ភ្លាមៗ
             sendGoogleSheetPayload({
                 action: 'add_expense',
                 expense: newExpense
@@ -2376,7 +2394,7 @@
             <td class="p-3 font-khmer font-bold text-stone-700">${catIcons[exp.cat] || exp.cat}</td>
             <td class="p-3 font-black text-rose-600 font-en">-${exp.amount.toLocaleString()} ៛</td>
             <td class="p-3 text-center">
-                <button onclick="deleteExpense('${exp.id}')" class="p-1 text-stone-400 hover:text-rose-600 rounded-lg">
+                <button onclick="deleteExpense('${exp.id}')" class="p-1 text-stone-400 hover:text-rose-600 rounded-lg transition">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -2457,7 +2475,7 @@
 
             ['today', 'yesterday', '7days', 'month', 'all'].forEach(id => {
                 const btn = document.getElementById(`btnDate-${id}`);
-                if (btn) btn.className = (id === type) ? "px-2.5 py-1.5 rounded-xl bg-bakery-caramel text-white" : "px-2.5 py-1.5 rounded-xl bg-bakery-vanilla text-stone-700";
+                if (btn) btn.className = (id === type) ? "px-2.5 py-1.5 rounded-xl bg-bakery-caramel text-white" : "px-2.5 py-1.5 rounded-xl bg-bakery-van text-stone-700 bg-bakery-vanilla";
             });
 
             if (type === 'today') { start = end; indicator = 'បង្ហាញទិន្នន័យ៖ ថ្ងៃនេះ'; }
@@ -2530,10 +2548,10 @@
             </td>
             <td class="p-3 font-black text-bakery-caramel">${t.totalKHR.toLocaleString()} ៛</td>
             <td class="p-3 text-center">
-                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel">
+                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel transition" title="បោះពុម្ពវិក្កយបត្រ">
                     <i class="fa-solid fa-print"></i>
                 </button>
-                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600">
+                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600 transition" title="លុប">
                     <i class="fa-solid fa-trash"></i>
                 </button>
             </td>
@@ -2679,7 +2697,6 @@
             renderShowcase();
             renderQuickAddons();
 
-            // Sync ទៅ Sheet ភ្លាមៗ
             syncStockToGoogleSheet();
 
             closeMultiUploadModal();
@@ -2695,7 +2712,6 @@
                 renderInventory();
                 renderProducts();
 
-                // Sync ស្តុកថ្មីទៅ Sheet ភ្លាមៗ
                 syncStockToGoogleSheet();
                 showToast(`បានបន្ថែមស្តុក ${p.name} ចំនួន ${delta}`, 'info');
             }
@@ -2710,7 +2726,6 @@
                 renderShowcase();
                 renderQuickAddons();
 
-                // Sync ការលុបទំនិញទៅ Sheet
                 syncStockToGoogleSheet();
                 showToast('បានលុបទំនិញរួចរាល់', 'info');
             }
@@ -2761,9 +2776,9 @@
               <td class="p-3.5 font-bold font-en text-stone-600">$${(p.priceKHR / KHR_RATE).toFixed(2)}</td>
               <td class="p-3.5 font-black font-en text-stone-800">${p.stock}</td>
               <td class="p-3.5 text-center">
-                  <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold">+10</button>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold"><i class="fa-solid fa-pen"></i></button>
-                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold"><i class="fa-solid fa-trash"></i></button>
+                  <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">+10</button>
+                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold hover:bg-orange-100 transition"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100 transition"><i class="fa-solid fa-trash"></i></button>
               </td>
           </tr>
         `;
@@ -3014,7 +3029,7 @@
             const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
             const invId = 'BK-' + Math.floor(1000 + Math.random() * 9000);
             const custName = document.getElementById('customerNameInput') ? (document.getElementById('customerNameInput').value.trim() || 'អតិថិជនទូទៅ') : 'អតិថិជនទូទៅ';
-            const phone = document.getElementById('customerPhoneInput').value.trim() || 'គ្មាន';
+            const phone = document.getElementById('customerPhoneInput') ? (document.getElementById('customerPhoneInput').value.trim() || 'គ្មាន') : 'គ្មាន';
 
             let depositKHR = totalKHR;
             let remainingKHR = 0;
@@ -3024,14 +3039,17 @@
             }
 
             let itemsSummaryArr = [];
+            let cakeFlavorsArr = [];
             let totalQty = 0;
 
-            // ចាប់យករូបភាពនំដំបូងដែលភ្ញៀវបានទិញ
             const firstCakePhoto = (cart[0] && cart[0].img) ? cart[0].img : (products[0] ? products[0].img : null);
 
             cart.forEach((item) => {
                 totalQty += item.qty;
                 itemsSummaryArr.push(`${item.name}${item.flavor ? ` (${item.flavor})` : ''} x${item.qty}`);
+                if (item.cat === 'cakes' || item.flavor) {
+                    cakeFlavorsArr.push(`${item.name}: ${item.flavor || 'ទូទៅ'}`);
+                }
                 if (!item.isCustom) {
                     const prod = products.find(p => p.id == item.id);
                     if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
@@ -3048,238 +3066,477 @@
             const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
             const status = (remainingKHR > 0) ? `កក់ ${depositKHR.toLocaleString()}៛ (ខ្វះ ${remainingKHR.toLocaleString()}៛)` : 'Paid (គ្រប់)';
 
-            const newOrder = {
-                id: invId, date: todayStr, time: timeStr,
-                customerName: custName, customerPhone: phone,
-                itemsCount: totalQty, itemsSummary: itemsSummaryArr.join(', '),
-                method: method, totalKHR: totalKHR, depositKHR: depositKHR,
-                remainingKHR: remainingKHR, status: status,
+            const newTx = {
+                id: invId,
+                date: todayStr,
+                time: timeStr,
+                customerName: custName,
+                customerPhone: phone,
+                itemsCount: totalQty,
+                itemsSummary: itemsSummaryArr.join(', '),
+                cakeFlavors: cakeFlavorsArr.join(', ') || 'គ្មាន',
+                addOns: 'គ្មាន',
+                method: method,
+                totalKHR: totalKHR,
+                depositKHR: depositKHR,
+                remainingKHR: remainingKHR,
+                status: status,
+                note: '',
                 firstImage: firstCakePhoto
             };
 
-            transactions.unshift(newOrder);
+            transactions.unshift(newTx);
             saveState();
-            closePaymentModal();
-            openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR);
 
-            // 1. Send to Telegram with cake photo
-            const shouldSendTelegram = document.getElementById('paySendTelegramCheck')?.checked !== false;
-            if (shouldSendTelegram) {
-                sendTelegramInvoice(newOrder);
+            const sendTeleCheck = document.getElementById('paySendTelegramCheck');
+            if (!sendTeleCheck || sendTeleCheck.checked) {
+                sendTelegramInvoice(newTx);
             }
 
-            // 2. Send to Google Sheet
             sendGoogleSheetPayload({
                 action: 'new_sale',
                 invoice: {
-                    id: invId, date: todayStr, time: timeStr,
-                    customerName: custName, customerPhone: phone,
-                    itemsSummary: itemsSummaryArr.join(', '),
-                    totalQty: totalQty, totalKHR: totalKHR,
-                    depositKHR: depositKHR, remainingKHR: remainingKHR,
-                    totalUSD: parseFloat(totalUSD), method: method, status: status
+                    id: invId,
+                    date: todayStr,
+                    time: timeStr,
+                    customerName: custName,
+                    customerPhone: phone,
+                    itemsSummary: newTx.itemsSummary,
+                    cakeFlavors: newTx.cakeFlavors,
+                    addOns: newTx.addOns,
+                    totalQty: totalQty,
+                    totalKHR: totalKHR,
+                    depositKHR: depositKHR,
+                    remainingKHR: remainingKHR,
+                    totalUSD: parseFloat(totalUSD),
+                    method: method,
+                    status: status
                 }
             });
 
-            // 3. Update stock in Google Sheet automatically
             setTimeout(() => syncStockToGoogleSheet(), 600);
+
+            closePaymentModal();
+            openReceiptModal(invId, method, totalKHR, depositKHR, remainingKHR, [...cart]);
 
             cart = [];
             currentDiscountKHR = 0;
+            if (document.getElementById('customerNameInput')) document.getElementById('customerNameInput').value = '';
+            document.getElementById('customerPhoneInput').value = '';
+            document.getElementById('customerPointsDisplay').innerText = '0 pts';
             renderCart();
             renderProducts();
             renderInventory();
             renderAnalytics();
             renderExpenses();
-            confetti({ particleCount: 80, spread: 70 });
-            showToast('ទូទាត់ប្រាក់ជោគជ័យ!', 'success');
+
+            confetti({ particleCount: 75, spread: 65, origin: { y: 0.6 } });
+            showToast('🎉 បានទូទាត់ប្រាក់ និងចេញវិក្កយបត្រជោគជ័យ!', 'success');
         }
 
-        // ================= RECEIPT =================
-        function openReceiptModal(id, method, total, deposit = total, remaining = 0) {
+        // ================= THERMAL RECEIPT MODAL =================
+        function openReceiptModal(id, method, totalKHR, depositKHR = null, remainingKHR = null, items = null) {
             document.getElementById('receiptInvoiceNo').innerText = `INV #${id}`;
-            document.getElementById('receiptTotalKHR').innerText = `${total.toLocaleString()} ៛`;
-            document.getElementById('receiptTotalUSD').innerText = `≈ $${(total / KHR_RATE).toFixed(2)}`;
-            document.getElementById('receiptDepositKHR').innerText = `${deposit.toLocaleString()} ៛`;
-            document.getElementById('receiptRemainingKHR').innerText = `${remaining.toLocaleString()} ៛`;
+            document.getElementById('receiptStoreName').innerText = (storeInfo.name || 'ហាងនំខេកវិជ្ជដា').toUpperCase();
+            document.getElementById('receiptStoreInfo').innerText = `${storeInfo.address || 'កោះរ៉ុងសន្លឹម'} • Tel: ${storeInfo.phone || '0978707000'}`;
 
-            const recItemsList = document.getElementById('receiptItemsList');
-            recItemsList.innerHTML = `
-        <div class="text-[10px] pb-1 border-b border-dashed border-stone-200">
-            <div>វិធីទូទាត់: <b>${method}</b></div>
-        </div>
-        ${cart.map(i => `
-            <div class="flex justify-between items-start text-[10px] py-0.5 font-semibold">
-                <div>${i.name}</div>
-                <div>x${i.qty} = <b>${(i.priceKHR * i.qty).toLocaleString()}៛</b></div>
-            </div>
-        `).join('')}
-      `;
+            const dep = (depositKHR !== null && depositKHR !== undefined) ? depositKHR : totalKHR;
+            const rem = (remainingKHR !== null && remainingKHR !== undefined) ? remainingKHR : 0;
+
+            document.getElementById('receiptTotalKHR').innerText = `${(totalKHR || 0).toLocaleString()} ៛`;
+            document.getElementById('receiptDepositKHR').innerText = `${(dep || 0).toLocaleString()} ៛`;
+            document.getElementById('receiptRemainingKHR').innerText = `${(rem || 0).toLocaleString()} ៛`;
+            document.getElementById('receiptTotalUSD').innerText = `≈ $${((totalKHR || 0) / KHR_RATE).toFixed(2)}`;
+
+            const itemsContainer = document.getElementById('receiptItemsList');
+            if (itemsContainer) {
+                if (Array.isArray(items) && items.length > 0) {
+                    itemsContainer.innerHTML = items.map(i => `
+                        <div class="flex justify-between text-[11px]">
+                            <span class="truncate max-w-[190px]">${i.name}${i.flavor ? ' (' + i.flavor + ')' : ''} x${i.qty}</span>
+                            <span class="font-bold font-en">${(i.priceKHR * i.qty).toLocaleString()} ៛</span>
+                        </div>
+                    `).join('');
+                } else {
+                    const tx = transactions.find(t => t.id === id);
+                    if (tx && tx.itemsSummary) {
+                        const arr = tx.itemsSummary.split(', ');
+                        itemsContainer.innerHTML = arr.map(s => `
+                            <div class="flex justify-between text-[11px]">
+                                <span class="truncate max-w-[220px]">• ${s}</span>
+                            </div>
+                        `).join('');
+                    } else {
+                        itemsContainer.innerHTML = `<div class="text-[11px] text-stone-500">មុខទំនិញ #${id}</div>`;
+                    }
+                }
+            }
+
             document.getElementById('receiptModal').classList.remove('hidden');
         }
 
-        function closeReceiptModal() { document.getElementById('receiptModal').classList.add('hidden'); }
+        function closeReceiptModal() {
+            document.getElementById('receiptModal').classList.add('hidden');
+        }
 
-        // ================= LIGHTBOX & STUDIO =================
+        // ================= LIGHTBOX MODAL =================
         function openPhotoLightbox(id) {
-            const p = products.find(prod => prod.id == id);
-            if (!p) return;
-            const imgs = p.images ? p.images : [p.img];
-            document.getElementById('lightboxTitle').innerText = p.name;
-            document.getElementById('lightboxPrice').innerText = `${p.priceKHR.toLocaleString()} ៛`;
-            document.getElementById('lightboxMainImage').src = formatImgUrl(imgs[0]);
-            document.getElementById('lightboxThumbnails').innerHTML = imgs.map(src => `
-        <img src="${formatImgUrl(src)}" onclick="document.getElementById('lightboxMainImage').src=formatImgUrl('${src}')" class="w-12 h-12 rounded-xl object-cover border border-white cursor-pointer" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
-      `).join('');
+            const prod = products.find(p => p.id == id);
+            if (!prod) return;
+
+            const imgs = prod.images && prod.images.length > 0 ? prod.images : [prod.img];
+            const mainImg = formatImgUrl(imgs[0]);
+
+            document.getElementById('lightboxMainImage').src = mainImg;
+            document.getElementById('lightboxTitle').innerText = prod.name;
+            document.getElementById('lightboxPrice').innerText = `${prod.priceKHR.toLocaleString()} ៛ (≈ $${(prod.priceKHR / KHR_RATE).toFixed(2)})`;
+
+            const thumbContainer = document.getElementById('lightboxThumbnails');
+            if (imgs.length > 1) {
+                thumbContainer.innerHTML = imgs.map(src => {
+                    const thumbUrl = formatImgUrl(src);
+                    return `
+                        <img src="${thumbUrl}" onclick="document.getElementById('lightboxMainImage').src='${thumbUrl}'" 
+                            class="w-14 h-14 rounded-xl object-cover border-2 border-white/60 hover:border-amber-400 cursor-pointer transition shadow-md shrink-0"
+                            onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                    `;
+                }).join('');
+                thumbContainer.classList.remove('hidden');
+            } else {
+                thumbContainer.innerHTML = '';
+                thumbContainer.classList.add('hidden');
+            }
+
             document.getElementById('photoLightboxModal').classList.remove('hidden');
         }
 
-        function closePhotoLightbox() { document.getElementById('photoLightboxModal').classList.add('hidden'); }
+        function closePhotoLightbox() {
+            document.getElementById('photoLightboxModal').classList.add('hidden');
+        }
 
+        // ================= CUSTOM CAKE STUDIO =================
         function renderFlavorsDropdown() {
-            document.getElementById('cakeFlavorSelect').innerHTML = cakeFlavors.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+            const select = document.getElementById('cakeFlavorSelect');
+            if (!select) return;
+            select.innerHTML = cakeFlavors.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
         }
 
         function updateCakeConfig(type, val, priceKHR) {
             if (type === 'tiers') {
                 customCake.tiers = val;
                 customCake.priceKHR = priceKHR;
-                document.querySelectorAll('.tier-btn').forEach(btn => btn.classList.replace('border-bakery-caramel', 'border-transparent'));
-                event.currentTarget.classList.replace('border-transparent', 'border-bakery-caramel');
-                document.getElementById('visualTierTop').classList.toggle('hidden', val === 1);
+                document.querySelectorAll('.tier-btn').forEach(btn => {
+                    btn.classList.remove('border-bakery-caramel', 'bg-orange-50/50');
+                    btn.classList.add('border-transparent', 'bg-stone-50');
+                });
+                if (window.event && window.event.currentTarget) {
+                    window.event.currentTarget.classList.remove('border-transparent', 'bg-stone-50');
+                    window.event.currentTarget.classList.add('border-bakery-caramel', 'bg-orange-50/50');
+                }
+
+                const topTier = document.getElementById('visualTierTop');
+                const bottomTier = document.getElementById('visualTierBottom');
+                if (val === 1) {
+                    topTier.classList.add('hidden');
+                    bottomTier.style.borderRadius = '1.5rem';
+                } else if (val === 'heart') {
+                    topTier.classList.add('hidden');
+                    bottomTier.style.borderRadius = '50% 50% 40% 40%';
+                } else {
+                    topTier.classList.remove('hidden');
+                    bottomTier.style.borderRadius = '1.5rem';
+                }
             } else if (type === 'flavor') {
                 customCake.flavor = val;
-                customCake.flavorName = cakeFlavors.find(f => f.id === val).name;
+                const found = cakeFlavors.find(f => f.id === val);
+                customCake.flavorName = found ? found.name : val;
+
+                const flavorColors = {
+                    pandan_coconut: '#D8F3DC',
+                    strawberry: '#F8D7DA',
+                    blueberry: '#D0E1FD',
+                    passion: '#FFF3CD',
+                    vanilla: '#FFF9E6',
+                    chocolate: '#D4A373',
+                    coffee: '#DDB892',
+                    redvelvet: '#F5C6CB',
+                    matcha: '#D1E7DD',
+                    taro: '#E2D9F3',
+                    cheesecake: '#FFF2B2',
+                    durian: '#FCF6BD',
+                    mango: '#FFE5B4',
+                    caramel: '#E9C46A',
+                    other: '#F8D7DA'
+                };
+                const bg = flavorColors[val] || '#F8D7DA';
+                const topTier = document.getElementById('visualTierTop');
+                const bottomTier = document.getElementById('visualTierBottom');
+                if (topTier) topTier.style.backgroundColor = bg;
+                if (bottomTier) bottomTier.style.backgroundColor = bg;
+                const topFlavorText = document.getElementById('visualTierTopFlavor');
+                if (topFlavorText) topFlavorText.innerText = customCake.flavorName.split('(')[0];
             }
             document.getElementById('customCakePriceKHR').innerText = `${customCake.priceKHR.toLocaleString()} ៛`;
         }
 
         function updateCakeMessage(msg) {
             customCake.message = msg || 'រីករាយថ្ងៃខួបកំណើត!';
-            document.getElementById('visualMessage').innerText = customCake.message;
+            const el = document.getElementById('visualMessage');
+            if (el) el.innerText = customCake.message;
         }
 
         function addCustomCakeToCart() {
+            const pickupDate = document.getElementById('cakeDateInput').value;
+            const phone = document.getElementById('cakePhoneInput').value.trim();
+            const customImg = 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+            const tierLabel = (customCake.tiers === 'heart') ? 'រាងបេះដូង' : `${customCake.tiers} ជាន់`;
+            const cakeTitle = `🎂 នំខេកកុម្ម៉ង់ (${tierLabel}, ${customCake.flavorName}) - "${customCake.message}"`;
+
             cart.push({
-                id: Date.now(),
-                name: `🎂 នំខេកកុម្ម៉ង់ (${customCake.tiers} ជាន់, ${customCake.flavorName})`,
-                cat: 'cakes', flavor: customCake.flavorName,
-                priceKHR: customCake.priceKHR, qty: 1, isCustom: true,
-                img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80'
+                id: 'custom-' + Date.now(),
+                name: cakeTitle,
+                cat: 'cakes',
+                priceKHR: customCake.priceKHR,
+                qty: 1,
+                flavor: customCake.flavorName,
+                isCustom: true,
+                pickupDate: pickupDate,
+                customerPhone: phone,
+                img: customImg
             });
+
             renderCart();
             switchView('pos');
-            showToast('បានបញ្ចូលនំខេកកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
+            confetti({ particleCount: 50, spread: 60 });
+            showToast('🎉 បានបញ្ចូលនំខេកកុម្ម៉ង់ទៅកន្ត្រក POS!', 'success');
+
+            const caption = `🎂 <b>មានការកុម្ម៉ង់នំខេក Studio ថ្មី!</b>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🍰 <b>ទំហំ/ជាន់:</b> ${tierLabel}\n` +
+                `🍓 <b>រសជាតិ:</b> ${customCake.flavorName}\n` +
+                `✍️ <b>អក្សរលើនំ:</b> "${customCake.message}"\n` +
+                `📅 <b>ថ្ងៃយកនំ:</b> ${pickupDate || 'មិនបានកំណត់'}\n` +
+                `📞 <b>ទូរស័ព្ទភ្ញៀវ:</b> ${phone || 'មិនបានបញ្ចូល'}\n` +
+                `💰 <b>តម្លៃ:</b> ${customCake.priceKHR.toLocaleString()} ៛ (≈ $${(customCake.priceKHR / KHR_RATE).toFixed(2)})`;
+
+            sendTelegramNotification(customImg, caption);
         }
 
+        async function sendTelegramNotification(photo, text) {
+            const token = integrationSettings.telegramBotToken;
+            const chatId = integrationSettings.telegramChatId;
+            if (!token || !chatId) return;
+
+            try {
+                if (photo && !photo.includes('data:image/svg+xml')) {
+                    if (photo.startsWith('data:image')) {
+                        const blob = base64ToBlob(photo);
+                        if (blob) {
+                            const fd = new FormData();
+                            fd.append('chat_id', chatId);
+                            fd.append('photo', blob, 'image.jpg');
+                            fd.append('caption', text);
+                            fd.append('parse_mode', 'HTML');
+                            await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, { method: 'POST', body: fd });
+                            return;
+                        }
+                    } else if (photo.startsWith('http')) {
+                        await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ chat_id: chatId, photo: photo, caption: text, parse_mode: 'HTML' })
+                        });
+                        return;
+                    }
+                }
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'HTML' })
+                });
+            } catch (err) {
+                console.warn('sendTelegramNotification failed:', err);
+            }
+        }
+
+        // ================= SHOWCASE VIEW =================
         function renderShowcase() {
-            document.getElementById('showcaseCategoryChips').innerHTML = categories.map(c => `
-        <button onclick="activeShowcaseCategory='${c.id}'; renderShowcase();" class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white' : 'bg-white text-stone-700'}">${c.label}</button>
-      `).join('');
+            const chips = document.getElementById('showcaseCategoryChips');
+            if (chips) {
+                chips.innerHTML = categories.map(c => `
+                    <button onclick="activeShowcaseCategory='${c.id}'; renderShowcase();" 
+                        class="px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition ${activeShowcaseCategory === c.id ? 'bg-bakery-caramel text-white shadow-sm' : 'bg-white text-stone-600 border border-orange-200'}">
+                        ${c.label}
+                    </button>
+                `).join('');
+            }
 
             const grid = document.getElementById('showcaseGrid');
+            if (!grid) return;
             const filtered = products.filter(p => p.cat !== 'ingredients' && (activeShowcaseCategory === 'all' || p.cat === activeShowcaseCategory));
+
             grid.innerHTML = filtered.map(p => {
-                const img = formatImgUrl(p.img || (p.images && p.images[0]));
+                const imgs = p.images && p.images.length > 0 ? p.images : [p.img];
+                const mainImg = formatImgUrl(imgs[0]);
                 return `
-          <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft">
-              <div class="h-48 sm:h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
-                  <img src="${img}" class="w-full h-full object-cover" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
-              </div>
-              <div class="p-4 flex items-center justify-between">
-                  <div>
-                      <h4 class="font-extrabold text-sm sm:text-base text-bakery-dark">${p.name}</h4>
-                      <div class="text-base sm:text-lg font-black text-bakery-caramel font-en mt-0.5">${p.priceKHR.toLocaleString()} ៛</div>
-                  </div>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="p-2 bg-orange-50 text-bakery-caramel rounded-xl font-bold text-xs"><i class="fa-solid fa-camera"></i></button>
-              </div>
-          </div>
-        `;
+                    <div class="bg-white rounded-3xl overflow-hidden border border-orange-100 shadow-soft group hover:shadow-glow transition">
+                        <div class="relative h-60 bg-stone-100 overflow-hidden cursor-pointer" onclick="openPhotoLightbox('${p.id}')">
+                            <img id="showcase-img-${p.id}" src="${mainImg}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
+                            <span class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white text-[10px] font-bold px-2.5 py-1 rounded-full flex items-center gap-1 shadow">
+                                <i class="fa-solid fa-images"></i> ${imgs.length} រូប
+                            </span>
+                            ${imgs.length > 1 ? `
+                                <div class="absolute bottom-2 left-2 right-2 flex gap-1.5 overflow-x-auto py-1 bg-black/30 backdrop-blur-sm rounded-xl px-2 custom-scroll" onclick="event.stopPropagation()">
+                                    ${imgs.map((src) => `
+                                        <img src="${formatImgUrl(src)}" onclick="document.getElementById('showcase-img-${p.id}').src='${formatImgUrl(src)}'" class="w-8 h-8 rounded-lg object-cover border border-white cursor-pointer shadow-sm hover:scale-110 transition">
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="p-4 sm:p-5 flex items-center justify-between">
+                            <div>
+                                <h4 class="font-extrabold text-base text-bakery-dark">${p.name}</h4>
+                                <div class="text-lg sm:text-xl font-black text-bakery-caramel font-en mt-1">${p.priceKHR.toLocaleString()} ៛</div>
+                            </div>
+                            <button onclick="openMultiUploadModal('${p.id}')" class="p-2.5 bg-orange-50 hover:bg-orange-100 text-bakery-caramel rounded-xl font-bold text-xs transition" title="កែប្រែរូបភាព">
+                                <i class="fa-solid fa-camera"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
         function toggleFullscreen() {
-            if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => { });
-            else document.exitFullscreen();
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => { });
+            } else {
+                document.exitFullscreen().catch(() => { });
+            }
         }
 
-        // ================= SETTINGS & SHIFT =================
+        // ================= SETTINGS & INTEGRATIONS =================
         function openSettingsModal() {
-            document.getElementById('settingStoreName').value = storeInfo.name;
-            document.getElementById('settingStorePhone').value = storeInfo.phone;
-            document.getElementById('settingStoreAddress').value = storeInfo.address;
-            document.getElementById('settingStoreTagline').value = storeInfo.tagline;
-            document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken;
-            document.getElementById('telegramChatId').value = integrationSettings.telegramChatId;
-            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl;
+            document.getElementById('settingStoreName').value = storeInfo.name || 'ហាងនំខេកវិជ្ជដា';
+            document.getElementById('settingStorePhone').value = storeInfo.phone || '0978707000';
+            document.getElementById('settingStoreAddress').value = storeInfo.address || 'កោះរ៉ុងសន្លឹម';
+            document.getElementById('settingStoreTagline').value = storeInfo.tagline || 'កោះរ៉ុងសន្លឹម • 0978707000';
+            document.getElementById('googleSheetUrl').value = integrationSettings.googleSheetUrl || '';
+            document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '';
+            document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '';
             document.getElementById('settingsModal').classList.remove('hidden');
         }
-        function closeSettingsModal() { document.getElementById('settingsModal').classList.add('hidden'); }
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
 
         function saveIntegrationSettings() {
-            storeInfo.name = document.getElementById('settingStoreName').value.trim() || 'ហាងនំខេកវិជ្ជដា';
-            storeInfo.phone = document.getElementById('settingStorePhone').value.trim();
-            storeInfo.address = document.getElementById('settingStoreAddress').value.trim();
-            storeInfo.tagline = document.getElementById('settingStoreTagline').value.trim();
-            localStorage.setItem('BAKERY_STORE_INFO', JSON.stringify(storeInfo));
+            const name = document.getElementById('settingStoreName').value.trim() || 'ហាងនំខេកវិជ្ជដា';
+            const phone = document.getElementById('settingStorePhone').value.trim() || '0978707000';
+            const address = document.getElementById('settingStoreAddress').value.trim() || 'កោះរ៉ុងសន្លឹម';
+            const tagline = document.getElementById('settingStoreTagline').value.trim() || `${address} • ${phone}`;
 
+            storeInfo = { name, phone, address, tagline };
+            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
             integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim();
             integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim();
-            integrationSettings.googleSheetUrl = document.getElementById('googleSheetUrl').value.trim();
-            localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
 
+            saveState();
             renderStoreInfo();
             closeSettingsModal();
-            confetti({ particleCount: 50, spread: 60 });
-            showToast('🎉 បានរក្សាទុកការកំណត់ជោគជ័យ!', 'success');
+            confetti({ particleCount: 40, spread: 60 });
+            showToast('💾 បានរក្សាទុកការកំណត់ទាំងអស់ជោគជ័យ!', 'success');
         }
 
-        function openRateModal() { document.getElementById('inputExchangeRate').value = KHR_RATE; document.getElementById('rateModal').classList.remove('hidden'); }
-        function closeRateModal() { document.getElementById('rateModal').classList.add('hidden'); }
+        // ================= EXCHANGE RATE MODAL =================
+        function openRateModal() {
+            document.getElementById('inputExchangeRate').value = KHR_RATE;
+            document.getElementById('rateModal').classList.remove('hidden');
+        }
+
+        function closeRateModal() {
+            document.getElementById('rateModal').classList.add('hidden');
+        }
+
         function saveExchangeRate() {
-            KHR_RATE = parseInt(document.getElementById('inputExchangeRate').value) || 4100;
-            localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
-            renderCart(); renderInventory(); renderAnalytics();
-            closeRateModal(); showToast('បានកែប្រែអត្រាប្រាក់ជោគជ័យ!', 'success');
+            const r = parseInt(document.getElementById('inputExchangeRate').value);
+            if (r && r > 0) {
+                KHR_RATE = r;
+                localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
+                closeRateModal();
+                renderCart();
+                renderAnalytics();
+                renderInventory();
+                showToast(`អត្រាប្រាក់ថ្មី៖ 1$ = ${KHR_RATE.toLocaleString()} ៛`, 'success');
+            }
         }
 
+        // ================= SHIFT CLOSE MODAL =================
         function openShiftModal() {
             const today = new Date().toISOString().split('T')[0];
             const todaySales = transactions.filter(t => t.date === today);
-            const cash = todaySales.filter(t => t.method.includes('ប្រាក់សុទ្ធ')).reduce((sum, t) => sum + t.totalKHR, 0);
-            const khqr = todaySales.filter(t => t.method.includes('KHQR')).reduce((sum, t) => sum + t.totalKHR, 0);
+            const cash = todaySales.filter(t => t.method && t.method.includes('ប្រាក់សុទ្ធ')).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const khqr = todaySales.filter(t => t.method && t.method.includes('KHQR')).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+
             document.getElementById('shiftCashSalesKHR').innerText = `${cash.toLocaleString()} ៛`;
             document.getElementById('shiftKhqrSalesKHR').innerText = `${khqr.toLocaleString()} ៛`;
             document.getElementById('shiftExpectedCashKHR').innerText = `${(100000 + cash).toLocaleString()} ៛`;
             document.getElementById('shiftActualCashInput').value = 100000 + cash;
             document.getElementById('shiftModal').classList.remove('hidden');
         }
-        function closeShiftModal() { document.getElementById('shiftModal').classList.add('hidden'); }
-        function confirmShiftClose() { closeShiftModal(); showToast('បានបិទវេនលក់ជោគជ័យ!', 'success'); }
 
+        function closeShiftModal() {
+            document.getElementById('shiftModal').classList.add('hidden');
+        }
+
+        function confirmShiftClose() {
+            const actual = parseInt(document.getElementById('shiftActualCashInput').value) || 0;
+            const shiftMsg = `🔒 <b>របាយការណ៍បិទវេនលក់ - ${storeInfo.name}</b>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `📅 <b>កាលបរិច្ឆេទ:</b> ${new Date().toLocaleString()}\n` +
+                `💵 <b>លុយដើមក្នុងថត:</b> 100,000 ៛\n` +
+                `💰 <b>សាច់ប្រាក់លក់បាន:</b> ${document.getElementById('shiftCashSalesKHR').innerText}\n` +
+                `📱 <b>KHQR លក់បាន:</b> ${document.getElementById('shiftKhqrSalesKHR').innerText}\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🎯 <b>លុយជាក់ស្តែងក្នុងថត:</b> ${actual.toLocaleString()} ៛`;
+
+            sendTelegramNotification(null, shiftMsg);
+            closeShiftModal();
+            confetti({ particleCount: 50, spread: 60 });
+            showToast('🔒 បានបិទវេនលក់ និងផ្ញើរបាយការណ៍ទៅ Telegram រួចរាល់!', 'success');
+        }
+
+        // ================= TOAST NOTIFICATIONS & UTILS =================
         function showToast(msg, type = 'info') {
             const container = document.getElementById('toastContainer');
+            if (!container) return;
             const toast = document.createElement('div');
-            const colors = { success: 'bg-emerald-700', warning: 'bg-amber-600', error: 'bg-rose-700', info: 'bg-bakery-dark' };
-            toast.className = `${colors[type] || colors.info} text-white px-4 py-3 rounded-2xl shadow-xl text-xs font-black flex items-center gap-2 pointer-events-auto border border-white/20`;
+            const colors = {
+                success: 'bg-emerald-600',
+                warning: 'bg-amber-500',
+                error: 'bg-rose-600',
+                info: 'bg-stone-900'
+            };
+            toast.className = `${colors[type] || colors.info} text-white px-4 py-3 rounded-2xl shadow-2xl text-xs font-bold flex items-center gap-2 pointer-events-auto transition-all`;
             toast.innerHTML = `<i class="fa-solid fa-bell"></i><span>${msg}</span>`;
             container.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                setTimeout(() => toast.remove(), 400);
+            }, 3500);
         }
 
-        /* --- 🌟 2. AUTO-PURGE NETLIFY BADGES --- */
         function purgeNetlifyBadge() {
-            const selectors = [
-                '#netlify-drawer-container',
-                '[data-netlify-deploy-preview]',
-                '.netlify-drawer',
-                'iframe[src*="netlify"]'
-            ];
-            selectors.forEach(sel => {
-                document.querySelectorAll(sel).forEach(el => el.remove());
+            const ids = ['netlify-drawer-container'];
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.remove();
             });
+            document.querySelectorAll('[data-netlify-deploy-preview], .netlify-drawer, iframe[src*="netlify"]').forEach(el => el.remove());
         }
-        setInterval(purgeNetlifyBadge, 500);
+        setInterval(purgeNetlifyBadge, 2500);
     </script>
 </body>
 
