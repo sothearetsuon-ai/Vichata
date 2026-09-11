@@ -260,6 +260,10 @@
                                 <i class="fa-solid fa-cloud-arrow-down text-emerald-600"></i> <span
                                     class="hidden xs:inline">Sync</span>
                             </span>
+                            <span
+                                class="bg-amber-100 text-amber-900 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black border border-amber-300 flex items-center gap-1 shadow-2xs" title="កំណែប្រែចុងក្រោយ">
+                                ⚡ v2.5
+                            </span>
                         </div>
                         <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none"
                             id="storeTaglineDisplay">
@@ -495,11 +499,11 @@
                     </div>
 
                     <div class="mt-3 grid grid-cols-2 gap-2.5 sm:gap-3">
-                        <button type="button" onclick="openPaymentModal('khqr')"
+                        <button type="button" id="btnCheckoutKhqr" onclick="openPaymentModal('khqr')"
                             class="py-3 sm:py-3.5 px-3 rounded-2xl bg-gradient-to-r from-red-600 to-rose-600 text-white font-black text-xs sm:text-sm shadow-md hover:opacity-95 active:scale-95 transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer select-none">
                             <i class="fa-solid fa-qrcode text-base"></i> KHQR រៀល
                         </button>
-                        <button type="button" onclick="openPaymentModal('cash')"
+                        <button type="button" id="btnCheckoutCash" onclick="openPaymentModal('cash')"
                             class="py-3 sm:py-3.5 px-3 rounded-2xl bg-bakery-dark text-white font-black text-xs sm:text-sm shadow-md hover:bg-black active:scale-95 transition flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer select-none">
                             <i class="fa-solid fa-money-bill-wave text-base"></i> ប្រាក់សុទ្ធ (Cash)
                         </button>
@@ -2027,6 +2031,15 @@
 
         <!-- ================= JAVASCRIPT SYSTEM ENGINE ================= -->
         <script>
+            window.onerror = function (msg, url, line, col, error) {
+                console.error('POS Engine Error:', msg, line, error);
+                const toast = document.createElement('div');
+                toast.style.cssText = 'position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:99999;background:#ef4444;color:white;padding:10px 16px;border-radius:12px;font-weight:bold;font-size:12px;box-shadow:0 10px 25px rgba(0,0,0,0.3);';
+                toast.innerText = `⚠️ កំហុសកូដ: ${msg} (ជួរ ${line})`;
+                document.body.appendChild(toast);
+                setTimeout(() => toast.remove(), 6000);
+            };
+
             /* --- 🌟 1. SMART IMAGE FORMATTER & GUARANTEED BASE64 FALLBACK --- */
             const FALLBACK_BAKERY_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0MDAgMzAwIiB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJiZyIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMTAwJSI+PHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI0ZGRjVFQiIvPjxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI0ZFRDdCMiIvPjwvbGluZWFyR3JhZGllbnQ+PC9kZWZzPjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSJ1cmwoI2JnKSIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwMCwgMTM1KSI+PGVsbGlwc2UgY3g9IjAiIGN5PSI1NSIgcng9IjkwIiByeT0iMTgiIGZpbGw9IiNFMkQ0QzkiIG9wYWNpdHk9IjAuNiIvPjxlbGxpcHNlIGN4PSIwIiBjeT0iNTIiIHJ4PSI4NSIgcnk9IjE1IiBmaWxsPSIjRkZGRkZGIi8+PHJlY3QgeD0iLTYwIiB5PSItMTAiIHdpZHRoPSIxMjAiIGhlaWdodD0iNTUiIHJ4PSI4IiBmaWxsPSIjRTA3QTVGIi8+PHBhdGggZD0iTS02MCwxNSBRLTQ1LDI1IC0zMCwxNSBRLTE1LDI1IDAsMTUgUTE1LDI1IDMwLDE1IFE0NSwyNSA2MCwxNSBMNjAsLTEwIEwtNjAsLTEwIFoiIGZpbGw9IiNGRkY5RjIiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii0xMCIgcng9IjYwIiByeT0iMTgiIGZpbGw9IiNGNEE2NjEiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii0xNCIgcng9IjU1IiByeT0iMTUiIGZpbGw9IiNGRkY5RjIiLz48cmVjdCB4PSItMyIgeT0iLTQ1IiB3aWR0aD0iNiIgaGVpZ2h0PSIzMiIgcng9IjIiIGZpbGw9IiNFNzZGNTEiLz48ZWxsaXBzZSBjeD0iMCIgY3k9Ii00OCIgcng9IjUiIHJ5PSI3IiBmaWxsPSIjRkRCQTg4Ii8+PGVsbGlwc2UgY3g9IjAiIGN5PSItNDkiIHJ4PSIzIiByeT0iNSIgZmlsbD0iI0U2Mzk0NiIvPjwvZz48dGV4dCB4PSIyMDAiIHk9IjI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iIzZFMjYxNCIgZm9udC1mYW1pbHk9InNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI4MDAiIGZvbnQtc2l6ZT0iMjAiPkJBS0VSWSBERUxJR0hUPC90ZXh0Pjwvc3ZnPg==";
 
@@ -2432,6 +2445,10 @@
             ];
 
             let cart = [];
+            try {
+                const savedCart = localStorage.getItem('BAKERY_CURRENT_CART');
+                if (savedCart) cart = JSON.parse(savedCart) || [];
+            } catch (e) { cart = []; }
             let activeCategory = 'all';
             let activeShowcaseCategory = 'all';
             let currentDiscountKHR = 0;
@@ -2565,6 +2582,7 @@
                 renderExchangeRateDisplay();
                 renderCategories();
                 renderProducts();
+                renderCart();
                 renderQuickAddons();
                 renderShowcase();
                 renderFlavorsDropdown();
@@ -3964,6 +3982,7 @@
             function clearCart() {
                 cart = [];
                 currentDiscountKHR = 0;
+                try { localStorage.removeItem('BAKERY_CURRENT_CART'); } catch(e) {}
                 document.getElementById('customerPhoneInput').value = '';
                 document.getElementById('customerPointsDisplay').innerText = '0 pts';
                 renderCart();
@@ -4043,6 +4062,7 @@
 
                 if (mobCount) mobCount.innerText = totalQty;
                 if (mobTotal) mobTotal.innerText = `${totalKHR.toLocaleString()} ៛`;
+                try { localStorage.setItem('BAKERY_CURRENT_CART', JSON.stringify(cart)); } catch(e) {}
             }
 
             /* --- 🎂 មុខងារបញ្ចូល និងកែប្រែតម្លៃនំតាមតម្រូវការភ្ញៀវ (Custom Cake & Price Adjust) --- */
@@ -4368,30 +4388,41 @@
             }
 
             function openPaymentModal(method) {
-                if (cart.length === 0) { 
-                    showToast('សូមបញ្ចូលមុខទំនិញក្នុងកន្ត្រកជាមុនសិន!', 'warning'); 
-                    return; 
-                }
-                setPaymentType('full');
-                const modal = document.getElementById('paymentModal');
-                if (modal) {
-                    modal.classList.remove('hidden');
-                    modal.style.display = 'flex';
-                }
-                const khqrEl = document.getElementById('khqrContent');
-                const cashEl = document.getElementById('cashContent');
-                if (method === 'khqr') {
-                    if (khqrEl) { khqrEl.classList.remove('hidden'); khqrEl.style.display = 'flex'; }
-                    if (cashEl) { cashEl.classList.add('hidden'); cashEl.style.display = 'none'; }
-                    updatePaymentModalAmounts();
-                    initKhqrImg();
-                } else {
-                    if (khqrEl) { khqrEl.classList.add('hidden'); khqrEl.style.display = 'none'; }
-                    if (cashEl) { cashEl.classList.remove('hidden'); cashEl.style.display = 'block'; }
-                    if (document.getElementById('cashReceivedKHRInput')) document.getElementById('cashReceivedKHRInput').value = '';
-                    if (document.getElementById('cashReceivedUSDInput')) document.getElementById('cashReceivedUSDInput').value = '';
-                    setCashCurrencyMode('khr');
-                    updatePaymentModalAmounts();
+                try {
+                    if (!cart || cart.length === 0) { 
+                        const wantCustom = confirm('⚠️ កន្ត្រកទំនិញនៅទំនេរ (0 មុខ)!\n\nតើលោកអ្នកចង់បន្ថែមកុម្ម៉ង់នំ ឬកំណត់តម្លៃតាមចិត្តភ្ញៀវសិនដែរឬទេ?');
+                        if (wantCustom) {
+                            openCustomCakePriceModal();
+                        }
+                        return; 
+                    }
+
+                    const modal = document.getElementById('paymentModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                        modal.style.display = 'flex';
+                    }
+
+                    setPaymentType('full');
+
+                    const khqrEl = document.getElementById('khqrContent');
+                    const cashEl = document.getElementById('cashContent');
+                    if (method === 'khqr') {
+                        if (khqrEl) { khqrEl.classList.remove('hidden'); khqrEl.style.display = 'flex'; }
+                        if (cashEl) { cashEl.classList.add('hidden'); cashEl.style.display = 'none'; }
+                        updatePaymentModalAmounts();
+                        initKhqrImg();
+                    } else {
+                        if (khqrEl) { khqrEl.classList.add('hidden'); khqrEl.style.display = 'none'; }
+                        if (cashEl) { cashEl.classList.remove('hidden'); cashEl.style.display = 'block'; }
+                        if (document.getElementById('cashReceivedKHRInput')) document.getElementById('cashReceivedKHRInput').value = '';
+                        if (document.getElementById('cashReceivedUSDInput')) document.getElementById('cashReceivedUSDInput').value = '';
+                        setCashCurrencyMode('khr');
+                        updatePaymentModalAmounts();
+                    }
+                } catch (err) {
+                    console.error('Error in openPaymentModal:', err);
+                    alert('⚠️ មានបញ្ហាក្នុងការបើកផ្ទាំងទូទាត់៖ ' + err.message);
                 }
             }
 
@@ -4402,6 +4433,8 @@
                     modal.style.display = 'none';
                 }
             }
+            window.openPaymentModal = openPaymentModal;
+            window.closePaymentModal = closePaymentModal;
 
             function setPaymentType(type) {
                 currentPaymentType = type;
@@ -4545,6 +4578,7 @@
 
                 cart = [];
                 currentDiscountKHR = 0;
+                try { localStorage.removeItem('BAKERY_CURRENT_CART'); } catch(e) {}
                 if (document.getElementById('customerNameInput')) document.getElementById('customerNameInput').value = '';
                 document.getElementById('customerPhoneInput').value = '';
                 document.getElementById('customerPointsDisplay').innerText = '0 pts';
