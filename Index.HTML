@@ -1981,6 +1981,9 @@
                     copy.img = cached.img;
                 } else if (localItem && isValidProductImage(localItem.img)) {
                     copy.img = localItem.img;
+                } else {
+                    const fallbackImg = getSmartFallbackProductImage(copy.name, copy.cat);
+                    if (fallbackImg) copy.img = fallbackImg;
                 }
             }
 
@@ -2001,6 +2004,63 @@
             }
 
             return copy;
+        }
+
+        /* --- 🌟 ផ្គូផ្គងរូបភាពស្វ័យប្រវត្តិតាមឈ្មោះ (Smart Auto Image Matcher by Name/Category) --- */
+        function getSmartFallbackProductImage(name = '', cat = '') {
+            const n = (name || '').toLowerCase();
+            if (n.includes('ទុរេន') || n.includes('durian')) {
+                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('សូកូឡា') || n.includes('choco') || n.includes('lava')) {
+                return 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ស្ត្របឺរី') || n.includes('strawberr')) {
+                return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ខ្ទឹម') || n.includes('garlic')) {
+                return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ប៊័រ') || n.includes('croissant') || n.includes('នំប៉័ង')) {
+                return 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ម៉ាកការ៉ុង') || n.includes('macaron')) {
+                return 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('កាហ្វេ') || n.includes('coffee') || n.includes('ភេសជ្ជ') || n.includes('drink')) {
+                return 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ទៀនវិល') || n.includes('ផ្កាឈូក')) {
+                return 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('ទៀន') || n.includes('candle')) {
+                return 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('មួក') || n.includes('hat')) {
+                return 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('ស្ប្រាយ') || n.includes('spray')) {
+                return 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('ចាន') || n.includes('កាំបិត') || n.includes('ស្លាបព្រា')) {
+                return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('មកុដ') || n.includes('crown')) {
+                return 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80';
+            }
+            if (cat === 'cakes') {
+                return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'breads') {
+                return 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'pastries') {
+                return 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'drinks') {
+                return 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80';
+            }
+            return null;
         }
 
         products = (JSON.parse(localStorage.getItem('BAKERY_PRODUCTS')) || initialProducts).map(p => normalizeProduct(p, initialProducts));
@@ -2959,12 +3019,14 @@
         // ================= BACKUP & RESTORE =================
         function exportBackupData() {
             try {
+                cacheAllCurrentProductImages();
                 const backupPayload = {
                     appName: storeInfo.name,
-                    backupVersion: "2.7",
+                    backupVersion: "2.8",
                     exportDate: new Date().toISOString(),
                     storeInfo, KHR_RATE, customKhqrImage, customMerchantName,
-                    integrationSettings, products, transactions, expenses, customerLoyalty
+                    integrationSettings, products, transactions, expenses, customerLoyalty,
+                    imageVault: getProductImageCache()
                 };
                 const blob = new Blob([JSON.stringify(backupPayload, null, 2)], { type: "application/json" });
                 const url = URL.createObjectURL(blob);
@@ -2976,7 +3038,7 @@
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
                 confetti({ particleCount: 50, spread: 60 });
-                showToast('💾 បានទាញយកឯកសារ Backup ដោយជោគជ័យ!', 'success');
+                showToast('💾 បានទាញយកឯកសារ Backup រួមទាំងរូបភាពទាំងអស់ជោគជ័យ!', 'success');
             } catch (err) { alert(err.message); }
         }
 
@@ -2988,6 +3050,11 @@
                 try {
                     const data = JSON.parse(e.target.result);
                     if (!confirm('តើអ្នកពិតជាចង់បញ្ចូលទិន្នន័យពី Backup នេះមែនទេ?')) return;
+                    if (data.imageVault) {
+                        try {
+                            localStorage.setItem('BAKERY_SAVED_PRODUCT_IMAGES', JSON.stringify(data.imageVault));
+                        } catch(err) {}
+                    }
                     if (data.storeInfo) storeInfo = data.storeInfo;
                     if (data.products) products = data.products.map(p => normalizeProduct(p, initialProducts));
                     if (data.transactions) transactions = data.transactions.map(normalizeTransaction);
@@ -2997,8 +3064,9 @@
                     if (data.customKhqrImage) customKhqrImage = data.customKhqrImage;
                     if (data.customMerchantName) customMerchantName = data.customMerchantName;
                     if (data.integrationSettings) integrationSettings = data.integrationSettings;
+                    cacheAllCurrentProductImages();
                     saveState();
-                    showToast('🎉 បានបញ្ចូលទិន្នន័យ Restore ជោគជ័យ ១០០%!', 'success');
+                    showToast('🎉 បានបញ្ចូលទិន្នន័យ និងរូបភាព Restore ជោគជ័យ ១០០%!', 'success');
                     setTimeout(() => location.reload(), 1000);
                 } catch (err) { alert('❌ មិនអាចអានឯកសារបានឡើយ៖ ' + err.message); }
             };
