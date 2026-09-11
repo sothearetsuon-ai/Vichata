@@ -204,6 +204,13 @@
 
                 <!-- RIGHT ACTIONS -->
                 <div class="flex items-center gap-1.5 sm:gap-2.5">
+                    <button onclick="openRateModal()"
+                        class="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-extrabold text-[11px] sm:text-xs shadow-xs transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+                        title="ចុចដើម្បីប្តូរអត្រាប្រាក់ (Exchange Rate)">
+                        <i class="fa-solid fa-money-bill-transfer text-bakery-caramel text-xs sm:text-sm"></i>
+                        <span class="font-en font-black">1$ = <span id="headerRateDisplay">4,100</span> ៛</span>
+                    </button>
+
                     <button onclick="openManualSalesModal()"
                         class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-amber-300"
                         title="កត់ត្រាការលក់ពីមុន">
@@ -346,8 +353,12 @@
                             <div class="text-right">
                                 <div class="text-xl sm:text-3xl font-black text-bakery-caramel tracking-tight font-en"
                                     id="summaryTotalKHR">0 ៛</div>
-                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en"
-                                    id="summaryTotalUSD">≈ $0.00
+                                <div class="text-[11px] sm:text-xs font-extrabold text-stone-600 font-en flex items-center justify-end gap-1.5 mt-0.5">
+                                    <span id="summaryTotalUSD">≈ $0.00</span>
+                                    <button type="button" onclick="openRateModal()" title="ប្តូរអត្រាប្រាក់"
+                                        class="inline-flex items-center gap-1 text-[10px] text-amber-800 hover:text-bakery-caramel bg-amber-100/90 hover:bg-amber-200 px-1.5 py-0.5 rounded-md font-bold transition border border-amber-300 shadow-xs cursor-pointer">
+                                        <i class="fa-solid fa-pen-to-square text-[9px]"></i> <span id="cartRateBadge">1$=4,100៛</span>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -1069,6 +1080,34 @@
                     </div>
                 </div>
 
+                <!-- Exchange Rate Setting Card -->
+                <div class="p-4 bg-amber-50/90 rounded-2xl border-2 border-amber-300 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-xs text-amber-950 flex items-center gap-1.5">
+                            <i class="fa-solid fa-money-bill-transfer text-amber-600"></i>
+                            <span>អត្រាប្តូរប្រាក់ (Exchange Rate: USD to KHR)</span>
+                        </h4>
+                        <span class="text-[11px] font-black font-en text-bakery-caramel bg-white px-2 py-0.5 rounded-lg border border-amber-300">
+                            1$ = <span id="settingsCurrentRatePreview">4,100</span> ៛
+                        </span>
+                    </div>
+                    <p class="text-[11px] text-stone-600 font-medium">កំណត់តម្លៃប្តូរប្រាក់ ១ ដុល្លារ ($) ជាប្រាក់រៀល (៛) សម្រាប់គណនាលើផ្ទាំង POS និងវិក្កយបត្រ</p>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <div class="relative flex-1">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 font-black text-amber-700 font-en text-sm">1$ =</span>
+                            <input type="number" id="settingExchangeRate" step="10" min="1000" max="10000" value="4100"
+                                class="w-full pl-12 pr-10 py-2.5 rounded-xl bg-white border border-amber-300 font-en font-black text-sm text-bakery-dark">
+                            <span class="absolute right-3 top-1/2 -translate-y-1/2 font-bold text-stone-500 text-xs">៛</span>
+                        </div>
+                        <div class="flex gap-1 items-center">
+                            <button type="button" onclick="document.getElementById('settingExchangeRate').value=4000" class="px-2.5 py-2 bg-white hover:bg-amber-100 border border-amber-300 rounded-xl text-[11px] font-en font-bold transition">4,000</button>
+                            <button type="button" onclick="document.getElementById('settingExchangeRate').value=4050" class="px-2.5 py-2 bg-white hover:bg-amber-100 border border-amber-300 rounded-xl text-[11px] font-en font-bold transition">4,050</button>
+                            <button type="button" onclick="document.getElementById('settingExchangeRate').value=4100" class="px-2.5 py-2 bg-white hover:bg-amber-100 border border-amber-300 rounded-xl text-[11px] font-en font-bold transition">4,100</button>
+                            <button type="button" onclick="document.getElementById('settingExchangeRate').value=4150" class="px-2.5 py-2 bg-white hover:bg-amber-100 border border-amber-300 rounded-xl text-[11px] font-en font-bold transition">4,150</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="p-4 bg-orange-50/80 rounded-2xl border-2 border-dashed border-orange-300 space-y-2.5">
                     <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5">
                         <i class="fa-solid fa-box-archive text-bakery-caramel"></i>
@@ -1240,15 +1279,70 @@
                     </button>
                 </div>
 
-                <div id="cashContent" class="hidden space-y-3">
-                    <div class="text-2xl font-black text-bakery-caramel font-en text-center" id="cashTotalKHR">0 ៛</div>
-                    <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateChangeKHR()"
-                        placeholder="ប្រាក់ទទួលជាប្រាក់រៀល..."
-                        class="w-full p-3 rounded-xl border border-stone-300 font-en text-lg font-bold">
-                    <div class="text-emerald-700 font-black font-en text-lg text-center" id="cashChangeKHR">0 ៛</div>
-                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ (៛)')"
-                        class="w-full py-3 rounded-2xl bg-bakery-dark hover:bg-black text-white font-bold text-sm shadow transition">
-                        គិតលុយ & ចេញវិក្កយបត្រ
+                <div id="cashContent" class="hidden space-y-3.5">
+                    <div class="text-center">
+                        <div class="text-2xl font-black text-bakery-caramel font-en" id="cashTotalKHR">0 ៛</div>
+                        <div class="text-xs font-bold text-stone-500 font-en mt-0.5" id="cashTotalUSD">≈ $0.00</div>
+                    </div>
+
+                    <!-- Currency Mode Selector -->
+                    <div class="flex p-1 bg-stone-100 rounded-2xl gap-1">
+                        <button type="button" onclick="setCashCurrencyMode('khr')" id="btnCashModeKHR"
+                            class="flex-1 py-1.5 rounded-xl font-bold text-xs bg-white text-bakery-dark shadow-xs transition flex items-center justify-center gap-1">
+                            <span>🇰🇭 ទទួលជារៀល (៛)</span>
+                        </button>
+                        <button type="button" onclick="setCashCurrencyMode('usd')" id="btnCashModeUSD"
+                            class="flex-1 py-1.5 rounded-xl font-bold text-xs text-stone-600 hover:text-stone-900 transition flex items-center justify-center gap-1">
+                            <span>🇺🇸 ទទួលជាដុល្លារ ($)</span>
+                        </button>
+                    </div>
+
+                    <!-- KHR Input Section -->
+                    <div id="cashInputSectionKHR" class="space-y-2">
+                        <div class="relative">
+                            <input type="number" step="500" id="cashReceivedKHRInput" oninput="calculateCashChange()"
+                                placeholder="បញ្ចូលប្រាក់ទទួលជារៀល..."
+                                class="w-full pl-4 pr-12 py-3 rounded-2xl border-2 border-stone-200 font-en text-lg font-black text-stone-800 focus:outline-none focus:border-bakery-caramel">
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-black text-stone-400">៛</span>
+                        </div>
+                        <!-- Quick Riel Bills -->
+                        <div class="grid grid-cols-4 gap-1.5">
+                            <button type="button" onclick="addCashQuickAmount(10000, 'khr')" class="py-1.5 bg-orange-50 hover:bg-orange-100 text-stone-800 rounded-xl font-en font-bold text-xs border border-orange-200">+10,000</button>
+                            <button type="button" onclick="addCashQuickAmount(20000, 'khr')" class="py-1.5 bg-orange-50 hover:bg-orange-100 text-stone-800 rounded-xl font-en font-bold text-xs border border-orange-200">+20,000</button>
+                            <button type="button" onclick="addCashQuickAmount(50000, 'khr')" class="py-1.5 bg-orange-50 hover:bg-orange-100 text-stone-800 rounded-xl font-en font-bold text-xs border border-orange-200">+50,000</button>
+                            <button type="button" onclick="setCashExactAmount('khr')" class="py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-bold text-xs">គ្រប់ចំនួន</button>
+                        </div>
+                    </div>
+
+                    <!-- USD Input Section -->
+                    <div id="cashInputSectionUSD" class="hidden space-y-2">
+                        <div class="relative">
+                            <input type="number" step="0.5" id="cashReceivedUSDInput" oninput="calculateCashChange()"
+                                placeholder="បញ្ចូលប្រាក់ទទួលជាដុល្លារ ($)..."
+                                class="w-full pl-8 pr-14 py-3 rounded-2xl border-2 border-emerald-300 font-en text-lg font-black text-stone-800 focus:outline-none focus:border-emerald-500 bg-emerald-50/40">
+                            <span class="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-emerald-600 font-en text-lg">$</span>
+                            <span class="absolute right-4 top-1/2 -translate-y-1/2 font-black text-stone-400">USD</span>
+                        </div>
+                        <!-- Quick Dollar Bills -->
+                        <div class="grid grid-cols-5 gap-1.5">
+                            <button type="button" onclick="addCashQuickAmount(1, 'usd')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-xl font-en font-bold text-xs border border-emerald-200">+$1</button>
+                            <button type="button" onclick="addCashQuickAmount(5, 'usd')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-xl font-en font-bold text-xs border border-emerald-200">+$5</button>
+                            <button type="button" onclick="addCashQuickAmount(10, 'usd')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-xl font-en font-bold text-xs border border-emerald-200">+$10</button>
+                            <button type="button" onclick="addCashQuickAmount(20, 'usd')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-xl font-en font-bold text-xs border border-emerald-200">+$20</button>
+                            <button type="button" onclick="addCashQuickAmount(50, 'usd')" class="py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 rounded-xl font-en font-bold text-xs border border-emerald-200">+$50</button>
+                        </div>
+                    </div>
+
+                    <!-- Change Calculation Box -->
+                    <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 text-center space-y-0.5">
+                        <span class="text-[11px] font-bold text-stone-500" id="cashChangeLabel">លុយអាប់ (Change)</span>
+                        <div class="text-xl font-black font-en text-emerald-700" id="cashChangeKHR">0 ៛</div>
+                        <div class="text-xs font-bold font-en text-stone-500" id="cashChangeUSD">≈ $0.00</div>
+                    </div>
+
+                    <button onclick="completeTransaction('ប្រាក់សុទ្ធ')"
+                        class="w-full py-3.5 rounded-2xl bg-bakery-dark hover:bg-black text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-receipt"></i> គិតលុយ & ចេញវិក្កយបត្រ
                     </button>
                 </div>
             </div>
@@ -1412,17 +1506,70 @@
     <!-- ================= RATE MODAL ================= -->
     <div id="rateModal"
         class="fixed inset-0 bg-stone-900/75 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-orange-100">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 sm:p-6 border border-orange-100">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
-                <h3 class="font-bold text-base text-bakery-dark">ប្តូរអត្រាប្រាក់</h3>
-                <button onclick="closeRateModal()" class="text-stone-400 hover:text-stone-600"><i
-                        class="fa-solid fa-xmark"></i></button>
+                <div class="flex items-center gap-2">
+                    <div class="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-lg font-bold">
+                        <i class="fa-solid fa-money-bill-transfer"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-base text-bakery-dark">ប្តូរអត្រាប្រាក់ (Exchange Rate)</h3>
+                        <p class="text-[11px] text-stone-500 font-medium">កំណត់តម្លៃប្តូរប្រាក់ 1 ដុល្លារ ($)</p>
+                    </div>
+                </div>
+                <button onclick="closeRateModal()" class="w-8 h-8 rounded-full bg-stone-100 text-stone-500 hover:text-stone-700 hover:bg-stone-200 flex items-center justify-center text-base transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
-            <div class="mt-4 space-y-3 text-xs">
-                <input type="number" id="inputExchangeRate" value="4100"
-                    class="w-full p-3 rounded-2xl border border-stone-300 font-black text-lg text-bakery-caramel text-center">
-                <button onclick="saveExchangeRate()"
-                    class="w-full py-3 rounded-2xl bg-bakery-caramel hover:bg-orange-700 text-white font-bold text-xs transition">រក្សាទុក</button>
+            <div class="mt-4 space-y-3.5 text-xs">
+                <div>
+                    <label class="block font-bold text-stone-700 mb-1.5 flex justify-between items-center">
+                        <span>អត្រា ១ ដុល្លារ ($) ស្មើនឹង៖</span>
+                        <span class="text-amber-700 font-black font-en" id="rateModalCurrentBadge">បច្ចុប្បន្ន: 4,100 ៛</span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute left-3.5 top-1/2 -translate-y-1/2 font-black text-amber-600 text-base font-en">1$ =</div>
+                        <input type="number" id="inputExchangeRate" value="4100" step="10" min="1000" max="10000"
+                            oninput="updateRateModalPreview()"
+                            class="w-full pl-14 pr-12 py-3 rounded-2xl border-2 border-amber-300 font-black text-xl text-bakery-caramel text-center focus:outline-none focus:ring-2 focus:ring-amber-500 bg-amber-50/50">
+                        <div class="absolute right-3.5 top-1/2 -translate-y-1/2 font-black text-stone-500 text-sm">៛</div>
+                    </div>
+                </div>
+
+                <!-- Quick Presets -->
+                <div>
+                    <span class="text-[11px] font-bold text-stone-600 block mb-1.5">ជ្រើសរើសរហ័ស (Quick Select):</span>
+                    <div class="grid grid-cols-3 gap-1.5">
+                        <button type="button" onclick="setQuickRateInput(4000)" class="py-1.5 px-2 bg-stone-50 hover:bg-amber-100 hover:text-amber-900 border border-stone-200 hover:border-amber-300 rounded-xl font-en font-black text-xs transition">4,000 ៛</button>
+                        <button type="button" onclick="setQuickRateInput(4050)" class="py-1.5 px-2 bg-stone-50 hover:bg-amber-100 hover:text-amber-900 border border-stone-200 hover:border-amber-300 rounded-xl font-en font-black text-xs transition">4,050 ៛</button>
+                        <button type="button" onclick="setQuickRateInput(4100)" class="py-1.5 px-2 bg-amber-100 text-amber-900 border border-amber-400 rounded-xl font-en font-black text-xs transition">4,100 ៛</button>
+                        <button type="button" onclick="setQuickRateInput(4120)" class="py-1.5 px-2 bg-stone-50 hover:bg-amber-100 hover:text-amber-900 border border-stone-200 hover:border-amber-300 rounded-xl font-en font-black text-xs transition">4,120 ៛</button>
+                        <button type="button" onclick="setQuickRateInput(4150)" class="py-1.5 px-2 bg-stone-50 hover:bg-amber-100 hover:text-amber-900 border border-stone-200 hover:border-amber-300 rounded-xl font-en font-black text-xs transition">4,150 ៛</button>
+                        <button type="button" onclick="setQuickRateInput(4200)" class="py-1.5 px-2 bg-stone-50 hover:bg-amber-100 hover:text-amber-900 border border-stone-200 hover:border-amber-300 rounded-xl font-en font-black text-xs transition">4,200 ៛</button>
+                    </div>
+                </div>
+
+                <!-- Live Preview Examples -->
+                <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 space-y-1">
+                    <span class="text-[10px] font-bold text-stone-500 block">ឧទាហរណ៍គណនា (Preview):</span>
+                    <div class="grid grid-cols-2 gap-x-2 gap-y-0.5 text-[11px] font-en font-bold text-stone-700" id="rateModalPreviewBox">
+                        <div>$1 = <span class="text-bakery-caramel">4,100 ៛</span></div>
+                        <div>$5 = <span class="text-bakery-caramel">20,500 ៛</span></div>
+                        <div>$10 = <span class="text-bakery-caramel">41,000 ៛</span></div>
+                        <div>$20 = <span class="text-bakery-caramel">82,000 ៛</span></div>
+                    </div>
+                </div>
+
+                <div class="flex gap-2 pt-1">
+                    <button onclick="saveExchangeRate()"
+                        class="flex-1 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel hover:from-amber-600 hover:to-orange-600 text-white font-black text-xs shadow-glow transition">
+                        <i class="fa-solid fa-floppy-disk mr-1"></i> រក្សាទុកអត្រាប្រាក់
+                    </button>
+                    <button onclick="closeRateModal()"
+                        class="px-4 py-3 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-xs transition">
+                        បោះបង់
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -1803,6 +1950,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             saveState();
             renderStoreInfo();
+            renderExchangeRateDisplay();
             renderCategories();
             renderProducts();
             renderQuickAddons();
@@ -1839,6 +1987,7 @@
                 localStorage.setItem('BAKERY_LOYALTY', JSON.stringify(customerLoyalty));
                 localStorage.setItem('BAKERY_EXPENSES', JSON.stringify(expenses));
                 localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
+                localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
             } catch (err) {
                 console.warn('LocalStorage Quota Warning:', err);
             }
@@ -3138,6 +3287,100 @@
         }
 
         // ================= CHECKOUT =================
+        let cashCurrencyMode = 'khr';
+
+        function setCashCurrencyMode(mode) {
+            cashCurrencyMode = mode;
+            const btnKHR = document.getElementById('btnCashModeKHR');
+            const btnUSD = document.getElementById('btnCashModeUSD');
+            const secKHR = document.getElementById('cashInputSectionKHR');
+            const secUSD = document.getElementById('cashInputSectionUSD');
+
+            if (mode === 'khr') {
+                if (btnKHR) btnKHR.className = "flex-1 py-1.5 rounded-xl font-bold text-xs bg-white text-bakery-dark shadow-xs transition flex items-center justify-center gap-1";
+                if (btnUSD) btnUSD.className = "flex-1 py-1.5 rounded-xl font-bold text-xs text-stone-600 hover:text-stone-900 transition flex items-center justify-center gap-1";
+                if (secKHR) secKHR.classList.remove('hidden');
+                if (secUSD) secUSD.classList.add('hidden');
+            } else {
+                if (btnUSD) btnUSD.className = "flex-1 py-1.5 rounded-xl font-bold text-xs bg-white text-emerald-800 shadow-xs transition flex items-center justify-center gap-1";
+                if (btnKHR) btnKHR.className = "flex-1 py-1.5 rounded-xl font-bold text-xs text-stone-600 hover:text-stone-900 transition flex items-center justify-center gap-1";
+                if (secUSD) secUSD.classList.remove('hidden');
+                if (secKHR) secKHR.classList.add('hidden');
+            }
+            calculateCashChange();
+        }
+
+        function addCashQuickAmount(amount, type) {
+            if (type === 'khr') {
+                const input = document.getElementById('cashReceivedKHRInput');
+                const cur = parseFloat(input ? input.value : 0) || 0;
+                if (input) input.value = cur + amount;
+            } else {
+                const input = document.getElementById('cashReceivedUSDInput');
+                const cur = parseFloat(input ? input.value : 0) || 0;
+                if (input) input.value = Math.round((cur + amount) * 100) / 100;
+            }
+            calculateCashChange();
+        }
+
+        function setCashExactAmount(type) {
+            const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
+            const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : totalKHR;
+            if (type === 'khr') {
+                const input = document.getElementById('cashReceivedKHRInput');
+                if (input) input.value = payAmount;
+            } else {
+                const input = document.getElementById('cashReceivedUSDInput');
+                if (input) input.value = Math.ceil((payAmount / KHR_RATE) * 100) / 100;
+            }
+            calculateCashChange();
+        }
+
+        function calculateCashChange() {
+            const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
+            const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : totalKHR;
+            let receivedKHR = 0;
+
+            if (cashCurrencyMode === 'usd') {
+                const receivedUSD = parseFloat(document.getElementById('cashReceivedUSDInput') ? document.getElementById('cashReceivedUSDInput').value : 0) || 0;
+                receivedKHR = Math.round(receivedUSD * KHR_RATE);
+            } else {
+                receivedKHR = parseFloat(document.getElementById('cashReceivedKHRInput') ? document.getElementById('cashReceivedKHRInput').value : 0) || 0;
+            }
+
+            const changeKHR = receivedKHR - payAmount;
+            const changeUSD = (Math.abs(changeKHR) / KHR_RATE).toFixed(2);
+            const labelEl = document.getElementById('cashChangeLabel');
+            const khrEl = document.getElementById('cashChangeKHR');
+            const usdEl = document.getElementById('cashChangeUSD');
+
+            if (changeKHR >= 0) {
+                if (labelEl) {
+                    labelEl.innerText = 'លុយអាប់ (Change)៖';
+                    labelEl.className = 'text-[11px] font-bold text-emerald-700';
+                }
+                if (khrEl) {
+                    khrEl.innerText = `${changeKHR.toLocaleString()} ៛`;
+                    khrEl.className = 'text-xl font-black font-en text-emerald-700';
+                }
+                if (usdEl) usdEl.innerText = `≈ $${changeUSD}`;
+            } else {
+                if (labelEl) {
+                    labelEl.innerText = 'នៅខ្វះ (Balance Due)៖';
+                    labelEl.className = 'text-[11px] font-bold text-rose-600';
+                }
+                if (khrEl) {
+                    khrEl.innerText = `${Math.abs(changeKHR).toLocaleString()} ៛`;
+                    khrEl.className = 'text-xl font-black font-en text-rose-600';
+                }
+                if (usdEl) usdEl.innerText = `≈ $${changeUSD}`;
+            }
+        }
+
+        function calculateChangeKHR() {
+            calculateCashChange();
+        }
+
         function openPaymentModal(method) {
             if (cart.length === 0) { showToast('សូមបញ្ចូលមុខទំនិញជាមុនសិន!', 'warning'); return; }
             setPaymentType('full');
@@ -3150,8 +3393,9 @@
             } else {
                 document.getElementById('khqrContent').classList.add('hidden');
                 document.getElementById('cashContent').classList.remove('hidden');
-                document.getElementById('cashReceivedKHRInput').value = '';
-                document.getElementById('cashChangeKHR').innerText = '0 ៛';
+                if (document.getElementById('cashReceivedKHRInput')) document.getElementById('cashReceivedKHRInput').value = '';
+                if (document.getElementById('cashReceivedUSDInput')) document.getElementById('cashReceivedUSDInput').value = '';
+                setCashCurrencyMode('khr');
                 updatePaymentModalAmounts();
             }
         }
@@ -3191,21 +3435,21 @@
         function updatePaymentModalAmounts() {
             const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
             const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : totalKHR;
+            const payUSD = (payAmount / KHR_RATE).toFixed(2);
 
             document.getElementById('khqrTotalKHR').innerText = `${payAmount.toLocaleString()} ៛`;
-            document.getElementById('khqrTotalUSD').innerText = `≈ $${(payAmount / KHR_RATE).toFixed(2)}`;
+            document.getElementById('khqrTotalUSD').innerText = `≈ $${payUSD}`;
             document.getElementById('cashTotalKHR').innerText = `${payAmount.toLocaleString()} ៛`;
-            calculateChangeKHR();
-        }
-
-        function calculateChangeKHR() {
-            const payAmount = (currentPaymentType === 'deposit') ? currentDepositKHR : Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
-            const received = parseFloat(document.getElementById('cashReceivedKHRInput').value) || 0;
-            const change = received - payAmount;
-            document.getElementById('cashChangeKHR').innerText = change >= 0 ? `${change.toLocaleString()} ៛` : `នៅខ្វះ ${Math.abs(change).toLocaleString()} ៛`;
+            if (document.getElementById('cashTotalUSD')) {
+                document.getElementById('cashTotalUSD').innerText = `≈ $${payUSD} (អត្រា 1$ = ${KHR_RATE.toLocaleString()} ៛)`;
+            }
+            calculateCashChange();
         }
 
         async function completeTransaction(method) {
+            if (method.includes('ប្រាក់សុទ្ធ')) {
+                method = (cashCurrencyMode === 'usd') ? 'ប្រាក់សុទ្ធ ($ USD)' : 'ប្រាក់សុទ្ធ (៛)';
+            }
             const totalKHR = Math.max(0, cart.reduce((sum, i) => sum + (i.priceKHR * i.qty), 0) - currentDiscountKHR);
             const invId = 'BK-' + Math.floor(1000 + Math.random() * 9000);
             const custName = document.getElementById('customerNameInput') ? (document.getElementById('customerNameInput').value.trim() || 'អតិថិជនទូទៅ') : 'អតិថិជនទូទៅ';
@@ -3603,6 +3847,12 @@
             document.getElementById('googleSheetUrl').value = (integrationSettings.googleSheetUrl && integrationSettings.googleSheetUrl.trim()) ? integrationSettings.googleSheetUrl : DEFAULT_GOOGLE_SHEET_URL;
             document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
             document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '8970210109';
+            if (document.getElementById('settingExchangeRate')) {
+                document.getElementById('settingExchangeRate').value = KHR_RATE;
+            }
+            if (document.getElementById('settingsCurrentRatePreview')) {
+                document.getElementById('settingsCurrentRatePreview').innerText = KHR_RATE.toLocaleString();
+            }
             document.getElementById('settingsModal').classList.remove('hidden');
         }
 
@@ -3621,16 +3871,47 @@
             integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim() || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
             integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim() || '8970210109';
 
+            const rateInput = document.getElementById('settingExchangeRate');
+            const newRate = parseInt(rateInput ? rateInput.value : 0);
+            if (newRate && newRate > 0) {
+                KHR_RATE = newRate;
+                localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
+            }
+
             saveState();
             renderStoreInfo();
+            renderExchangeRateDisplay();
+            renderCart();
+            renderAnalytics();
+            renderInventory();
             closeSettingsModal();
             confetti({ particleCount: 40, spread: 60 });
             showToast('💾 បានរក្សាទុកការកំណត់ទាំងអស់ជោគជ័យ!', 'success');
         }
 
-        // ================= EXCHANGE RATE MODAL =================
+        // ================= EXCHANGE RATE SYSTEM =================
+        function renderExchangeRateDisplay() {
+            const headerRate = document.getElementById('headerRateDisplay');
+            if (headerRate) headerRate.innerText = KHR_RATE.toLocaleString();
+
+            const cartBadge = document.getElementById('cartRateBadge');
+            if (cartBadge) cartBadge.innerText = `1$=${KHR_RATE.toLocaleString()}៛`;
+
+            const settingsPreview = document.getElementById('settingsCurrentRatePreview');
+            if (settingsPreview) settingsPreview.innerText = KHR_RATE.toLocaleString();
+
+            const settingInput = document.getElementById('settingExchangeRate');
+            if (settingInput) settingInput.value = KHR_RATE;
+
+            const modalBadge = document.getElementById('rateModalCurrentBadge');
+            if (modalBadge) modalBadge.innerText = `បច្ចុប្បន្ន: ${KHR_RATE.toLocaleString()} ៛`;
+        }
+
         function openRateModal() {
-            document.getElementById('inputExchangeRate').value = KHR_RATE;
+            const input = document.getElementById('inputExchangeRate');
+            if (input) input.value = KHR_RATE;
+            updateRateModalPreview();
+            renderExchangeRateDisplay();
             document.getElementById('rateModal').classList.remove('hidden');
         }
 
@@ -3638,16 +3919,46 @@
             document.getElementById('rateModal').classList.add('hidden');
         }
 
+        function setQuickRateInput(rate) {
+            const input = document.getElementById('inputExchangeRate');
+            if (input) {
+                input.value = rate;
+                updateRateModalPreview();
+            }
+        }
+
+        function updateRateModalPreview() {
+            const input = document.getElementById('inputExchangeRate');
+            const r = parseInt(input ? input.value : KHR_RATE) || KHR_RATE;
+            const box = document.getElementById('rateModalPreviewBox');
+            if (box) {
+                box.innerHTML = `
+                    <div>$1 = <span class="text-bakery-caramel font-black">${r.toLocaleString()} ៛</span></div>
+                    <div>$5 = <span class="text-bakery-caramel font-black">${(r * 5).toLocaleString()} ៛</span></div>
+                    <div>$10 = <span class="text-bakery-caramel font-black">${(r * 10).toLocaleString()} ៛</span></div>
+                    <div>$20 = <span class="text-bakery-caramel font-black">${(r * 20).toLocaleString()} ៛</span></div>
+                `;
+            }
+        }
+
         function saveExchangeRate() {
-            const r = parseInt(document.getElementById('inputExchangeRate').value);
+            const input = document.getElementById('inputExchangeRate');
+            const r = parseInt(input ? input.value : 0);
             if (r && r > 0) {
                 KHR_RATE = r;
                 localStorage.setItem('BAKERY_EXCHANGE_RATE', KHR_RATE);
+                renderExchangeRateDisplay();
                 closeRateModal();
                 renderCart();
                 renderAnalytics();
                 renderInventory();
-                showToast(`អត្រាប្រាក់ថ្មី៖ 1$ = ${KHR_RATE.toLocaleString()} ៛`, 'success');
+                if (document.getElementById('paymentModal') && !document.getElementById('paymentModal').classList.contains('hidden')) {
+                    updatePaymentModalAmounts();
+                }
+                confetti({ particleCount: 35, spread: 50 });
+                showToast(`💱 អត្រាប្រាក់ថ្មី៖ 1$ = ${KHR_RATE.toLocaleString()} ៛`, 'success');
+            } else {
+                showToast('សូមបញ្ចូលអត្រាប្រាក់ឱ្យបានត្រឹមត្រូវ!', 'warning');
             }
         }
 
