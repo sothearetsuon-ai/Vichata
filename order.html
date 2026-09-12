@@ -627,6 +627,15 @@
             return false;
         }
 
+        function formatOrderImg(img) {
+            if (!img || typeof img !== 'string') return '';
+            let s = img.trim();
+            if (s.includes('pinimg.com')) {
+                s = s.replace(/\/(?:236x|474x|564x)\//g, '/736x/');
+            }
+            return s;
+        }
+
         function getSmartFallbackProductImage(name = '', cat = '') {
             const n = (name || '').toLowerCase();
             if (n.includes('តយ') || n.includes('pandan') || n.includes('ដូង') || n.includes('coconut')) {
@@ -913,7 +922,8 @@
             if (emptyState) emptyState.classList.add('hidden');
 
             grid.innerHTML = filtered.map(p => {
-                const img = (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG;
+                const rawImg = (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG;
+                const img = formatOrderImg(rawImg);
                 const priceUSD = (p.priceKHR / KHR_RATE).toFixed(2);
                 const isCake = p.cat === 'cakes';
 

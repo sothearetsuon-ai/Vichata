@@ -2364,13 +2364,13 @@
                     </div>
 
                     <div class="mt-2.5 pt-2.5 border-t border-orange-200/70 text-left">
-                        <label class="block font-bold text-stone-600 mb-1 text-[11px]">
-                            <i class="fa-solid fa-link text-bakery-caramel mr-1"></i> ឬ បិទភ្ជាប់លីងរូបភាព (Link URL
-                            / រូប GIF)៖
+                        <label class="block font-bold text-stone-600 mb-1 text-[11px] flex items-center justify-between">
+                            <span><i class="fa-solid fa-link text-bakery-caramel mr-1"></i> ឬ បិទភ្ជាប់លីងរូបភាព (Link URL / GIF)៖</span>
+                            <span class="text-[10px] text-rose-600 font-bold"><i class="fa-brands fa-pinterest"></i> គាំទ្រ Pinterest HD</span>
                         </label>
                         <div class="flex gap-1.5">
                             <input type="url" id="batchProdImgUrlInput"
-                                placeholder="https://... (Link ពី Google Drive, Facebook, Web)"
+                                placeholder="https://... (Paste Link ពី Pinterest, Google Drive, Facebook, Web)"
                                 class="flex-1 p-2 rounded-xl border border-stone-300 font-en text-xs focus:ring-1 focus:ring-bakery-caramel focus:outline-none">
                             <button type="button" onclick="addBatchImageUrl()"
                                 class="px-3 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-xl text-xs transition shadow-xs whitespace-nowrap">
@@ -2671,6 +2671,11 @@
             if (rawUrl.startsWith('data:image')) return rawUrl;
             // រក្សាលីងរូប GIF មានចលនា មិនឱ្យកាត់ Frames
             if (rawUrl.toLowerCase().includes('.gif')) return rawUrl;
+
+            // 🌟 គាំទ្ររូបភាពពី Pinterest: ប្តូរពី Thumbnail តូចៗ (236x/474x/564x) ទៅជារូបច្បាស់ HD (736x) ស្វ័យប្រវត្តិ
+            if (rawUrl.includes('pinimg.com')) {
+                return rawUrl.replace(/\/(?:236x|474x|564x)\//g, '/736x/');
+            }
 
             const driveMatch = rawUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/) ||
                 rawUrl.match(/id=([a-zA-Z0-9_-]+)/) ||
@@ -6209,7 +6214,7 @@ function sendTelegramApi(method, payload) {
 
         function addBatchImageUrl() {
             const input = document.getElementById('batchProdImgUrlInput');
-            const url = input ? input.value.trim() : '';
+            let url = input ? input.value.trim() : '';
             if (!url) {
                 showToast('សូមបញ្ចូលលីងរូបភាព (URL)!', 'warning');
                 return;
@@ -6218,10 +6223,16 @@ function sendTelegramApi(method, payload) {
                 showToast('លីងរូបភាពត្រូវតែចាប់ផ្តើមដោយ https://', 'warning');
                 return;
             }
+
+            // 🌟 គាំទ្ររូបភាពពី Pinterest: ប្តូរទៅជា HD 736x ស្វ័យប្រវត្តិ
+            if (url.includes('pinimg.com')) {
+                url = url.replace(/\/(?:236x|474x|564x)\//g, '/736x/');
+            }
+
             batchUploadedImages.push(url);
             renderBatchPreviews();
             input.value = '';
-            showToast('បានបន្ថែមលីងរូបភាពរួចរាល់!', 'success');
+            showToast('🎉 បានបន្ថែមលីងរូបភាពរួចរាល់!', 'success');
         }
 
         async function handleBatchFileSelect(event) {
