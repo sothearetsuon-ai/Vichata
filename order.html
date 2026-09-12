@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>កុម្ម៉ង់នំខេកតាមអនឡាញ - ហាងនំខេកវិជ្ជដា (Vicheta Bakery)</title>
-    <meta name="description" content="កុម្ម៉ង់នំខេកខួបកំណើត នំប៉័ង និងភេសជ្ជៈតាមអនឡាញ ជាមួយហាងនំខេកវិជ្ជដា កោះរ៉ុងសន្លឹម។ ទូទាត់តាម KHQR ងាយស្រួល និងរហ័សទាន់ចិត្ត!">
+    <meta name="description" content="កុម្ម៉ង់នំខេកខួបកំណើត នំប៉័ង និងភេសជ្ជៈតាមអនឡាញ ជាមួយហាងនំខេកវិជ្ជដា រតនៈគីរី អូរយ៉ាដាវ។ ទូទាត់តាម KHQR ងាយស្រួល និងរហ័សទាន់ចិត្ត!">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -97,7 +97,7 @@
                     <p class="text-[10px] sm:text-xs text-stone-500 font-medium flex items-center gap-1.5">
                         <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
                         <span class="text-emerald-700 font-bold">បើកទទួលកុម្ម៉ង់ 24/7</span>
-                        <span>• កោះរ៉ុងសន្លឹម</span>
+                        <span>• រតនៈគីរី អូរយ៉ាដាវ</span>
                     </p>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                     កុម្ម៉ង់នំខេកខួបកំណើត & នំឆ្ងាញ់ៗពីចម្ងាយ
                 </h2>
                 <p class="text-xs sm:text-sm text-orange-100 font-medium leading-relaxed">
-                    ផ្ញើជូនមនុស្សជាទីស្រឡាញ់នៅកោះរ៉ុងសន្លឹម • អាចជ្រើសរើសរសជាតិ សរសេរអក្សរលើនំ និងទូទាត់តាម KHQR ភ្លាមៗ!
+                    ផ្ញើជូនមនុស្សជាទីស្រឡាញ់នៅ រតនៈគីរី អូរយ៉ាដាវ • អាចជ្រើសរើសរសជាតិ សរសេរអក្សរលើនំ និងទូទាត់តាម KHQR ភ្លាមៗ!
                 </p>
                 <div class="pt-2 flex flex-wrap items-center gap-3 text-[11px] font-bold text-white/95">
                     <span class="flex items-center gap-1.5 bg-black/15 px-2.5 py-1 rounded-xl"><i class="fa-solid fa-qrcode text-amber-200"></i> ទូទាត់តាម KHQR គ្រប់ធនាគារ</span>
@@ -368,7 +368,7 @@
                 <!-- Delivery Address (if Delivery selected) -->
                 <div id="deliveryAddressGroup" class="hidden space-y-1">
                     <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ទីតាំង / អាសយដ្ឋានដឹកជញ្ជូន *</label>
-                    <input type="text" id="custAddress" placeholder="បញ្ជាក់ឈ្មោះសណ្ឋាគារ រមណីយដ្ឋាន ឬទីតាំងទទួលនំ..."
+                    <input type="text" id="custAddress" placeholder="បញ្ជាក់ទីតាំង ភូមិ/ឃុំ ឬផ្ទះក្នុងស្រុកអូរយ៉ាដាវ រតនៈគីរី..."
                         class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs font-semibold focus:outline-none focus:border-amber-500 focus:bg-white">
                 </div>
 
@@ -533,8 +533,8 @@
         const STORE_INFO = {
             name: 'ហាងនំខេកវិជ្ជដា',
             phone: '0978707000',
-            address: 'កោះរ៉ុងសន្លឹម',
-            tagline: 'កោះរ៉ុងសន្លឹម • 0978707000'
+            address: 'រតនៈគីរី អូរយ៉ាដាវ',
+            tagline: 'រតនៈគីរី អូរយ៉ាដាវ • 0978707000'
         };
 
         const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
@@ -542,17 +542,20 @@
         const TELEGRAM_CHAT_ID = '8970210109';
         const KHR_RATE = 4100;
         const DEFAULT_KHQR_URL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://bakong.nbc.gov.kh';
-        const FALLBACK_BAKERY_SVG = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23fff3ea'/%3E%3Ctext x='50%25' y='46%25' dominant-baseline='middle' text-anchor='middle' font-size='50'%3E%F0%9F%8E%82%3C/text%3E%3Ctext x='50%25' y='68%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' font-weight='bold' fill='%23c86b27'%3E%E1%9E%A0%E1%9E%Bguide%E1%9E%93%E1%9F%86%E1%9E%81%E1%9F%81%E1%9E%80%E1%9E%9C%E1%9E%B7%E1%9E%87%E1%9F%92%E1%9E%87%E1%9E%8Ran%3C/text%3E%3C/svg%3E";
+        const FALLBACK_BAKERY_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmNWViIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZlZDdhYSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIHJ4PSIxNiIgZmlsbD0idXJsKCNnKSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwMCwxMjApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4KICAgIDx0ZXh0IGZvbnQtc2l6ZT0iNjQiIHk9IjIwIj7wn46CPC90ZXh0PgogIDwvZz4KICA8dGV4dCB4PSIyMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IidLYW50dW1ydXkgUHJvJywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNjODZiMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPuGeoOGetuGehOGek+GfhuGegeGfgeGegOGenOGet+Geh+GfkuGeh+GeiuGetjwvdGV4dD4KICA8dGV4dCB4PSIyMDAiIHk9IjIyOCIgZm9udC1mYW1pbHk9IidLYW50dW1ydXkgUHJvJywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzlhMzQxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4Z6a4Z6P4Z6T4Z+I4Z6C4Z644Z6a4Z64IOGeouGevOGemuGemeGfieGetuGeiuGetuGenDwvdGV4dD4KPC9zdmc+";
 
-        // Preloaded Bakery Catalog
+        // Preloaded Bakery Catalog with High Quality Imagery
         const initialProducts = [
-            { id: 1, name: 'នំខេកស្ត្របឺរីស្រស់ (Strawberry Shortcake)', cat: 'cakes', priceKHR: 65000, stock: 12, img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80', badge: 'ពេញនិយម' },
-            { id: 2, name: 'នំខេកសូកូឡាឡាវ៉ា (Choco Lava Cake)', cat: 'cakes', priceKHR: 55000, stock: 8, img: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80', badge: 'លក់ដាច់' },
-            { id: 3, name: 'នំប៉័ងប៊័រស្រួយ (French Butter Croissant)', cat: 'breads', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', badge: 'ដុតថ្មីៗ' },
-            { id: 4, name: 'នំប៉័ងខ្ទឹមឈីសកូរ៉េ (Korean Garlic Cheese)', cat: 'breads', priceKHR: 12000, stock: 14, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80', badge: 'Hot' },
-            { id: 5, name: 'នំម៉ាកការ៉ុងបារាំង ៦គ្រាប់ (Macarons Box)', cat: 'pastries', priceKHR: 28000, stock: 18, img: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80', badge: 'កញ្ចប់កាដូ' },
-            { id: 6, name: 'កាហ្វេទឹកដោះគោទឹកកក (Iced Milk Coffee)', cat: 'drinks', priceKHR: 7000, stock: 50, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80', badge: 'ប្រចាំហាង' },
-            { id: 7, name: 'តែបៃតងទឹកដោះគោ (Iced Green Tea)', cat: 'drinks', priceKHR: 7000, stock: 40, img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80', badge: 'ត្រជាក់ចិត្ត' },
+            { id: 1789185895751, name: 'នំខេកតយដូង(Pandan Coconut)', cat: 'cakes', priceKHR: 20000, stock: 10, img: 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80', badge: 'ពិសេស' },
+            { id: 1788958925820, name: 'នំខេកស្ត្របឺរីស្រស់ (Strawberry Shortcake)', cat: 'cakes', priceKHR: 20000, stock: 12, img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80', badge: 'ពេញនិយម' },
+            { id: 2, name: 'នំខេកសូកូឡាឡាវ៉ា (Choco Lava Cake)', cat: 'cakes', priceKHR: 20000, stock: 8, img: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80', badge: 'លក់ដាច់' },
+            { id: 3, name: 'នំខេកប៊្លូបឺរី (Blueberry Cream Cake)', cat: 'cakes', priceKHR: 20000, stock: 6, img: 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80', badge: 'ថ្មី' },
+            { id: 4, name: 'នំខេកផាសិន (Passion Fruit Cake)', cat: 'cakes', priceKHR: 20000, stock: 8, img: 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80', badge: 'Hot' },
+            { id: 5, name: 'នំប៉័ងប៊័រស្រួយ (French Butter Croissant)', cat: 'breads', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', badge: 'ដុតថ្មីៗ' },
+            { id: 6, name: 'នំប៉័ងខ្ទឹមឈីសកូរ៉េ (Korean Garlic Cheese)', cat: 'breads', priceKHR: 12000, stock: 14, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80', badge: 'Hot' },
+            { id: 7, name: 'នំម៉ាកការ៉ុងបារាំង ៦គ្រាប់ (Macarons Box)', cat: 'pastries', priceKHR: 28000, stock: 18, img: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80', badge: 'កញ្ចប់កាដូ' },
+            { id: 8, name: 'កាហ្វេទឹកដោះគោទឹកកក (Iced Milk Coffee)', cat: 'drinks', priceKHR: 7000, stock: 50, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80', badge: 'ប្រចាំហាង' },
+            { id: 9, name: 'តែបៃតងទឹកដោះគោ (Iced Green Tea)', cat: 'drinks', priceKHR: 7000, stock: 40, img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80', badge: 'ត្រជាក់ចិត្ត' },
             { id: 'acc-1', name: 'ទៀនវិលភ្លេងផ្កាឈូក (Musical Lotus Candle)', cat: 'accessories', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80', badge: 'Hot' },
             { id: 'acc-2', name: 'ទៀនលេខខួបកំណើត 0-9 (Number Candles)', cat: 'accessories', priceKHR: 2000, stock: 60, img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80', badge: 'ពេញនិយម' },
             { id: 'acc-3', name: 'មួកខួបកំណើតចម្រុះពណ៌ (Party Hats)', cat: 'accessories', priceKHR: 4000, stock: 30, img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80', badge: 'Party' },
@@ -578,8 +581,122 @@
             { id: 'coffee', name: 'កាហ្វេ (Coffee)', icon: '☕' }
         ];
 
+        // --- 🌟 មុខងារការពារ និងផ្គូផ្គងរូបភាពស្វ័យប្រវត្ត (Bulletproof Product Image Normalization) ---
+        function isValidProductImage(img) {
+            if (!img || typeof img !== 'string') return false;
+            const s = img.trim();
+            if (s.length < 10) return false;
+            if (s.startsWith('http://') || s.startsWith('https://') || s.startsWith('data:image/')) return true;
+            return false;
+        }
+
+        function getSmartFallbackProductImage(name = '', cat = '') {
+            const n = (name || '').toLowerCase();
+            if (n.includes('តយ') || n.includes('pandan') || n.includes('ដូង') || n.includes('coconut')) {
+                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ទុរេន') || n.includes('durian')) {
+                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('សូកូឡា') || n.includes('choco') || n.includes('lava')) {
+                return 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ស្ត្របឺរី') || n.includes('ស្ត្រប៊ឺរី') || n.includes('strawberr')) {
+                return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ប៊្លូបឺរី') || n.includes('ប៊្លូប៊ឺរី') || n.includes('blueberr')) {
+                return 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ផាសិន') || n.includes('passion') || n.includes('ស្វាយ') || n.includes('mango')) {
+                return 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('រ៉េដ') || n.includes('red velvet')) {
+                return 'https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ដំឡូងស្វាយ') || n.includes('taro')) {
+                return 'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ឈីស') || n.includes('cheese')) {
+                return 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ខ្ទឹម') || n.includes('garlic')) {
+                return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ប៊័រ') || n.includes('croissant') || n.includes('នំប៉័ង') || n.includes('bread')) {
+                return 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ម៉ាកការ៉ុង') || n.includes('macaron')) {
+                return 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('តែបៃតង') || n.includes('matcha')) {
+                return 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('កាហ្វេ') || n.includes('coffee') || n.includes('ភេសជ្ជ') || n.includes('drink') || n.includes('tea')) {
+                return 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ទៀនវិល') || n.includes('ផ្កាឈូក')) {
+                return 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('ទៀន') || n.includes('candle') || n.includes('ផាវ')) {
+                return 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80';
+            }
+            if (n.includes('មួក') || n.includes('hat') || n.includes('ស្ប្រាយ') || n.includes('spray') || n.includes('មកុដ')) {
+                return 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80';
+            }
+            if (cat === 'cakes' || n.includes('ខេក') || n.includes('cake')) {
+                return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'breads') {
+                return 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'pastries') {
+                return 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'drinks') {
+                return 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80';
+            }
+            if (cat === 'accessories') {
+                return 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80';
+            }
+            return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+        }
+
+        function normalizeProduct(p) {
+            if (!p) return p;
+            let copy = { ...p };
+
+            let localItem = initialProducts.find(lp =>
+                String(lp.id) === String(copy.id) ||
+                (lp.name && copy.name && lp.name.trim().toLowerCase() === copy.name.trim().toLowerCase())
+            );
+
+            if (!localItem) {
+                try {
+                    const saved = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS') || '[]');
+                    localItem = saved.find(sp =>
+                        String(sp.id) === String(copy.id) ||
+                        (sp.name && copy.name && sp.name.trim().toLowerCase() === copy.name.trim().toLowerCase())
+                    );
+                } catch(e) {}
+            }
+
+            if (!isValidProductImage(copy.img)) {
+                if (localItem && isValidProductImage(localItem.img)) {
+                    copy.img = localItem.img;
+                } else {
+                    copy.img = getSmartFallbackProductImage(copy.name, copy.cat);
+                }
+            }
+
+            if (!copy.images || !Array.isArray(copy.images) || copy.images.length === 0) {
+                copy.images = [copy.img];
+            }
+
+            return copy;
+        }
+
         // State Variables
-        let products = [...initialProducts];
+        let products = initialProducts.map(p => normalizeProduct(p));
         let activeCategory = 'all';
         let cart = [];
         let activeCakeCustomizing = null;
@@ -619,10 +736,10 @@
                 const res = await fetch(GOOGLE_SHEET_URL);
                 const data = await res.json();
                 if (data && data.status === 'success' && Array.isArray(data.products) && data.products.length > 0) {
-                    // Filter out internal ingredients
+                    // Filter out internal ingredients and normalize each product
                     const live = data.products.filter(p => p.cat !== 'ingredients');
                     if (live.length > 0) {
-                        products = live;
+                        products = live.map(p => normalizeProduct(p));
                         renderProducts();
                     }
                 }
@@ -682,7 +799,7 @@
             if (emptyState) emptyState.classList.add('hidden');
 
             grid.innerHTML = filtered.map(p => {
-                const img = p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG;
+                const img = (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG;
                 const priceUSD = (p.priceKHR / KHR_RATE).toFixed(2);
                 const isCake = p.cat === 'cakes';
 
@@ -745,7 +862,7 @@
 
             document.getElementById('customModalName').innerText = p.name;
             document.getElementById('customModalBasePrice').innerText = `${Number(p.priceKHR).toLocaleString()} ៛ (≈ $${(p.priceKHR / KHR_RATE).toFixed(2)})`;
-            document.getElementById('customModalImg').src = p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG;
+            document.getElementById('customModalImg').src = (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG;
             document.getElementById('cakeCustomMessage').value = '';
 
             selectCakeTier(1, 0, '១ ជាន់ (ខ្នាតធម្មតា)');
@@ -808,7 +925,7 @@
                 cartItemId: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
                 productId: activeCakeCustomizing.id,
                 name: activeCakeCustomizing.name,
-                img: activeCakeCustomizing.img || (activeCakeCustomizing.images && activeCakeCustomizing.images[0]) || FALLBACK_BAKERY_SVG,
+                img: (isValidProductImage(activeCakeCustomizing.img) ? activeCakeCustomizing.img : null) || (activeCakeCustomizing.images && isValidProductImage(activeCakeCustomizing.images[0]) ? activeCakeCustomizing.images[0] : null) || getSmartFallbackProductImage(activeCakeCustomizing.name, activeCakeCustomizing.cat) || FALLBACK_BAKERY_SVG,
                 priceKHR: finalPrice,
                 qty: 1,
                 isCake: true,
@@ -838,7 +955,7 @@
                     cartItemId: 'item_' + Date.now(),
                     productId: p.id,
                     name: p.name,
-                    img: p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG,
+                    img: (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG,
                     priceKHR: Number(p.priceKHR),
                     qty: 1,
                     isCake: false
@@ -905,7 +1022,7 @@
                 const subtotal = item.priceKHR * item.qty;
                 return `
                     <div class="p-3 bg-stone-50 rounded-2xl border border-orange-100 flex items-start gap-3">
-                        <img src="${item.img}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover border border-orange-200/70">
+                        <img src="${item.img}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover border border-orange-200/70" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;">
                         <div class="flex-1 min-w-0 space-y-1">
                             <div class="flex items-start justify-between gap-1">
                                 <h5 class="font-extrabold text-stone-900 text-xs truncate">${item.name}</h5>

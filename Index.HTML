@@ -268,7 +268,7 @@
                         </div>
                         <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none"
                             id="storeTaglineDisplay">
-                            កោះរ៉ុងសន្លឹម • 0978707000
+                            រតនៈគីរី អូរយ៉ាដាវ • 0978707000
                         </p>
                     </div>
                 </div>
@@ -2406,7 +2406,7 @@
                 <div class="text-center pb-2 border-b border-dashed border-stone-300">
                     <div class="font-extrabold text-base uppercase font-en" id="receiptStoreName">ហាងនំខេកវិជ្ជដា
                     </div>
-                    <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">កោះរ៉ុងសន្លឹម • Tel:
+                    <div class="text-[10px] text-stone-600 font-medium" id="receiptStoreInfo">រតនៈគីរី អូរយ៉ាដាវ • Tel:
                         0978707000
                     </div>
                     <div class="mt-1 font-bold text-xs" id="receiptInvoiceNo">INV #BK-8821</div>
@@ -2797,15 +2797,16 @@
         // Default Store Profile
         let storeInfo = JSON.parse(localStorage.getItem('BAKERY_STORE_INFO')) || {
             name: 'ហាងនំខេកវិជ្ជដា',
-            tagline: 'កោះរ៉ុងសន្លឹម • 0978707000',
+            tagline: 'រតនៈគីរី អូរយ៉ាដាវ • 0978707000',
             phone: '0978707000',
-            address: 'កោះរ៉ុងសន្លឹម'
+            address: 'រតនៈគីរី អូរយ៉ាដាវ'
         };
 
-        if (!storeInfo.name || storeInfo.name.includes('SweetDelight')) {
+        if (!storeInfo.name || storeInfo.name.includes('SweetDelight') || storeInfo.address === 'កោះរ៉ុងសន្លឹម' || (storeInfo.tagline && storeInfo.tagline.includes('កោះរ៉ុងសន្លឹម'))) {
             storeInfo.name = 'ហាងនំខេកវិជ្ជដា';
             storeInfo.phone = '0978707000';
-            storeInfo.address = 'កោះរ៉ុងសន្លឹម';
+            storeInfo.address = 'រតនៈគីរី អូរយ៉ាដាវ';
+            storeInfo.tagline = 'រតនៈគីរី អូរយ៉ាដាវ • 0978707000';
             localStorage.setItem('BAKERY_STORE_INFO', JSON.stringify(storeInfo));
         }
 
@@ -2950,14 +2951,32 @@
         /* --- 🌟 ផ្គូផ្គងរូបភាពស្វ័យប្រវត្តិតាមឈ្មោះ (Smart Auto Image Matcher by Name/Category) --- */
         function getSmartFallbackProductImage(name = '', cat = '') {
             const n = (name || '').toLowerCase();
+            if (n.includes('តយ') || n.includes('pandan') || n.includes('ដូង') || n.includes('coconut')) {
+                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+            }
             if (n.includes('ទុរេន') || n.includes('durian')) {
                 return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('សូកូឡា') || n.includes('choco') || n.includes('lava')) {
                 return 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80';
             }
-            if (n.includes('ស្ត្របឺរី') || n.includes('strawberr')) {
+            if (n.includes('ស្ត្របឺរី') || n.includes('ស្ត្រប៊ឺរី') || n.includes('strawberr')) {
                 return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ប៊្លូបឺរី') || n.includes('ប៊្លូប៊ឺរី') || n.includes('blueberr')) {
+                return 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ផាសិន') || n.includes('passion') || n.includes('ស្វាយ') || n.includes('mango')) {
+                return 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('រ៉េដ') || n.includes('red velvet')) {
+                return 'https://images.unsplash.com/photo-1586788680434-30d324b2d46f?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ដំឡូងស្វាយ') || n.includes('taro')) {
+                return 'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80';
+            }
+            if (n.includes('ឈីស') || n.includes('cheese')) {
+                return 'https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('ខ្ទឹម') || n.includes('garlic')) {
                 return 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80';
@@ -6795,7 +6814,7 @@ function sendTelegramApi(method, payload) {
         function openReceiptModal(id, method, totalKHR, depositKHR = null, remainingKHR = null, items = null) {
             document.getElementById('receiptInvoiceNo').innerText = `INV #${id}`;
             document.getElementById('receiptStoreName').innerText = (storeInfo.name || 'ហាងនំខេកវិជ្ជដា').toUpperCase();
-            document.getElementById('receiptStoreInfo').innerText = `${storeInfo.address || 'កោះរ៉ុងសន្លឹម'} • Tel: ${storeInfo.phone || '0978707000'}`;
+            document.getElementById('receiptStoreInfo').innerText = `${storeInfo.address || 'រតនៈគីរី អូរយ៉ាដាវ'} • Tel: ${storeInfo.phone || '0978707000'}`;
 
             const dep = (depositKHR !== null && depositKHR !== undefined) ? depositKHR : totalKHR;
             const rem = (remainingKHR !== null && remainingKHR !== undefined) ? remainingKHR : 0;
@@ -7544,8 +7563,8 @@ function sendTelegramApi(method, payload) {
         function openSettingsModal() {
             document.getElementById('settingStoreName').value = storeInfo.name || 'ហាងនំខេកវិជ្ជដា';
             document.getElementById('settingStorePhone').value = storeInfo.phone || '0978707000';
-            document.getElementById('settingStoreAddress').value = storeInfo.address || 'កោះរ៉ុងសន្លឹម';
-            document.getElementById('settingStoreTagline').value = storeInfo.tagline || 'កោះរ៉ុងសន្លឹម • 0978707000';
+            document.getElementById('settingStoreAddress').value = storeInfo.address || 'រតនៈគីរី អូរយ៉ាដាវ';
+            document.getElementById('settingStoreTagline').value = storeInfo.tagline || 'រតនៈគីរី អូរយ៉ាដាវ • 0978707000';
             document.getElementById('googleSheetUrl').value = (integrationSettings.googleSheetUrl && integrationSettings.googleSheetUrl.trim()) ? integrationSettings.googleSheetUrl : DEFAULT_GOOGLE_SHEET_URL;
             document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
             document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '8970210109';
@@ -7600,7 +7619,7 @@ function sendTelegramApi(method, payload) {
         function saveIntegrationSettings() {
             const name = document.getElementById('settingStoreName').value.trim() || 'ហាងនំខេកវិជ្ជដា';
             const phone = document.getElementById('settingStorePhone').value.trim() || '0978707000';
-            const address = document.getElementById('settingStoreAddress').value.trim() || 'កោះរ៉ុងសន្លឹម';
+            const address = document.getElementById('settingStoreAddress').value.trim() || 'រតនៈគីរី អូរយ៉ាដាវ';
             const tagline = document.getElementById('settingStoreTagline').value.trim() || `${address} • ${phone}`;
 
             storeInfo = { name, phone, address, tagline };
