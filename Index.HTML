@@ -3210,19 +3210,19 @@
         function getSmartFallbackProductImage(name = '', cat = '') {
             const n = (name || '').toLowerCase();
             if (n.includes('តយ') || n.includes('pandan') || n.includes('ដូង') || n.includes('coconut')) {
-                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+                return 'https://images.unsplash.com/photo-1519869325930-281384150729?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('ទុរេន') || n.includes('durian')) {
-                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
+                return 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('សូកូឡា') || n.includes('choco') || n.includes('lava')) {
-                return 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80';
+                return 'https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('ស្ត្របឺរី') || n.includes('ស្ត្រប៊ឺរី') || n.includes('strawberr')) {
                 return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('ប៊្លូបឺរី') || n.includes('ប៊្លូប៊ឺរី') || n.includes('blueberr')) {
-                return 'https://images.unsplash.com/photo-1535141192574-5d4897c13136?auto=format&fit=crop&w=800&q=80';
+                return 'https://images.unsplash.com/photo-1588195538326-c5b1e9f80a1b?auto=format&fit=crop&w=800&q=80';
             }
             if (n.includes('ផាសិន') || n.includes('passion') || n.includes('ស្វាយ') || n.includes('mango')) {
                 return 'https://images.unsplash.com/photo-1541781774459-bb2af2f05b55?auto=format&fit=crop&w=800&q=80';
@@ -6402,6 +6402,13 @@ function sendTelegramApi(method, payload) {
 
         async function saveBatchProduct(event) {
             event.preventDefault();
+
+            // 🌟 1. ពិសេសសម្រាប់ទូរស័ព្ទដៃ៖ បើ Paste Link ក្នុងប្រអប់ input តែភ្លេចចុចប៊ូតុង "ថែមលីង" ត្រូវ Auto-Add ភ្លាម!
+            const leftoverInput = document.getElementById('batchProdImgUrlInput');
+            if (leftoverInput && leftoverInput.value.trim()) {
+                await addBatchImageUrl();
+            }
+
             const id = document.getElementById('multiUploadProdId').value;
             const name = document.getElementById('batchProdName').value.trim();
             const cat = document.getElementById('batchProdCat').value;
