@@ -850,16 +850,20 @@
                 </div>
 
                 <div class="flex items-center gap-2 flex-wrap w-full sm:w-auto">
-                    <button onclick="syncStockToGoogleSheet()"
-                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust hover:bg-amber-100 font-extrabold text-xs border border-amber-200 transition flex items-center gap-1.5 shadow-xs">
-                        <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> Sync ស្តុក & គ្រឿងផ្សំ
+                    <button onclick="syncStockToGoogleSheet(true)" title="Sync ស្តុក និងរូបភាពទៅ Google Sheet"
+                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust hover:bg-amber-100 font-extrabold text-xs border border-amber-200 transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95">
+                        <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> Sync ស្តុក & រូបភាព
+                    </button>
+                    <button onclick="pullProductsFromGoogleSheet()" title="ទាញទំនិញ ស្តុក និងរូបភាពពី Google Sheet ចូលម៉ាស៊ីន"
+                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95">
+                        <i class="fa-solid fa-cloud-arrow-down text-sky-600"></i> 📥 ទាញពី Google Sheet
                     </button>
                     <button onclick="sendStockSummaryToTelegram()"
-                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95">
-                        <i class="fa-brands fa-telegram text-sky-500 text-sm"></i> ផ្ញើស្តុកទៅ Telegram
+                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-emerald-50 text-emerald-700 hover:bg-emerald-100 font-extrabold text-xs border border-emerald-200 transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95">
+                        <i class="fa-brands fa-telegram text-emerald-500 text-sm"></i> ផ្ញើស្តុកទៅ Telegram
                     </button>
                     <button onclick="openMultiUploadModal()"
-                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow hover:bg-orange-700 transition flex items-center gap-1.5">
+                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow hover:bg-orange-700 transition flex items-center gap-1.5 cursor-pointer active:scale-95">
                         <i class="fa-solid fa-plus"></i> បន្ថែមទំនិញ
                     </button>
                 </div>
@@ -2800,6 +2804,41 @@
             });
         }
 
+        async function prepareProductsForSheetAsync(list) {
+            const cache = (typeof getProductImageCache === 'function') ? getProductImageCache() : {};
+            const results = [];
+            for (const p of (list || [])) {
+                let bestImg = p.img || (Array.isArray(p.images) && p.images[0]) || '';
+                if (!bestImg && cache) {
+                    if (p.id && cache[String(p.id)]) bestImg = cache[String(p.id)].img;
+                    if (!bestImg && p.name && cache[p.name.trim().toLowerCase()]) bestImg = cache[p.name.trim().toLowerCase()].img;
+                }
+                let sheetImg = '';
+                if (bestImg && typeof bestImg === 'string') {
+                    if (bestImg.startsWith('http://') || bestImg.startsWith('https://')) {
+                        sheetImg = bestImg;
+                    } else if (bestImg.startsWith('data:image/')) {
+                        // បង្រួមរូបភាពស្វ័យប្រវត្តិឱ្យនៅក្រោម 35KB (<320px, quality 0.6) ដើម្បីធានាថាកត់ត្រាចូល Google Sheet បាន ១០០%
+                        if (bestImg.length > 35000) {
+                            sheetImg = await compressBase64ToThumbnail(bestImg, 320, 0.6);
+                        } else {
+                            sheetImg = bestImg;
+                        }
+                    }
+                }
+                results.push({
+                    id: p.id,
+                    name: p.name,
+                    cat: p.cat,
+                    badge: p.badge || '',
+                    priceKHR: p.priceKHR || 0,
+                    stock: p.stock !== undefined ? p.stock : 0,
+                    img: sheetImg
+                });
+            }
+            return results;
+        }
+
         function prepareProductsForSheet(list) {
             const cache = (typeof getProductImageCache === 'function') ? getProductImageCache() : {};
             return (list || []).map(p => {
@@ -4376,31 +4415,31 @@
             }
         }
 
-        // មុខងារ Sync ស្តុកទំនិញ និងចំណាយ ទៅ Google Sheet (ដោយមិនបង្កើតជួរលក់ 0៛)
+        // មុខងារ Sync ស្តុកទំនិញ និងរូបភាព ទៅ Google Sheet (ដោយមិនបង្កើតជួរលក់ 0៛)
         async function syncStockToGoogleSheet(showNotice = false) {
             cacheAllCurrentProductImages();
-            const prodList = prepareProductsForSheet(products.filter(p => p.cat !== 'ingredients'));
-            const ingList = prepareProductsForSheet(products.filter(p => p.cat === 'ingredients'));
+            const prodList = await prepareProductsForSheetAsync(products.filter(p => p.cat !== 'ingredients'));
+            const ingList = await prepareProductsForSheetAsync(products.filter(p => p.cat === 'ingredients'));
 
             await sendGoogleSheetPayload({
                 action: 'sync_products',
                 products: prodList,
                 ingredients: ingList
-            }, showNotice, '☁️ បាន Sync ស្តុកទំនិញទៅ Google Sheet ជោគជ័យ!');
+            }, showNotice, '☁️ បាន Sync ស្តុកទំនិញ និងរូបភាពទៅ Google Sheet ជោគជ័យ!');
         }
 
-        // មុខងារ Sync ទាំងអស់ (ទាំងការលក់, ស្តុក, និងចំណាយ)
+        // មុខងារ Sync ទាំងអស់ (ទាំងការលក់, ស្តុក, រូបភាព, និងចំណាយ)
         async function syncAllToGoogleSheet() {
             saveIntegrationSettings();
-            showToast('⏳ កំពុងធ្វើសមកាលកម្មទិន្នន័យទាំងអស់ (ការលក់, ស្តុក, ចំណាយ) ទៅ Google Sheet...', 'info');
+            showToast('⏳ កំពុងធ្វើសមកាលកម្មទិន្នន័យទាំងអស់ (ការលក់, ស្តុក, រូបភាព, ចំណាយ) ទៅ Google Sheet...', 'info');
 
             // ១. Sync ការលក់ទាំងអស់ដែលខ្វះ
             await syncSalesToGoogleSheet();
 
-            // ២. Sync ស្តុកទំនិញ & គ្រឿងផ្សំ
+            // ២. Sync ស្តុកទំនិញ & គ្រឿងផ្សំ & រូបភាព
             cacheAllCurrentProductImages();
-            const prodList = prepareProductsForSheet(products.filter(p => p.cat !== 'ingredients'));
-            const ingList = prepareProductsForSheet(products.filter(p => p.cat === 'ingredients'));
+            const prodList = await prepareProductsForSheetAsync(products.filter(p => p.cat !== 'ingredients'));
+            const ingList = await prepareProductsForSheetAsync(products.filter(p => p.cat === 'ingredients'));
             await sendGoogleSheetPayload({
                 action: 'sync_products',
                 products: prodList,
@@ -4555,12 +4594,22 @@ function doPost(e) {
     
     // --- ករណី ៥: ស៊ីងទំនិញ ឬកែសម្រួលស្តុក (Sync Products / Update Stock) ---
     if (action === "sync_products" || action === "update_stock" || action === "sync_all") {
-      // សម្គាល់៖ មិនបង្កើតជួរលក់ក្លែងក្លាយជាដាច់ខាត! ដំណើរការតែ Products ប៉ុណ្ណោះ
+      // ប្រសិនបើមានផ្ញើ KHQR មកជាមួយ កត់ត្រាទុកក្នុង Settings
+      if (data.khqr || data.merchantName) {
+        saveStoreSettings(ss, data);
+      }
       const prodList = (data.products || []).concat(data.ingredients || []);
       let res = { status: "success", message: "Products updated" };
       if (prodList.length > 0) {
         res = syncAllProducts(ss, prodList);
       }
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
+    // --- ករណី ៥.១: Upload រូបភាពឡើង Google Drive (Upload Image to Google Drive) ---
+    if (action === "upload_image" || action === "upload_product_image") {
+      const res = uploadImageToDrive(ss, data);
       return ContentService.createTextOutput(JSON.stringify(res))
         .setMimeType(ContentService.MimeType.JSON);
     }
@@ -4817,14 +4866,25 @@ function getExpensesData(ss) {
 }
 
 // ==============================================================================
-// 5. HELPER FUNCTIONS: PRODUCTS (ទំនិញ & គ្រឿងផ្សំ)
+// 5. HELPER FUNCTIONS: PRODUCTS (ទំនិញ & គ្រឿងផ្សំ & រូបភាព)
 // ==============================================================================
+function getProductsSheet(ss) {
+  let sheet = ss.getSheetByName(SHEET_PRODUCTS);
+  if (!sheet) {
+    initSheetsIfNotExist(ss);
+    sheet = ss.getSheetByName(SHEET_PRODUCTS);
+  }
+  return sheet;
+}
+
 function syncAllProducts(ss, prodList) {
-  const sheet = ss.getSheetByName(SHEET_PRODUCTS);
+  const sheet = getProductsSheet(ss);
   sheet.clearContents();
   sheet.appendRow(["ID", "ឈ្មោះទំនិញ", "ប្រភេទ", "ស្លាក", "តម្លៃលក់ (៛)", "ស្តុកនៅសល់", "តំណភ្ជាប់រូបភាព"]);
+  sheet.getRange("A1:G1").setBackground("#3B82F6").setFontColor("#FFFFFF").setFontWeight("bold");
+  sheet.setFrozenRows(1);
   
-  if (prodList.length > 0) {
+  if (prodList && prodList.length > 0) {
     const rows = prodList.map(p => [
       String(p.id || ""),
       p.name || "",
@@ -4832,15 +4892,16 @@ function syncAllProducts(ss, prodList) {
       p.badge || "",
       Number(p.priceKHR || 0),
       Number(p.stock !== undefined ? p.stock : 10),
-      (p.img && typeof p.img === 'string' && p.img.startsWith('http')) ? p.img : ""
+      (p.img && typeof p.img === 'string' && (p.img.startsWith('http') || p.img.startsWith('data:image/'))) ? p.img : ""
     ]);
     sheet.getRange(2, 1, rows.length, 7).setValues(rows);
   }
-  return { status: "success", count: prodList.length };
+  return { status: "success", count: prodList ? prodList.length : 0 };
 }
 
 function getProductsData(ss) {
-  const sheet = ss.getSheetByName(SHEET_PRODUCTS);
+  const sheet = getProductsSheet(ss);
+  if (!sheet) return [];
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
   
@@ -4854,6 +4915,35 @@ function getProductsData(ss) {
     stock: Number(row[5] !== undefined ? row[5] : 0),
     img: String(row[6] || "")
   })).filter(p => p.name !== "");
+}
+
+/**
+ * មុខងារ Upload រូបភាពឡើង Google Drive ផ្ទាល់ (រក្សាកម្រិតច្បាស់ HD និងបង្កើត Web Link)
+ */
+function uploadImageToDrive(ss, data) {
+  try {
+    const base64Str = data.image || data.base64 || "";
+    const fileName = data.fileName || ("cake_" + Date.now() + ".jpg");
+    if (!base64Str) return { status: "error", message: "No image provided" };
+    
+    const contentType = base64Str.indexOf("image/png") > -1 ? "image/png" : "image/jpeg";
+    const cleanBase64 = base64Str.replace(/^data:image\/[a-z]+;base64,/, "");
+    const decoded = Utilities.base64Decode(cleanBase64);
+    const blob = Utilities.newBlob(decoded, contentType, fileName);
+    
+    let folders = DriveApp.getFoldersByName("Bakery_POS_Images");
+    let folder = folders.hasNext() ? folders.next() : DriveApp.createFolder("Bakery_POS_Images");
+    folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    
+    let file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    const fileId = file.getId();
+    
+    const directUrl = "https://lh3.googleusercontent.com/d/" + fileId;
+    return { status: "success", url: directUrl, fileId: fileId };
+  } catch (err) {
+    return { status: "error", message: err.toString() };
+  }
 }
 
 // ==============================================================================
@@ -6167,7 +6257,7 @@ function sendTelegramApi(method, payload) {
 
         function clearBatchImages() { batchUploadedImages = []; renderBatchPreviews(); }
 
-        function saveBatchProduct(event) {
+        async function saveBatchProduct(event) {
             event.preventDefault();
             const id = document.getElementById('multiUploadProdId').value;
             const name = document.getElementById('batchProdName').value.trim();
@@ -6200,11 +6290,12 @@ function sendTelegramApi(method, payload) {
             renderShowcase();
             renderQuickAddons();
 
-            syncStockToGoogleSheet();
-
             closeMultiUploadModal();
             confetti({ particleCount: 50, spread: 60 });
-            showToast(`បានរក្សាទុក "${name}" ជោគជ័យ!`, 'success');
+            showToast(`🎉 បានរក្សាទុក "${name}" & កំពុង Sync រូបភាពទៅ Google Sheet...`, 'success');
+
+            // Sync ទៅ Google Sheet ដោយស្វ័យប្រវត្តិ (ទាំងស្តុក និងរូបភាព)
+            syncStockToGoogleSheet(true);
         }
 
         function adjustProductStock(id, delta) {
