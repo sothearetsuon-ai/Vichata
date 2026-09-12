@@ -2366,11 +2366,16 @@
                     <div class="mt-2.5 pt-2.5 border-t border-orange-200/70 text-left">
                         <label class="block font-bold text-stone-600 mb-1 text-[11px] flex items-center justify-between">
                             <span><i class="fa-solid fa-link text-bakery-caramel mr-1"></i> ឬ បិទភ្ជាប់លីងរូបភាព (Link URL / GIF)៖</span>
-                            <span class="text-[10px] text-rose-600 font-bold"><i class="fa-brands fa-pinterest"></i> គាំទ្រ Pinterest HD</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-[10px] text-rose-600 font-bold"><i class="fa-brands fa-pinterest"></i> Pinterest HD</span>
+                                <button type="button" onclick="showPinterestHelperModal()" class="text-[10px] text-amber-700 hover:text-amber-800 bg-amber-100 px-1.5 py-0.5 rounded-md font-bold transition flex items-center gap-1">
+                                    <i class="fa-solid fa-circle-question"></i> របៀបយក Link
+                                </button>
+                            </div>
                         </label>
                         <div class="flex gap-1.5">
                             <input type="url" id="batchProdImgUrlInput"
-                                placeholder="https://... (Paste Link ពី Pinterest, Google Drive, Facebook, Web)"
+                                placeholder="https://i.pinimg.com/... (Paste Link ពី Pinterest HD, Google Drive, Web)"
                                 class="flex-1 p-2 rounded-xl border border-stone-300 font-en text-xs focus:ring-1 focus:ring-bakery-caramel focus:outline-none">
                             <button type="button" onclick="addBatchImageUrl()"
                                 class="px-3 py-2 bg-amber-500 hover:bg-amber-600 active:scale-95 text-white font-bold rounded-xl text-xs transition shadow-xs whitespace-nowrap">
@@ -2427,6 +2432,74 @@
                         class="px-4 py-3 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold text-xs transition">បោះបង់</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: PINTEREST IMAGE HELPER ================= -->
+    <div id="pinterestHelperModal"
+        class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-[60] hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full p-5 sm:p-6 border border-orange-100 flex flex-col animate-scale-up">
+            <div class="flex justify-between items-center pb-3 border-b border-orange-100">
+                <h3 class="font-extrabold text-base text-rose-600 flex items-center gap-2">
+                    <i class="fa-brands fa-pinterest text-xl"></i> របៀបយក Link រូបភាពពី Pinterest
+                </h3>
+                <button onclick="closePinterestHelperModal()" class="text-stone-400 hover:text-stone-600 p-1">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <div class="mt-4 space-y-3.5 text-xs text-stone-700">
+                <div id="pinterestUrlNotice" class="p-3 bg-rose-50 border border-rose-200 rounded-2xl hidden">
+                    <div class="font-bold text-rose-800 flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-triangle-exclamation"></i> Link ដែលអ្នកបានបិទភ្ជាប់ជា Webpage Link:
+                    </div>
+                    <div id="pinterestAttemptedUrl" class="font-mono text-[10px] text-rose-600 truncate bg-white/80 p-1.5 rounded-lg border border-rose-200"></div>
+                    <p class="mt-1 text-[11px] text-rose-700 leading-relaxed">
+                        Link ខាងលើគឺជាតំណភ្ជាប់ទំព័រវេបសាយ (Webpage) មិនមែនជារូបភាពទេ ទើបប្រព័ន្ធបង្ហាញរូបគំនូរតំណាង <b>Bakery Delight</b>។
+                    </p>
+                </div>
+
+                <div class="p-3.5 bg-amber-50/80 border border-amber-200 rounded-2xl">
+                    <h4 class="font-extrabold text-amber-900 text-sm flex items-center gap-1.5 mb-2">
+                        <span class="w-5 h-5 rounded-full bg-amber-500 text-white flex items-center justify-center text-[10px]">1</span>
+                        វិធីទី ១៖ ចម្លងអាសយដ្ឋានរូប (Copy Image Address)
+                    </h4>
+                    <ul class="space-y-1.5 text-[11px] text-stone-600 ml-1">
+                        <li class="flex items-start gap-1.5">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>នៅលើកុំព្យូទ័រ PC / Laptop៖ ដាក់ Mouse លើរូបនំក្នុង Pinterest</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>ចុច <b>Mouse ស្ដាំ (Right-Click)</b> លើរូបភាពផ្ទាល់</span>
+                        </li>
+                        <li class="flex items-start gap-1.5">
+                            <i class="fa-solid fa-check text-emerald-600 mt-0.5"></i>
+                            <span>ជ្រើសរើសពាក្យ <b>"Copy image address"</b> (ឬ "Copy image link")</span>
+                        </li>
+                    </ul>
+                    <div class="mt-2 p-2 bg-white rounded-xl border border-amber-200 text-[10px] font-mono text-emerald-700">
+                        ✅ Link ត្រឹមត្រូវចាប់ផ្តើមដោយ: <b>https://i.pinimg.com/...jpg</b>
+                    </div>
+                </div>
+
+                <div class="p-3.5 bg-emerald-50/80 border border-emerald-200 rounded-2xl">
+                    <h4 class="font-extrabold text-emerald-900 text-sm flex items-center gap-1.5 mb-2">
+                        <span class="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[10px]">2</span>
+                        វិធីទី ២៖ Download រូបផ្ទាល់ (ស្រួលបំផុត & មិនដែលខុស)
+                    </h4>
+                    <p class="text-[11px] text-stone-600 leading-relaxed">
+                        នៅលើរូប Pinterest ចុចសញ្ញាចុច ៣ <b>(...)</b> > យកពាក្យ <b>"Download image"</b> រួចត្រឡប់មកកម្មវិធី POS ចុចប៊ូតុង <b>"ជ្រើសរើសរូប ឬ ថតរូប"</b> ដើម្បីបញ្ចូល នោះរូបភាពនឹងរក្សាទុកជាប់ជានិច្ច គ្មានថ្ងៃបាត់ឡើយ!
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-orange-100 flex justify-end">
+                <button type="button" onclick="closePinterestHelperModal()"
+                    class="w-full py-2.5 rounded-2xl bg-bakery-caramel hover:bg-orange-700 active:scale-95 text-white font-bold text-xs transition shadow-sm">
+                    យល់ព្រម / ខ្ញុំបានយល់ហើយ
+                </button>
+            </div>
         </div>
     </div>
 
@@ -6212,7 +6285,7 @@ function sendTelegramApi(method, payload) {
 
         function closeMultiUploadModal() { document.getElementById('multiUploadModal').classList.add('hidden'); }
 
-        function addBatchImageUrl() {
+        async function addBatchImageUrl() {
             const input = document.getElementById('batchProdImgUrlInput');
             let url = input ? input.value.trim() : '';
             if (!url) {
@@ -6224,15 +6297,74 @@ function sendTelegramApi(method, payload) {
                 return;
             }
 
-            // 🌟 គាំទ្ររូបភាពពី Pinterest: ប្តូរទៅជា HD 736x ស្វ័យប្រវត្តិ
+            // 🌟 ករណីទី ១: រូបភាពផ្ទាល់ពី Pinterest (i.pinimg.com) -> ប្តូរទៅជា HD 736x ស្វ័យប្រវត្តិ
             if (url.includes('pinimg.com')) {
                 url = url.replace(/\/(?:236x|474x|564x)\//g, '/736x/');
+                batchUploadedImages.push(url);
+                renderBatchPreviews();
+                input.value = '';
+                showToast('🎉 បានបន្ថែមរូបភាព Pinterest HD រួចរាល់!', 'success');
+                return;
+            }
+
+            // 🌟 ករណីទី ២: អ្នកប្រើ Copy Link ទំព័រ Pinterest (pinterest.com/pin/ ឬ pin.it/)
+            const isPinterestPage = (url.includes('pinterest.com/pin/') || url.includes('pin.it/') || (url.includes('pinterest.com') && !url.includes('pinimg.com')));
+            if (isPinterestPage) {
+                // សាកល្បង Auto-Resolve តាមរយៈ Google Apps Script Web App
+                const settings = JSON.parse(localStorage.getItem('pos_settings') || '{}');
+                const scriptUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) 
+                    ? settings.googleSheetUrl.trim() 
+                    : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
+                
+                if (scriptUrl && scriptUrl.includes('/macros/s/')) {
+                    showToast('🔍 កំពុងស្រង់យករូបភាពផ្ទាល់ពី Pinterest... ⏳', 'info');
+                    try {
+                        const fetchUrl = `${scriptUrl}?action=resolve_pinterest&url=${encodeURIComponent(url)}`;
+                        const res = await fetch(fetchUrl);
+                        if (res.ok) {
+                            const data = await res.json();
+                            if (data && data.status === 'success' && data.imageUrl) {
+                                batchUploadedImages.push(data.imageUrl);
+                                renderBatchPreviews();
+                                input.value = '';
+                                showToast('🎉 បានស្រង់យករូបភាព Pinterest HD ដោយជោគជ័យ!', 'success');
+                                return;
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('Auto resolve pinterest failed:', e);
+                    }
+                }
+
+                // ប្រសិនបើតំណភ្ជាប់មិនអាចទាញស្វ័យប្រវត្តិបាន បង្ហាញផ្ទាំងពន្យល់ និងណែនាំភ្លាមៗ
+                showPinterestHelperModal(url);
+                return;
             }
 
             batchUploadedImages.push(url);
             renderBatchPreviews();
             input.value = '';
             showToast('🎉 បានបន្ថែមលីងរូបភាពរួចរាល់!', 'success');
+        }
+
+        function showPinterestHelperModal(attemptedUrl = '') {
+            const modal = document.getElementById('pinterestHelperModal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                const noticeBox = document.getElementById('pinterestUrlNotice');
+                const urlBox = document.getElementById('pinterestAttemptedUrl');
+                if (noticeBox && urlBox && attemptedUrl) {
+                    urlBox.innerText = attemptedUrl;
+                    noticeBox.classList.remove('hidden');
+                } else if (noticeBox) {
+                    noticeBox.classList.add('hidden');
+                }
+            }
+        }
+
+        function closePinterestHelperModal() {
+            const modal = document.getElementById('pinterestHelperModal');
+            if (modal) modal.classList.add('hidden');
         }
 
         async function handleBatchFileSelect(event) {
