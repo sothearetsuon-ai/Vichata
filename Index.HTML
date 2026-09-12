@@ -1503,37 +1503,29 @@
                         <input type="checkbox" id="settingTelegramNotifications" class="w-4 h-4 text-bakery-caramel rounded focus:ring-0 cursor-pointer accent-orange-600">
                     </div>
 
-                    <div class="p-2.5 bg-white/90 rounded-xl border border-sky-200/70 text-[11px] space-y-1">
-                        <div class="font-bold text-sky-900 flex items-center gap-1">
-                            <i class="fa-solid fa-list-check text-sky-600"></i>
-                            <span>ប៊ូតុង Menu លើ Telegram (ចុចមួយប៉ក់ចេញរបាយការណ៍):</span>
+                    <div class="p-2.5 bg-sky-50/80 rounded-xl border border-sky-200 text-[11px] space-y-1.5 text-stone-700">
+                        <div class="font-bold text-sky-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check text-emerald-600"></i>
+                            <span>មុខងារ Telegram Bot (ផ្ញើដំណឹង & របាយការណ៍):</span>
                         </div>
-                        <div class="grid grid-cols-2 gap-1 text-[10px] text-stone-700 pt-0.5 font-semibold">
-                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📊 <b>របាយការណ៍លក់</b> (ចំណូល/វិក្កយបត្រ)</div>
-                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📦 <b>ពិនិត្យស្តុក</b> (ទំនិញជិតអស់)</div>
-                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">💸 <b>ពិនិត្យចំណាយ</b> (ចំណាយថ្ងៃនេះ)</div>
-                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📈 <b>សង្ខេបថ្ងៃនេះ</b> (ប្រាក់ចំណេញសុទ្ធ)</div>
-                        </div>
+                        <ul class="text-[10px] space-y-1 pl-1 text-stone-600">
+                            <li>• <b>ស្វ័យប្រវត្តិ៖</b> ផ្ញើវិក្កយបត្រ + រូបនំ ពេលគិតលុយលក់រួចរាល់</li>
+                            <li>• <b>របាយការណ៍៖</b> ចុចប៊ូតុង "ផ្ញើរបាយការណ៍ទៅ Telegram" ក្នុងផ្ទាំងរបាយការណ៍</li>
+                            <li>• <b>បិទវេនលក់៖</b> ផ្ញើសង្ខេបប្រាក់ក្នុងថត និងការលក់ពេលបិទវេន</li>
+                        </ul>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2 pt-1">
-                        <button type="button" onclick="setupTelegramMenuAndWebhook()"
-                            class="py-2.5 px-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
-                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                            <span>🤖 ដំឡើង Menu លើ Telegram</span>
-                        </button>
                         <button type="button" onclick="testTelegramMessageWithPhoto()"
-                            class="py-2.5 px-3 bg-white hover:bg-stone-100 text-sky-700 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
-                            <i class="fa-solid fa-paper-plane text-sky-500"></i>
+                            class="py-2.5 px-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                            <i class="fa-solid fa-paper-plane"></i>
                             <span>តេស្តផ្ញើ Telegram</span>
                         </button>
-                    </div>
-
-                    <div class="pt-1">
-                        <button type="button" onclick="stopTelegramBotLoop()"
-                            class="w-full py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
-                            <i class="fa-solid fa-bell-slash text-rose-600"></i>
-                            <span>🛑 បិទសាររំខាន / កុំឱ្យលោតសារដដែលៗ (Stop Bot Spam)</span>
+                        <button type="button" onclick="clearTelegramBotMenu()"
+                            class="py-2.5 px-3 bg-white hover:bg-stone-100 text-stone-700 border border-stone-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+                            title="លុបផ្ទាំងប៊ូតុងចាស់ៗចេញពី Telegram កុំឱ្យច្រឡំ">
+                            <i class="fa-solid fa-broom text-amber-500"></i>
+                            <span>សម្អាត Menu ចាស់</span>
                         </button>
                     </div>
                 </div>
@@ -3681,101 +3673,45 @@
             }
         }
 
-        // ================= TELEGRAM BOT INTERACTIVE MENU & QUICK SEND =================
-        async function stopTelegramBotLoop() {
+        // ================= TELEGRAM BOT CLEANUP & QUICK SEND =================
+        async function clearTelegramBotMenu() {
             const token = document.getElementById('telegramBotToken')?.value.trim() || integrationSettings.telegramBotToken;
-            if (!token) {
-                showToast('⚠️ មិនមាន Telegram Bot Token ទេ!', 'warning');
-                return;
-            }
-
-            showToast('⏳ កំពុងបិទសាររំខាន និងលុប Webhook...', 'info');
-            try {
-                const res = await fetch(`https://api.telegram.org/bot${token}/deleteWebhook?drop_pending_updates=true`);
-                const data = await res.json();
-                
-                // Also turn off auto-send notifications if active
-                const notifCb = document.getElementById('settingTelegramNotifications');
-                if (notifCb) notifCb.checked = false;
-                integrationSettings.telegramNotificationsEnabled = false;
-                localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
-
-                if (data.ok) {
-                    showToast('🛑 បានបិទសាររំខាន និងលុប Webhook ជោគជ័យ! លែងលោតសារទៀតហើយ។', 'success');
-                } else {
-                    showToast('⚠️ Webhook ត្រូវបានបិទ (ចំណាំ: ' + (data.description || 'ok') + ')', 'info');
-                }
-            } catch(e) {
-                showToast('⚠️ កំហុសបណ្តាញ: ' + e.message, 'error');
-            }
-        }
-
-        // ================= TELEGRAM BOT INTERACTIVE MENU & QUICK SEND =================
-        async function setupTelegramMenuAndWebhook() {
-            const token = document.getElementById('telegramBotToken').value.trim() || integrationSettings.telegramBotToken;
-            const chatId = document.getElementById('telegramChatId').value.trim() || integrationSettings.telegramChatId;
+            const chatId = document.getElementById('telegramChatId')?.value.trim() || integrationSettings.telegramChatId;
 
             if (!token) {
                 showToast('⚠️ សូមបញ្ចូល Telegram Bot Token ជាមុនសិន!', 'warning');
                 return;
             }
 
-            showToast('⏳ កំពុងដំឡើង Telegram Menu...', 'info');
+            showToast('⏳ កំពុងសម្អាត និងលុប Menu ចាស់ក្នុង Telegram...', 'info');
 
             try {
-                // 1. Set Official Telegram Bot Commands Menu
-                const cmdRes = await fetch(`https://api.telegram.org/bot${token}/setMyCommands`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        commands: [
-                            { command: 'start', description: '🏠 បើកផ្ទាំង Menu មេ' },
-                            { command: 'sales', description: '📊 របាយការណ៍លក់ថ្ងៃនេះ' },
-                            { command: 'stock', description: '📦 ពិនិត្យស្តុក និងទំនិញជិតអស់' },
-                            { command: 'expenses', description: '💸 របាយការណ៍ចំណាយថ្ងៃនេះ' },
-                            { command: 'summary', description: '📈 សង្ខេបចំណូល-ចំណាយ និងប្រាក់ចំណេញ' },
-                            { command: 'help', description: 'ℹ️ ជំនួយ និងរបៀបប្រើប្រាស់' }
-                        ]
-                    })
-                });
-                const cmdData = await cmdRes.json();
-                if (!cmdData.ok) {
-                    throw new Error('Bot Token មិនត្រឹមត្រូវ: ' + (cmdData.description || ''));
-                }
+                // 1. លុប Commands ចាស់ៗចេញពី Bot
+                await fetch(`https://api.telegram.org/bot${token}/deleteMyCommands`);
 
-                // 2. Ensure Webhook is CLEARED to prevent 302 redirect loops with Apps Script
-                try {
-                    await fetch(`https://api.telegram.org/bot${token}/deleteWebhook?drop_pending_updates=true`);
-                } catch(e) {
-                    console.warn('deleteWebhook check warning:', e);
-                }
+                // 2. លុប Webhook និងសម្អាត Updates ចាស់ៗ
+                await fetch(`https://api.telegram.org/bot${token}/deleteWebhook?drop_pending_updates=true`);
 
-                // 3. Send greeting message with Persistent Reply Keyboard if Chat ID exists
+                // 3. បិទផ្ទាំងប៊ូតុង Keyboard Menu ពីលើអេក្រង់ Telegram
                 if (chatId) {
                     await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
                             chat_id: chatId,
-                            text: `🎉 <b>បានដំឡើង Telegram Menu ជោគជ័យ!</b> 🎂\n\n🏪 <b>${storeInfo.name || 'ហាងនំខេកវិជ្ជដា'} (Bakery POS)</b>\nលោកអ្នកអាចចុចប៊ូតុង Menu ខាងក្រោមដើម្បីពិនិត្យរបាយការណ៍លក់ ស្តុក និងចំណាយបានគ្រប់ពេល 24/7៖`,
+                            text: '🧹 <b>បានសម្អាត និងបិទផ្ទាំង Menu ចាស់ក្នុង Telegram រួចរាល់!</b> ✅\n\nចាប់ពីពេលនេះតទៅ Telegram នឹងប្រើសម្រាប់តែទទួលការជូនដំណឹងពីការលក់ វិក្កយបត្រ និងរបាយការណ៍ដែលផ្ញើចេញពី POS ប៉ុណ្ណោះ។',
                             parse_mode: 'HTML',
                             reply_markup: {
-                                keyboard: [
-                                    [{ text: '📊 របាយការណ៍លក់' }, { text: '📦 ពិនិត្យស្តុក' }],
-                                    [{ text: '💸 ពិនិត្យចំណាយ' }, { text: '📈 សង្ខេបថ្ងៃនេះ' }]
-                                ],
-                                resize_keyboard: true,
-                                persistent: true
+                                remove_keyboard: true
                             }
                         })
                     });
                 }
 
-                showToast('🎉 បានដំឡើង Telegram Menu ជោគជ័យ និងបិទ Webhook រួចរាល់!', 'success');
-                confetti({ particleCount: 60, spread: 70 });
+                showToast('🎉 បានសម្អាត និងបិទ Menu ចាស់ក្នុង Telegram ជោគជ័យ!', 'success');
             } catch (err) {
-                console.error('setupTelegramMenuAndWebhook error:', err);
-                showToast(`⚠️ បរាជ័យក្នុងការដំឡើង Telegram: ${err.message}`, 'error');
+                console.error('clearTelegramBotMenu error:', err);
+                showToast(`⚠️ បរាជ័យក្នុងការសម្អាត: ${err.message}`, 'error');
             }
         }
 
@@ -4590,6 +4526,7 @@
 const SHEET_SALES = "Sales";
 const SHEET_PRODUCTS = "Products";
 const SHEET_EXPENSES = "Expenses";
+const SHEET_SETTINGS = "Settings";
 const TELEGRAM_BOT_TOKEN = "8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4";
 
 // ==============================================================================
@@ -4597,18 +4534,39 @@ const TELEGRAM_BOT_TOKEN = "8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4";
 // ==============================================================================
 function doGet(e) {
   try {
+    const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "";
+    if (action === "resolve_pinterest") {
+      const pinUrl = e.parameter.url || "";
+      const res = resolvePinterestImage(pinUrl);
+      const callback = e.parameter.callback || "";
+      if (callback) {
+        return ContentService.createTextOutput(callback + "(" + JSON.stringify(res) + ");")
+          .setMimeType(ContentService.MimeType.JAVASCRIPT);
+      }
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     initSheetsIfNotExist(ss);
     
     const sales = getSalesData(ss);
     const products = getProductsData(ss);
     const expenses = getExpensesData(ss);
+    const settings = getStoreSettings(ss);
     
     const result = {
       status: "success",
       sales: sales,
       products: products,
       expenses: expenses,
+      khqr: settings.khqr || "",
+      merchantName: settings.merchantName || "ហាងនំខេកវិជ្ជដា",
+      storeInfo: {
+        name: settings.merchantName || "ហាងនំខេកវិជ្ជដា",
+        phone: settings.phone || "0978707000",
+        address: settings.address || "រតនៈគីរី អូរយ៉ាដាវ"
+      },
       timestamp: new Date().toISOString()
     };
     
@@ -4653,6 +4611,14 @@ function doPost(e) {
       return ContentService.createTextOutput(JSON.stringify(res))
         .setMimeType(ContentService.MimeType.JSON);
     }
+
+    // --- ករណី ១.១: លុបការលក់/វិក្កយបត្រពី Sheet (Delete Sale from Sheet) ---
+    if (action === "delete_sale" || action === "delete_invoice" || action === "void_sale") {
+      const invId = String(data.id || data.invoiceId || "");
+      const res = deleteSaleRow(ss, invId);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     
     // --- ករណី ២: បញ្ជូនការលក់ជាច្រើនក្នុងពេលតែមួយ (Batch Sales Sync) ---
     if (action === "sync_sales" || action === "batch_sales") {
@@ -4678,6 +4644,13 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
     
+    // --- ករណី ៤.១: ស៊ីង KHQR ឬការកំណត់ហាង (Sync KHQR & Store Settings) ---
+    if (action === "sync_khqr" || action === "save_khqr" || action === "sync_settings" || action === "save_settings") {
+      const res = saveStoreSettings(ss, data);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+
     // --- ករណី ៥: ស៊ីងទំនិញ ឬកែសម្រួលស្តុក (Sync Products / Update Stock) ---
     if (action === "sync_products" || action === "update_stock" || action === "sync_all") {
       // ប្រសិនបើមានផ្ញើ KHQR មកជាមួយ កត់ត្រាទុកក្នុង Settings
@@ -4696,6 +4669,14 @@ function doPost(e) {
     // --- ករណី ៥.១: Upload រូបភាពឡើង Google Drive (Upload Image to Google Drive) ---
     if (action === "upload_image" || action === "upload_product_image") {
       const res = uploadImageToDrive(ss, data);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+    // --- ករណី ៥.២: ស្រាយលីង Pinterest ទៅជារូបភាពផ្ទាល់ HD (Resolve Pinterest Pin Image) ---
+    if (action === "resolve_pinterest") {
+      const pinUrl = data.url || "";
+      const res = resolvePinterestImage(pinUrl);
       return ContentService.createTextOutput(JSON.stringify(res))
         .setMimeType(ContentService.MimeType.JSON);
     }
@@ -4723,23 +4704,180 @@ function doPost(e) {
 // ==============================================================================
 // 3. HELPER FUNCTIONS: SALES (ការលក់)
 // ==============================================================================
-function appendSaleRow(ss, inv) {
-  const sheet = ss.getSheetByName(SHEET_SALES);
-  const id = String(inv.id || ("BK-" + Date.now()));
+
+/**
+ * ស្វែងរកទីតាំងជួរឈរ (Column Index) នីមួយៗតាមចំណងជើងក្នុង Sheet ជាក់ស្តែង
+ * ដើម្បីការពារកុំឱ្យទិន្នន័យខុសជួរឈរ (Column Shift) ទោះបីជា Sheet មាន ១៤ ឬ ១៥ ជួរឈរក៏ដោយ
+ */
+function getSalesColumnMapping(sheet) {
+  const lastCol = Math.max(sheet.getLastColumn(), 15);
+  const headerRow = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
   
+  // លំនាំដើមផ្អែកលើតារាងជាក់ស្តែងរបស់អ្នកប្រើប្រាស់ (15 ជួរឈរពី A ដល់ O)
+  const map = {
+    id: 0,            // A: លេខវិក្កយបត្រ
+    date: 1,          // B: កាលបរិច្ឆេទ
+    time: 2,          // C: ម៉ោង
+    customerName: 3,  // D: ឈ្មោះអតិថិជន
+    customerPhone: 4, // E: លេខទូរស័ព្ទ
+    itemsSummary: 5,  // F: មុខទំនិញ
+    note: 6,          // G: កំណត់ចំណាំ
+    discount: 7,      // H: ការបញ្ចុះតម្លៃ
+    itemsCount: 8,    // I: ចំនួនសរុប
+    totalKHR: 9,      // J: តម្លៃសរុប (៛)
+    depositKHR: 10,   // K: ប្រាក់កក់/បានបង់ (៛)
+    remainingKHR: 11, // L: ប្រាក់នៅខ្វះ (៛)
+    totalUSD: 12,     // M: តម្លៃសរុប ($)
+    method: 13,       // N: វិធីទូទាត់
+    status: 14,       // O: ស្ថានភាពទូទាត់
+    photoLink: 15     // P: តំណភ្ជាប់រូបភាព (បើមាន)
+  };
+
+  headerRow.forEach((colName, idx) => {
+    if (!colName || typeof colName !== 'string') return;
+    const name = colName.trim().toLowerCase();
+    
+    if (name.includes('វិក្កយបត្រ') || name.includes('invoice') || name === 'id') {
+      map.id = idx;
+    } else if (name.includes('កាលបរិច្ឆេទ') || name.includes('date')) {
+      map.date = idx;
+    } else if (name.includes('ម៉ោង') || name.includes('time')) {
+      map.time = idx;
+    } else if (name.includes('ឈ្មោះ') || name.includes('customer')) {
+      map.customerName = idx;
+    } else if (name.includes('ទូរស័ព្ទ') || name.includes('phone')) {
+      map.customerPhone = idx;
+    } else if (name.includes('មុខទំនិញ') || name.includes('item')) {
+      map.itemsSummary = idx;
+    } else if (name.includes('កំណត់ចំណាំ') || name.includes('ចំណាំ') || name.includes('note')) {
+      map.note = idx;
+    } else if (name.includes('បញ្ចុះ') || name.includes('discount')) {
+      map.discount = idx;
+    } else if (name.includes('ចំនួន') || name.includes('qty') || name.includes('count')) {
+      map.itemsCount = idx;
+    } else if (name.includes('ខ្វះ') || name.includes('due') || name.includes('remain')) {
+      map.remainingKHR = idx;
+    } else if (name.includes('កក់') || name.includes('បានបង់') || name.includes('deposit') || name.includes('paid')) {
+      map.depositKHR = idx;
+    } else if (name.includes('($)') || name.includes('usd')) {
+      map.totalUSD = idx;
+    } else if (name.includes('តម្លៃសរុប') || name.includes('ទឹកប្រាក់សរុប') || name.includes('total')) {
+      map.totalKHR = idx;
+    } else if (name.includes('វិធី') || (name.includes('ទូទាត់') && !name.includes('ស្ថានភាព')) || name.includes('method')) {
+      map.method = idx;
+    } else if (name.includes('ស្ថានភាព') || name.includes('status')) {
+      map.status = idx;
+    } else if (name.includes('រូប') || name.includes('photo') || name.includes('image')) {
+      map.photoLink = idx;
+    }
+  });
+
+  return { map, totalCols: Math.max(lastCol, 15) };
+}
+
+/**
+ * បង្កើតជួរដេកទិន្នន័យ (Row Array) ឱ្យត្រូវតាមទីតាំង Column Mapping ពិតប្រាកដ
+ */
+function buildSaleRowArray(inv, mapInfo) {
+  const { map, totalCols } = mapInfo;
+  const row = new Array(totalCols).fill("");
+
+  const id = String(inv.id || ("BK-" + Date.now()));
   const dateStr = inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
   const timeStr = inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
   const custName = inv.customerName || "អតិថិជនទូទៅ";
   const custPhone = inv.customerPhone || "គ្មាន";
   const itemsSummary = inv.itemsSummary || "";
-  const itemsCount = Number(inv.itemsCount || 1);
+  const itemsCount = Number(inv.itemsCount || inv.totalQty || 1);
   const totalKHR = Number(inv.totalKHR || 0);
   const depositKHR = Number((inv.depositKHR !== undefined && inv.depositKHR !== null) ? inv.depositKHR : totalKHR);
   const remainingKHR = Number(inv.remainingKHR || 0);
+  const totalUSD = Number((totalKHR / 4100).toFixed(2));
+  const discount = Number(inv.discount || inv.discountKHR || 0);
   const status = inv.status || (remainingKHR > 0 ? "នៅខ្វះ" : "Paid (គ្រប់)");
   const method = inv.method || "ប្រាក់សុទ្ធ (៛)";
-  const note = inv.note || "";
+  const note = inv.note || "គ្មាន";
   const photoLink = inv.photoLink || "";
+
+  if (map.id !== undefined) row[map.id] = id;
+  if (map.date !== undefined) row[map.date] = dateStr;
+  if (map.time !== undefined) row[map.time] = timeStr;
+  if (map.customerName !== undefined) row[map.customerName] = custName;
+  if (map.customerPhone !== undefined) row[map.customerPhone] = custPhone;
+  if (map.itemsSummary !== undefined) row[map.itemsSummary] = itemsSummary;
+  if (map.note !== undefined) row[map.note] = note;
+  if (map.discount !== undefined) row[map.discount] = discount > 0 ? discount : "គ្មាន";
+  if (map.itemsCount !== undefined) row[map.itemsCount] = itemsCount;
+  if (map.totalKHR !== undefined) row[map.totalKHR] = totalKHR;
+  if (map.depositKHR !== undefined) row[map.depositKHR] = depositKHR;
+  if (map.remainingKHR !== undefined) row[map.remainingKHR] = remainingKHR;
+  if (map.totalUSD !== undefined) row[map.totalUSD] = totalUSD;
+  if (map.method !== undefined) row[map.method] = method;
+  if (map.status !== undefined) row[map.status] = status;
+  if (map.photoLink !== undefined) row[map.photoLink] = photoLink;
+
+  return row;
+}
+
+/**
+ * ជួសជុលជួរដេកចាស់ៗដែលលោតខុសជួរឈរ (Auto-Repair Shuffled Rows e.g. rows 32-38)
+ */
+function autoFixMisalignedSalesRows(sheet) {
+  try {
+    const lastRow = sheet.getLastRow();
+    const lastCol = sheet.getLastColumn();
+    if (lastRow <= 1 || lastCol < 11) return;
+
+    const range = sheet.getRange(2, 1, lastRow - 1, Math.max(lastCol, 15));
+    const values = range.getValues();
+    let hasChanges = false;
+
+    for (let i = 0; i < values.length; i++) {
+      const row = values[i];
+      // ត្រួតពិនិត្យករណីខុសជួរឈរ៖ ជួរ K (index 10) មានពាក្យ "Paid" ឬ "នៅខ្វះ" ហើយជួរ G (index 6) ជាលេខចំនួន (itemsCount)
+      const valK = String(row[10] || "").trim();
+      const valG = row[6];
+      const isShifted = (valK.includes("Paid") || valK.includes("នៅខ្វះ") || valK.includes("គ្រប់")) && (typeof valG === "number" || (!isNaN(valG) && valG !== "" && valG !== "គ្មាន"));
+
+      if (isShifted) {
+        const qty = Number(row[6]) || 1;
+        const total = Number(row[7]) || 0;
+        const deposit = Number(row[8]) || 0;
+        const remaining = Number(row[9]) || 0;
+        const status = String(row[10] || "Paid (គ្រប់)");
+        const method = String(row[11] || "ប្រាក់សុទ្ធ (៛)");
+        const usd = Number((total / 4100).toFixed(2));
+
+        // កែតម្រូវមកទីតាំងពិតប្រាកដតាមចំណងជើងតារាង
+        row[6] = "គ្មាន";          // Col G: កំណត់ចំណាំ
+        row[7] = "គ្មាន";          // Col H: ការបញ្ចុះតម្លៃ
+        row[8] = qty;              // Col I: ចំនួនសរុប
+        row[9] = total;            // Col J: តម្លៃសរុប (៛)
+        row[10] = deposit;         // Col K: ប្រាក់កក់/បានបង់ (៛)
+        row[11] = remaining;       // Col L: ប្រាក់នៅខ្វះ (៛)
+        row[12] = usd;             // Col M: តម្លៃសរុប ($)
+        row[13] = method;          // Col N: វិធីទូទាត់
+        row[14] = status;          // Col O: ស្ថានភាពទូទាត់
+        hasChanges = true;
+      }
+    }
+
+    if (hasChanges) {
+      range.setValues(values);
+      Logger.log("Successfully auto-repaired misaligned sales rows in Sheet!");
+    }
+  } catch (err) {
+    Logger.log("autoFixMisalignedSalesRows error: " + err.toString());
+  }
+}
+
+function appendSaleRow(ss, inv) {
+  const sheet = ss.getSheetByName(SHEET_SALES);
+  autoFixMisalignedSalesRows(sheet);
+  
+  const id = String(inv.id || ("BK-" + Date.now()));
+  const mapInfo = getSalesColumnMapping(sheet);
+  const rowData = buildSaleRowArray(inv, mapInfo);
 
   // ត្រួតពិនិត្យមើលថាតើវិក្កយបត្រនេះមានរួចហើយឬនៅ
   const existingIds = getExistingColumnValues(sheet, 1);
@@ -4748,43 +4886,12 @@ function appendSaleRow(ss, inv) {
   if (existingIndex !== -1) {
     // ប្រសិនបើមានរួចហើយ (ករណីកែប្រែវិក្កយបត្រ) ធ្វើការ Update ជួរចាស់នោះ
     const targetRow = existingIndex + 2; // បូក ២ ព្រោះជួរទី ១ ជា Header
-    sheet.getRange(targetRow, 1, 1, 14).setValues([[
-      id,
-      dateStr,
-      timeStr,
-      custName,
-      custPhone,
-      itemsSummary,
-      itemsCount,
-      totalKHR,
-      depositKHR,
-      remainingKHR,
-      status,
-      method,
-      note,
-      photoLink
-    ]]);
+    sheet.getRange(targetRow, 1, 1, rowData.length).setValues([rowData]);
     return { status: "success", id: id, updated: true, message: "Invoice updated successfully" };
   }
   
-  sheet.appendRow([
-    id,
-    dateStr,
-    timeStr,
-    custName,
-    custPhone,
-    itemsSummary,
-    itemsCount,
-    totalKHR,
-    depositKHR,
-    remainingKHR,
-    status,
-    method,
-    note,
-    photoLink
-  ]);
-  
-  return { status: "success", id: id, photoUrl: photoLink };
+  sheet.appendRow(rowData);
+  return { status: "success", id: id, photoUrl: inv.photoLink || "" };
 }
 
 function batchAppendSales(ss, salesList) {
@@ -4793,6 +4900,9 @@ function batchAppendSales(ss, salesList) {
   }
   
   const sheet = ss.getSheetByName(SHEET_SALES);
+  autoFixMisalignedSalesRows(sheet);
+  
+  const mapInfo = getSalesColumnMapping(sheet);
   const existingIds = getExistingColumnValues(sheet, 1);
   const existingSet = new Set(existingIds);
   
@@ -4801,54 +4911,69 @@ function batchAppendSales(ss, salesList) {
     const id = String(inv.id || ("BK-" + Date.now()));
     if (!existingSet.has(id)) {
       existingSet.add(id);
-      rowsToAdd.push([
-        id,
-        inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
-        inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm"),
-        inv.customerName || "អតិថិជនទូទៅ",
-        inv.customerPhone || "គ្មាន",
-        inv.itemsSummary || "",
-        Number(inv.itemsCount || 1),
-        Number(inv.totalKHR || 0),
-        Number(inv.depositKHR || (inv.totalKHR || 0)),
-        Number(inv.remainingKHR || 0),
-        inv.status || "Paid (គ្រប់)",
-        inv.method || "ប្រាក់សុទ្ធ (៛)",
-        inv.note || "",
-        inv.photoLink || ""
-      ]);
+      rowsToAdd.push(buildSaleRowArray(inv, mapInfo));
     }
   });
   
   if (rowsToAdd.length > 0) {
     const lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow + 1, 1, rowsToAdd.length, 14).setValues(rowsToAdd);
+    sheet.getRange(lastRow + 1, 1, rowsToAdd.length, rowsToAdd[0].length).setValues(rowsToAdd);
   }
   
   return { status: "success", addedCount: rowsToAdd.length };
 }
 
+/**
+ * លុបជួរដេកការលក់/វិក្កយបត្រចេញពី Sheet ដោយយោងតាមលេខ ID វិក្កយបត្រ
+ */
+function deleteSaleRow(ss, invId) {
+  if (!invId) return { status: "error", message: "Missing invoice ID" };
+  
+  const sheet = ss.getSheetByName(SHEET_SALES);
+  if (!sheet) return { status: "error", message: "Sales sheet not found" };
+  
+  const existingIds = getExistingColumnValues(sheet, 1);
+  const rowIndex = existingIds.indexOf(String(invId).trim());
+  
+  if (rowIndex !== -1) {
+    const rowToDelete = rowIndex + 2; // +2 ព្រោះជួរទី ១ ជា Header
+    sheet.deleteRow(rowToDelete);
+    Logger.log("Successfully deleted invoice " + invId + " at row " + rowToDelete);
+    return { status: "success", id: invId, message: "បានលុបវិក្កយបត្រ " + invId + " ពី Sheet រួចរាល់" };
+  }
+  
+  return { status: "warning", id: invId, message: "រកមិនឃើញវិក្កយបត្រ " + invId + " ក្នុង Sheet ទេ" };
+}
+
 function getSalesData(ss) {
   const sheet = ss.getSheetByName(SHEET_SALES);
+  autoFixMisalignedSalesRows(sheet);
+  
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
   
-  const values = sheet.getRange(2, 1, lastRow - 1, 14).getValues();
+  const mapInfo = getSalesColumnMapping(sheet);
+  const m = mapInfo.map;
+  const colCount = Math.max(sheet.getLastColumn(), 15);
+  const values = sheet.getRange(2, 1, lastRow - 1, colCount).getValues();
+  
   return values.map(row => ({
-    id: String(row[0] || ""),
-    date: row[1] ? (row[1] instanceof Date ? Utilities.formatDate(row[1], "GMT+7", "yyyy-MM-dd") : String(row[1])) : "",
-    time: row[2] ? (row[2] instanceof Date ? Utilities.formatDate(row[2], "GMT+7", "HH:mm") : String(row[2])) : "",
-    customerName: String(row[3] || "អតិថិជនទូទៅ"),
-    customerPhone: String(row[4] || "គ្មាន"),
-    itemsSummary: String(row[5] || ""),
-    itemsCount: Number(row[6] || 1),
-    totalKHR: Number(row[7] || 0),
-    depositKHR: Number(row[8] || 0),
-    remainingKHR: Number(row[9] || 0),
-    status: String(row[10] || "Paid (គ្រប់)"),
-    method: String(row[11] || "ប្រាក់សុទ្ធ (៛)"),
-    note: String(row[12] || ""),
-    photoLink: String(row[13] || "")
+    id: String(row[m.id !== undefined ? m.id : 0] || ""),
+    date: row[m.date !== undefined ? m.date : 1] ? (row[m.date !== undefined ? m.date : 1] instanceof Date ? Utilities.formatDate(row[m.date !== undefined ? m.date : 1], "GMT+7", "yyyy-MM-dd") : String(row[m.date !== undefined ? m.date : 1])) : "",
+    time: row[m.time !== undefined ? m.time : 2] ? (row[m.time !== undefined ? m.time : 2] instanceof Date ? Utilities.formatDate(row[m.time !== undefined ? m.time : 2], "GMT+7", "HH:mm") : String(row[m.time !== undefined ? m.time : 2])) : "",
+    customerName: String(row[m.customerName !== undefined ? m.customerName : 3] || "អតិថិជនទូទៅ"),
+    customerPhone: String(row[m.customerPhone !== undefined ? m.customerPhone : 4] || "គ្មាន"),
+    itemsSummary: String(row[m.itemsSummary !== undefined ? m.itemsSummary : 5] || ""),
+    note: String(row[m.note !== undefined ? m.note : 6] || ""),
+    discount: Number(row[m.discount !== undefined ? m.discount : 7]) || 0,
+    itemsCount: Number(row[m.itemsCount !== undefined ? m.itemsCount : 8]) || 1,
+    totalKHR: Number(row[m.totalKHR !== undefined ? m.totalKHR : 9]) || 0,
+    depositKHR: Number(row[m.depositKHR !== undefined ? m.depositKHR : 10]) || 0,
+    remainingKHR: Number(row[m.remainingKHR !== undefined ? m.remainingKHR : 11]) || 0,
+    totalUSD: Number(row[m.totalUSD !== undefined ? m.totalUSD : 12]) || 0,
+    method: String(row[m.method !== undefined ? m.method : 13] || "ប្រាក់សុទ្ធ (៛)"),
+    status: String(row[m.status !== undefined ? m.status : 14] || "Paid (គ្រប់)"),
+    photoLink: String(row[m.photoLink !== undefined ? m.photoLink : 15] || "")
   })).filter(s => s.id !== "");
 }
 
@@ -5017,6 +5142,7 @@ function uploadImageToDrive(ss, data) {
     const decoded = Utilities.base64Decode(cleanBase64);
     const blob = Utilities.newBlob(decoded, contentType, fileName);
     
+    // បង្កើត Folder លើ Google Drive
     let folders = DriveApp.getFoldersByName("Bakery_POS_Images");
     let folder = folders.hasNext() ? folders.next() : DriveApp.createFolder("Bakery_POS_Images");
     folder.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
@@ -5025,8 +5151,77 @@ function uploadImageToDrive(ss, data) {
     file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
     const fileId = file.getId();
     
+    // តំណភ្ជាប់ផ្ទាល់ (Direct High-Speed CDN URL)
     const directUrl = "https://lh3.googleusercontent.com/d/" + fileId;
     return { status: "success", url: directUrl, fileId: fileId };
+  } catch (err) {
+    return { status: "error", message: err.toString() };
+  }
+}
+
+/**
+ * ស្រាយលីង Pinterest (Page Pin ឬ pin.it) ទៅជារូបភាពច្បាស់ផ្ទាល់ (Direct HD Image 736x)
+ */
+function resolvePinterestImage(pinUrl) {
+  try {
+    if (!pinUrl || typeof pinUrl !== 'string') {
+      return { status: "error", message: "URL មិនត្រឹមត្រូវ" };
+    }
+    pinUrl = pinUrl.trim();
+    
+    // បើជា direct image (i.pinimg.com) រួចហើយ
+    if (pinUrl.includes('pinimg.com')) {
+      const hd = pinUrl.replace(/\/(?:236x|474x|564x)\//g, "/736x/");
+      return { status: "success", imageUrl: hd };
+    }
+    
+    let targetUrl = pinUrl;
+    let directImg = "";
+    
+    // ប្រសិនបើជា link pin.it ត្រូវតាម redirect ជាមុនសិន
+    if (targetUrl.includes('pin.it')) {
+      try {
+        const headResp = UrlFetchApp.fetch(targetUrl, { followRedirects: true, muteHttpExceptions: true });
+        const html = headResp.getContentText();
+        
+        // 1. រកមើលរូបភាព i.pinimg.com ក្នុងទំព័រផ្ទាល់
+        const imgMatch = html.match(/(https:\/\/i\.pinimg\.com\/[^\s"']+\.(?:jpg|png|webp))/i);
+        if (imgMatch && imgMatch[1]) {
+          directImg = imgMatch[1].replace(/\/(?:236x|474x|564x)\//g, "/736x/");
+        }
+        
+        // 2. ស្រង់យក Pin ID ដើម្បីសម្អាត URL កុំឱ្យជាប់កូដ invite_code ឬ /sent/
+        const pinMatch = html.match(/\/pin\/(\d+)/i) || html.match(/pinterest\.com\/pin\/(\d+)/i);
+        if (pinMatch && pinMatch[1]) {
+          targetUrl = "https://www.pinterest.com/pin/" + pinMatch[1] + "/";
+        }
+      } catch (errHead) {}
+    } else {
+      // បើជា link pinterest.com ធម្មតា តែមាន query parameters
+      const pinMatch = targetUrl.match(/\/pin\/(\d+)/i);
+      if (pinMatch && pinMatch[1]) {
+        targetUrl = "https://www.pinterest.com/pin/" + pinMatch[1] + "/";
+      }
+    }
+    
+    // បើបាន directImg រួចហើយ មិនបាច់ចាំសួរ oEmbed ទៀតក៏បាន
+    if (directImg) {
+      return { status: "success", imageUrl: directImg };
+    }
+    
+    // ហៅ Pinterest oEmbed API ដោយប្រើ Clean URL
+    const oembedUrl = "https://www.pinterest.com/oembed.json?url=" + encodeURIComponent(targetUrl);
+    const resp = UrlFetchApp.fetch(oembedUrl, { muteHttpExceptions: true });
+    if (resp.getResponseCode() === 200) {
+      const json = JSON.parse(resp.getContentText());
+      let thumb = json.thumbnail_url || "";
+      if (thumb) {
+        const hd = thumb.replace(/\/(?:236x|474x|564x)\//g, "/736x/");
+        return { status: "success", imageUrl: hd, title: json.title || "" };
+      }
+    }
+    
+    return { status: "error", message: "មិនអាចទាញយករូបពី Link Pinterest នេះបានទេ សូមប្រើ Mouse ស្ដាំ Copy Image Address ឬ Download រូបមកបញ្ចូល" };
   } catch (err) {
     return { status: "error", message: err.toString() };
   }
@@ -5040,12 +5235,14 @@ function initSheetsIfNotExist(ss) {
   if (!sales) {
     sales = ss.insertSheet(SHEET_SALES);
     sales.appendRow([
-      "ID វិក្កយបត្រ", "កាលបរិច្ឆេទ", "ម៉ោង", "ឈ្មោះអតិថិជន", "លេខទូរស័ព្ទ",
-      "មុខទំនិញដែលបានទិញ", "ចំនួនសរុប", "ទឹកប្រាក់សរុប (៛)", "ប្រាក់បានកក់/បង់ (៛)",
-      "ប្រាក់នៅខ្វះ (៛)", "ស្ថានភាព", "វិធីទូទាត់", "កំណត់ចំណាំ", "តំណភ្ជាប់រូបភាព"
+      "លេខវិក្កយបត្រ", "កាលបរិច្ឆេទ", "ម៉ោង", "ឈ្មោះអតិថិជន", "លេខទូរស័ព្ទ",
+      "មុខទំនិញ", "កំណត់ចំណាំ", "ការបញ្ចុះតម្លៃ", "ចំនួនសរុប", "តម្លៃសរុប (៛)",
+      "ប្រាក់កក់/បានបង់ (៛)", "ប្រាក់នៅខ្វះ (៛)", "តម្លៃសរុប ($)", "វិធីទូទាត់", "ស្ថានភាពទូទាត់"
     ]);
-    sales.getRange("A1:N1").setBackground("#E07A5F").setFontColor("#FFFFFF").setFontWeight("bold");
+    sales.getRange("A1:O1").setBackground("#E07A5F").setFontColor("#FFFFFF").setFontWeight("bold");
     sales.setFrozenRows(1);
+  } else {
+    autoFixMisalignedSalesRows(sales);
   }
   
   let products = ss.getSheetByName(SHEET_PRODUCTS);
@@ -5063,6 +5260,83 @@ function initSheetsIfNotExist(ss) {
     expenses.getRange("A1:F1").setBackground("#EF4444").setFontColor("#FFFFFF").setFontWeight("bold");
     expenses.setFrozenRows(1);
   }
+
+  let settings = ss.getSheetByName(SHEET_SETTINGS);
+  if (!settings) {
+    settings = ss.insertSheet(SHEET_SETTINGS);
+    settings.appendRow(["Key", "Value"]);
+    settings.appendRow(["KHQR_IMAGE", ""]);
+    settings.appendRow(["MERCHANT_NAME", "ហាងនំខេកវិជ្ជដា"]);
+    settings.appendRow(["STORE_PHONE", "0978707000"]);
+    settings.appendRow(["STORE_ADDRESS", "រតនៈគីរី អូរយ៉ាដាវ"]);
+    settings.getRange("A1:B1").setBackground("#8B5CF6").setFontColor("#FFFFFF").setFontWeight("bold");
+    settings.setFrozenRows(1);
+  }
+}
+
+function getStoreSettings(ss) {
+  let sheet = ss.getSheetByName(SHEET_SETTINGS);
+  if (!sheet) {
+    initSheetsIfNotExist(ss);
+    sheet = ss.getSheetByName(SHEET_SETTINGS);
+  }
+  const lastRow = sheet ? sheet.getLastRow() : 0;
+  const result = {
+    khqr: "",
+    merchantName: "ហាងនំខេកវិជ្ជដា",
+    phone: "0978707000",
+    address: "រតនៈគីរី អូរយ៉ាដាវ"
+  };
+  if (!sheet || lastRow <= 1) return result;
+  
+  const values = sheet.getRange(2, 1, lastRow - 1, 2).getValues();
+  values.forEach(row => {
+    const k = String(row[0] || "").trim().toUpperCase();
+    const v = String(row[1] || "").trim();
+    if (k === "KHQR_IMAGE" || k === "KHQR") result.khqr = v;
+    if (k === "MERCHANT_NAME") result.merchantName = v;
+    if (k === "STORE_PHONE") result.phone = v;
+    if (k === "STORE_ADDRESS") result.address = v;
+  });
+  return result;
+}
+
+function saveStoreSettings(ss, data) {
+  let sheet = ss.getSheetByName(SHEET_SETTINGS);
+  if (!sheet) {
+    initSheetsIfNotExist(ss);
+    sheet = ss.getSheetByName(SHEET_SETTINGS);
+  }
+  
+  const lastRow = sheet.getLastRow();
+  let keys = [];
+  if (lastRow > 1) {
+    keys = sheet.getRange(2, 1, lastRow - 1, 1).getValues().map(r => String(r[0] || "").trim().toUpperCase());
+  }
+  
+  function setVal(key, val) {
+    if (val === undefined || val === null || val === "") return;
+    const sVal = String(val);
+    const idx = keys.indexOf(key.toUpperCase());
+    if (idx >= 0) {
+      sheet.getRange(idx + 2, 2).setValue(sVal);
+    } else {
+      sheet.appendRow([key, sVal]);
+      keys.push(key.toUpperCase());
+    }
+  }
+
+  const khqr = data.khqr || data.customKhqr || data.khqrImage || "";
+  const merchant = data.merchantName || data.name || "";
+  const phone = data.phone || data.storePhone || "";
+  const address = data.address || data.storeAddress || "";
+
+  if (khqr) setVal("KHQR_IMAGE", khqr);
+  if (merchant) setVal("MERCHANT_NAME", merchant);
+  if (phone) setVal("STORE_PHONE", phone);
+  if (address) setVal("STORE_ADDRESS", address);
+
+  return { status: "success", message: "Saved store settings successfully" };
 }
 
 function getExistingColumnValues(sheet, colIndex) {
@@ -5372,6 +5646,7 @@ function sendTelegramApi(method, payload) {
     return { ok: false, error: e.toString() };
   }
 }
+
 
 `;
 
@@ -5926,13 +6201,22 @@ function sendTelegramApi(method, payload) {
             if (ord) openReceiptModal(ord.id, ord.method, ord.totalKHR, ord.depositKHR, ord.remainingKHR);
         }
 
-        function deleteInvoice(invId) {
-            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} នេះមែនទេ?`)) {
+        async function deleteInvoice(invId) {
+            if (confirm(`តើអ្នកពិតជាចង់លុបវិក្កយបត្រ ${invId} នេះមែនទេ?\n(វានឹងលុបចេញពី POS និងលុបចេញពី Google Sheet ដំណាលគ្នា)`)) {
                 transactions = transactions.filter(t => t.id !== invId);
                 saveState();
                 renderAnalytics();
                 renderExpenses();
-                showToast('បានលុបវិក្កយបត្ររួចរាល់', 'info');
+                showToast(`🗑️ កំពុងលុបវិក្កយបត្រ #${invId} ពី Google Sheet...`, 'info');
+
+                try {
+                    await sendGoogleSheetPayload({
+                        action: 'delete_sale',
+                        id: invId
+                    }, true, `🗑️ បានលុបវិក្កយបត្រ #${invId} ពី Google Sheet ជោគជ័យ!`);
+                } catch (e) {
+                    console.error('deleteInvoice sync error:', e);
+                }
             }
         }
 
