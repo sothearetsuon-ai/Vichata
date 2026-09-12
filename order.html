@@ -757,6 +757,14 @@
                 return copy;
             }
 
+            // 🌟 លុបបំបាត់រូបសូកូឡាចាស់ដែលធ្លាប់ច្រឡំភ្ជាប់ជាមួយនំតយដូង / Coconut
+            const nLower = (copy.name || '').toLowerCase();
+            if ((nLower.includes('តយ') || nLower.includes('ដូង') || nLower.includes('coconut') || nLower.includes('pandan')) &&
+                (copy.img && copy.img.includes('photo-1578985545062-69928b1d9587'))) {
+                copy.img = '';
+                if (copy.images) copy.images = copy.images.filter(img => !img.includes('photo-1578985545062-69928b1d9587'));
+            }
+
             // 2. If product itself has a valid image
             if (isValidProductImage(copy.img)) {
                 copy.images = [copy.img];

@@ -263,7 +263,7 @@
                             <span
                                 class="bg-amber-100 text-amber-900 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black border border-amber-300 flex items-center gap-1 shadow-2xs"
                                 title="កំណែប្រែចុងក្រោយ">
-                                ⚡ v2.6
+                                ⚡ v2.7
                             </span>
                         </div>
                         <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none"
@@ -3173,6 +3173,14 @@
                 if (copy.stock === null || copy.stock === undefined) {
                     copy.stock = (localItem && localItem.stock !== undefined) ? localItem.stock : 0;
                 }
+            }
+
+            // 🌟 លុបបំបាត់រូបសូកូឡាចាស់ដែលធ្លាប់ច្រឡំភ្ជាប់ជាមួយនំតយដូង / Coconut
+            const nLower = (copy.name || '').toLowerCase();
+            if ((nLower.includes('តយ') || nLower.includes('ដូង') || nLower.includes('coconut') || nLower.includes('pandan')) &&
+                (copy.img && copy.img.includes('photo-1578985545062-69928b1d9587'))) {
+                copy.img = '';
+                if (copy.images) copy.images = copy.images.filter(img => !img.includes('photo-1578985545062-69928b1d9587'));
             }
 
             // ស្តាររូបភាពពិតប្រាកដដោយមិនឱ្យបាត់
@@ -6285,6 +6293,21 @@ function sendTelegramApi(method, payload) {
 
         function closeMultiUploadModal() { document.getElementById('multiUploadModal').classList.add('hidden'); }
 
+        function appendOrReplaceBatchImage(newImg) {
+            if (!newImg) return;
+            // បើរូបចាស់ជារូប Fallback (Unsplash ឬ SVG) ជំនួសវាចេញភ្លាម មិនទុកឱ្យនៅបាំងមុខរូបថ្មីឡើយ
+            if (batchUploadedImages.length === 1 && (
+                batchUploadedImages[0].includes('unsplash.com') ||
+                batchUploadedImages[0].startsWith('data:image/svg') ||
+                batchUploadedImages[0] === FALLBACK_BAKERY_SVG
+            )) {
+                batchUploadedImages = [newImg];
+            } else {
+                // ដាក់រូបថ្មីជារូបដំបូង (Main Photo) ជានិច្ច
+                batchUploadedImages.unshift(newImg);
+            }
+        }
+
         async function addBatchImageUrl() {
             const input = document.getElementById('batchProdImgUrlInput');
             let url = input ? input.value.trim() : '';
@@ -6300,7 +6323,7 @@ function sendTelegramApi(method, payload) {
             // 🌟 ករណីទី ១: រូបភាពផ្ទាល់ពី Pinterest (i.pinimg.com) -> ប្តូរទៅជា HD 736x ស្វ័យប្រវត្តិ
             if (url.includes('pinimg.com')) {
                 url = url.replace(/\/(?:236x|474x|564x)\//g, '/736x/');
-                batchUploadedImages.push(url);
+                appendOrReplaceBatchImage(url);
                 renderBatchPreviews();
                 input.value = '';
                 showToast('🎉 បានបន្ថែមរូបភាព Pinterest HD រួចរាល់!', 'success');
@@ -6324,7 +6347,7 @@ function sendTelegramApi(method, payload) {
                         if (res.ok) {
                             const data = await res.json();
                             if (data && data.status === 'success' && data.imageUrl) {
-                                batchUploadedImages.push(data.imageUrl);
+                                appendOrReplaceBatchImage(data.imageUrl);
                                 renderBatchPreviews();
                                 input.value = '';
                                 showToast('🎉 បានស្រង់យករូបភាព Pinterest HD ដោយជោគជ័យ!', 'success');
@@ -6341,7 +6364,7 @@ function sendTelegramApi(method, payload) {
                 return;
             }
 
-            batchUploadedImages.push(url);
+            appendOrReplaceBatchImage(url);
             renderBatchPreviews();
             input.value = '';
             showToast('🎉 បានបន្ថែមលីងរូបភាពរួចរាល់!', 'success');
@@ -6375,7 +6398,7 @@ function sendTelegramApi(method, payload) {
             for (const file of files) {
                 if (!file.type.startsWith('image/')) continue;
                 const compressed = await compressImageFile(file, 800, 800, 0.75);
-                batchUploadedImages.push(compressed);
+                appendOrReplaceBatchImage(compressed);
             }
             renderBatchPreviews();
             event.target.value = '';
@@ -6389,9 +6412,10 @@ function sendTelegramApi(method, payload) {
                 countText.innerText = batchUploadedImages.length > 0 ? `បានជ្រើសរើស ${batchUploadedImages.length} សន្លឹក` : 'មិនទាន់បានជ្រើសរើសរូបនៅឡើយទេ';
             }
             container.innerHTML = batchUploadedImages.map((src, idx) => `
-        <div class="relative w-14 h-14 rounded-xl overflow-hidden border border-stone-300">
+        <div class="relative w-14 h-14 rounded-xl overflow-hidden border ${idx === 0 ? 'border-amber-500 ring-2 ring-amber-400' : 'border-stone-300'}">
             <img src="${src}" class="w-full h-full object-cover">
-            <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px]">
+            ${idx === 0 ? '<span class="absolute bottom-0 left-0 right-0 bg-amber-500 text-white text-[8px] font-black text-center py-0.2">រូបមេ</span>' : ''}
+            <button type="button" onclick="batchUploadedImages.splice(${idx},1); renderBatchPreviews();" class="absolute top-0.5 right-0.5 w-4 h-4 bg-rose-500 text-white rounded-full flex items-center justify-center text-[8px] shadow-sm">
                 <i class="fa-solid fa-xmark"></i>
             </button>
         </div>
