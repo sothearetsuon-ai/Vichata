@@ -1310,9 +1310,7 @@
                         <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5">
                             <i class="fa-solid fa-table text-emerald-600"></i> Google Sheet Web App URL
                         </h4>
-                        <span
-                            class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Cloud
-                            Sync</span>
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold">Cloud Sync</span>
                     </div>
                     <input type="text" id="googleSheetUrl"
                         value="https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec"
@@ -1391,30 +1389,24 @@
     <!-- ================= MODAL: GOOGLE APPS SCRIPT CODE ================= -->
     <div id="appsScriptModal"
         class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div
-            class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-6 border border-orange-100 flex flex-col max-h-[90vh]">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-6 border border-orange-100 flex flex-col max-h-[90vh]">
             <div class="flex justify-between items-center pb-3 border-b border-orange-100">
                 <div class="flex items-center gap-2">
-                    <div
-                        class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                    <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
                         <i class="fa-solid fa-code"></i>
                     </div>
                     <div>
-                        <h3 class="font-extrabold text-sm sm:text-base text-bakery-dark">កូដ Google Apps Script
-                            (Backend)</h3>
-                        <p class="text-[11px] text-stone-500 font-medium">សម្រាប់ដាក់ក្នុង Google Sheet > Extensions >
-                            Apps Script</p>
+                        <h3 class="font-extrabold text-sm sm:text-base text-bakery-dark">កូដ Google Apps Script (Backend)</h3>
+                        <p class="text-[11px] text-stone-500 font-medium">សម្រាប់ដាក់ក្នុង Google Sheet > Extensions > Apps Script</p>
                     </div>
                 </div>
-                <button onclick="closeAppsScriptModal()"
-                    class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center transition cursor-pointer">
+                <button onclick="closeAppsScriptModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center transition cursor-pointer">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
             </div>
 
             <div class="mt-3 overflow-y-auto space-y-3 flex-1 pr-1 text-xs custom-scroll">
-                <div
-                    class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-stone-700 space-y-1 leading-relaxed text-[11px]">
+                <div class="p-3 bg-amber-50 rounded-2xl border border-amber-200 text-stone-700 space-y-1 leading-relaxed text-[11px]">
                     <div class="font-bold text-amber-900 flex items-center gap-1.5">
                         <i class="fa-solid fa-lightbulb text-amber-600"></i>
                         <span>របៀបដំឡើង (Quick Setup):</span>
@@ -1445,6 +1437,323 @@
                     បិទ
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: VIEW INVOICE DETAILS (មើលវិក្កយបត្រ) ================= -->
+    <div id="invoiceDetailsModal"
+        class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 flex flex-col max-h-[92vh]">
+            <!-- Header -->
+            <div class="flex justify-between items-center pb-3 border-b border-orange-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-orange-100 text-bakery-caramel flex items-center justify-center font-bold text-base shadow-xs">
+                        <i class="fa-solid fa-receipt"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-extrabold text-base text-bakery-dark">ព័ត៌មានលម្អិតវិក្កយបត្រ</h3>
+                            <span id="viewInvIdBadge" class="px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 font-mono font-black text-xs">#INV</span>
+                        </div>
+                        <p class="text-[11px] text-stone-500 font-medium">ព័ត៌មានប្រតិបត្តិការលក់ និងការទូទាត់</p>
+                    </div>
+                </div>
+                <button onclick="closeInvoiceDetailsModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body (Scrollable) -->
+            <div class="mt-3 overflow-y-auto space-y-3.5 flex-1 pr-1 text-xs custom-scroll">
+                <!-- Payment Summary Card -->
+                <div class="bg-gradient-to-br from-amber-500/10 via-orange-500/5 to-amber-500/15 p-4 rounded-2xl border border-orange-200/80">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <span class="text-[11px] font-bold text-stone-500 block">ទឹកប្រាក់សរុប (Total)</span>
+                            <div class="text-2xl font-black text-bakery-caramel font-en" id="viewInvTotalKHR">0 ៛</div>
+                            <div class="text-xs font-bold text-stone-500 font-en" id="viewInvTotalUSD">≈ $0.00</div>
+                        </div>
+                        <div class="text-right space-y-1">
+                            <div id="viewInvStatusBadge" class="inline-block px-2.5 py-1 rounded-full text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Paid (គ្រប់)
+                            </div>
+                            <div class="text-[11px] text-stone-600 font-semibold flex items-center justify-end gap-1" id="viewInvMethodText">
+                                <i class="fa-solid fa-money-bill-wave text-emerald-600"></i>
+                                <span>ប្រាក់សុទ្ធ (៛)</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Deposit & Remaining Breakdown -->
+                    <div class="grid grid-cols-2 gap-2 mt-3 pt-3 border-t border-orange-200/60">
+                        <div class="bg-white/80 p-2.5 rounded-xl border border-orange-100">
+                            <span class="text-[10px] text-stone-500 font-bold block">ប្រាក់បានបង់ / កក់</span>
+                            <span class="text-sm font-black text-emerald-700 font-en" id="viewInvDepositKHR">0 ៛</span>
+                        </div>
+                        <div class="bg-white/80 p-2.5 rounded-xl border border-orange-100" id="viewInvRemainingBox">
+                            <span class="text-[10px] text-stone-500 font-bold block">ប្រាក់នៅខ្វះ (Balance Due)</span>
+                            <span class="text-sm font-black text-rose-600 font-en" id="viewInvRemainingKHR">0 ៛</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Grid -->
+                <div class="grid grid-cols-2 gap-2.5 bg-stone-50 p-3 rounded-2xl border border-stone-200/70">
+                    <div>
+                        <span class="text-[10px] text-stone-400 font-bold block">កាលបរិច្ឆេទ & ម៉ោង</span>
+                        <div class="text-xs font-extrabold text-stone-700 font-en mt-0.5 flex items-center gap-1.5">
+                            <i class="fa-regular fa-calendar-check text-bakery-caramel"></i>
+                            <span id="viewInvDateTime">-</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-stone-400 font-bold block">អតិថិជន</span>
+                        <div class="text-xs font-extrabold text-stone-800 mt-0.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user text-bakery-caramel text-[11px]"></i>
+                            <span id="viewInvCustomer">-</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-stone-400 font-bold block">លេខទូរស័ព្ទ</span>
+                        <div class="text-xs font-bold text-stone-700 font-en mt-0.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-phone text-stone-400 text-[11px]"></i>
+                            <span id="viewInvPhone">-</span>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="text-[10px] text-stone-400 font-bold block">ចំនួនមុខទំនិញសរុប</span>
+                        <div class="text-xs font-black text-stone-800 font-en mt-0.5 flex items-center gap-1.5">
+                            <i class="fa-solid fa-box-open text-amber-600 text-[11px]"></i>
+                            <span id="viewInvItemsCount">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items Purchased Box -->
+                <div class="p-3 bg-white rounded-2xl border border-orange-100 space-y-2">
+                    <div class="font-extrabold text-stone-800 text-xs flex items-center gap-1.5">
+                        <i class="fa-solid fa-basket-shopping text-bakery-caramel"></i>
+                        <span>មុខទំនិញដែលបានទិញ</span>
+                    </div>
+                    <div id="viewInvItemsContainer" class="space-y-1.5 pt-1">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- Note & Cake Preview (If exists) -->
+                <div id="viewInvNoteBox" class="p-3 bg-amber-50/80 rounded-2xl border border-amber-200 text-stone-700 text-xs hidden">
+                    <div class="font-bold text-amber-900 flex items-center gap-1.5 mb-1">
+                        <i class="fa-solid fa-note-sticky text-amber-600"></i>
+                        <span>កំណត់ចំណាំ៖</span>
+                    </div>
+                    <p id="viewInvNoteContent" class="leading-relaxed font-khmer pl-5"></p>
+                </div>
+
+                <div id="viewInvCakeImageBox" class="p-3 bg-orange-50/50 rounded-2xl border border-orange-200 hidden">
+                    <span class="font-bold text-stone-700 text-xs block mb-2 flex items-center gap-1.5">
+                        <i class="fa-solid fa-camera text-bakery-caramel"></i>
+                        <span>រូបភាពនំខេក (Cake Design Photo):</span>
+                    </span>
+                    <img id="viewInvCakeImg" src="" alt="Cake Photo" class="w-full max-h-48 object-cover rounded-xl border border-orange-200 shadow-sm cursor-pointer" onclick="if(typeof openPhotoLightbox === 'function') openPhotoLightbox(this.src)" />
+                </div>
+            </div>
+
+            <!-- Footer Action Buttons -->
+            <div class="mt-4 pt-3 border-t border-orange-100 flex flex-wrap gap-2">
+                <button type="button" id="viewInvPrintBtn" onclick="printFromViewModal()"
+                    class="flex-1 py-2.5 px-3 rounded-2xl bg-stone-800 hover:bg-stone-900 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                    <i class="fa-solid fa-print"></i>
+                    <span>បោះពុម្ពវិក្កយបត្រ</span>
+                </button>
+                <button type="button" id="viewInvEditBtn" onclick="editFromViewModal()"
+                    class="flex-1 py-2.5 px-3 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    <span>កែប្រែវិក្កយបត្រ</span>
+                </button>
+                <button type="button" onclick="closeInvoiceDetailsModal()"
+                    class="px-4 py-2.5 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition cursor-pointer">
+                    បិទ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: EDIT INVOICE (កែប្រែវិក្កយបត្រ) ================= -->
+    <div id="editInvoiceModal"
+        class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 flex flex-col max-h-[92vh]">
+            <!-- Header -->
+            <div class="flex justify-between items-center pb-3 border-b border-orange-100">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold text-base shadow-xs">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-extrabold text-base text-bakery-dark">កែប្រែវិក្កយបត្រ</h3>
+                            <span id="editInvIdBadge" class="px-2 py-0.5 rounded-md bg-stone-100 text-stone-700 font-mono font-black text-xs">#INV</span>
+                        </div>
+                        <p class="text-[11px] text-stone-500 font-medium">កែសម្រួលតម្លៃ កាលបរិច្ឆេទ ឬព័ត៌មានអតិថិជន</p>
+                    </div>
+                </div>
+                <button onclick="closeEditInvoiceModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center transition cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Form Body (Scrollable) -->
+            <form id="editInvoiceForm" onsubmit="handleSaveEditedInvoice(event)" class="mt-3 overflow-y-auto space-y-3.5 flex-1 pr-1 text-xs custom-scroll">
+                <input type="hidden" id="editInvId" value="">
+
+                <!-- Grid Row 1: Date & Time -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">កាលបរិច្ឆេទ (Date) *</label>
+                        <input type="date" id="editInvDate" required
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en font-bold text-xs" />
+                    </div>
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">ម៉ោង (Time) *</label>
+                        <input type="time" id="editInvTime" required
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en font-bold text-xs" />
+                    </div>
+                </div>
+
+                <!-- Grid Row 2: Customer Name & Phone -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">ឈ្មោះអតិថិជន</label>
+                        <input type="text" id="editInvCustName" placeholder="អតិថិជនទូទៅ"
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs" />
+                    </div>
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">លេខទូរស័ព្ទ</label>
+                        <input type="tel" id="editInvCustPhone" placeholder="012 345 678"
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en text-xs" />
+                    </div>
+                </div>
+
+                <!-- Items Summary & Count -->
+                <div class="space-y-2 bg-stone-50/70 p-3 rounded-2xl border border-stone-200/70">
+                    <div class="flex justify-between items-center">
+                        <label class="font-bold text-stone-700 block">សេចក្តីសង្ខេបមុខទំនិញ (Items Summary)</label>
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-[11px] text-stone-500 font-medium">ចំនួនសរុប:</span>
+                            <input type="number" id="editInvItemsCount" min="1" required
+                                class="w-16 p-1 text-center rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en font-bold text-xs bg-white" />
+                        </div>
+                    </div>
+                    <textarea id="editInvItemsSummary" rows="2" placeholder="ឧ. Croissant x2, Matcha Latte x1..."
+                        class="w-full p-2.5 rounded-xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs bg-white"></textarea>
+                </div>
+
+                <!-- Financial Calculation Card -->
+                <div class="p-3.5 bg-amber-50/70 rounded-2xl border border-amber-200/80 space-y-3">
+                    <div class="font-bold text-amber-900 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-calculator text-amber-600"></i>
+                            <span>ការគណនាប្រាក់ និងការទូទាត់</span>
+                        </span>
+                        <span class="text-[11px] text-stone-500 font-en font-bold" id="editInvUsdDisplay">≈ $0.00</span>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <div>
+                            <label class="font-bold text-stone-700 block mb-1">តម្លៃសរុប (Total KHR) *</label>
+                            <div class="relative">
+                                <input type="number" id="editInvTotalKHR" min="0" step="100" required oninput="calculateEditInvoiceBalance()"
+                                    class="w-full p-2.5 pr-8 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en font-black text-xs text-bakery-caramel" />
+                                <span class="absolute right-2.5 top-2.5 text-stone-400 font-bold text-[11px]">៛</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="font-bold text-stone-700 block mb-1">ប្រាក់បានបង់/កក់ (KHR) *</label>
+                            <div class="relative">
+                                <input type="number" id="editInvDepositKHR" min="0" step="100" required oninput="calculateEditInvoiceBalance()"
+                                    class="w-full p-2.5 pr-8 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel font-en font-black text-xs text-emerald-700" />
+                                <span class="absolute right-2.5 top-2.5 text-stone-400 font-bold text-[11px]">៛</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick buttons for deposit -->
+                    <div class="flex items-center gap-1.5 pt-0.5">
+                        <span class="text-[10px] text-stone-500 font-semibold">កែសម្រួលរហ័ស:</span>
+                        <button type="button" onclick="setEditDepositQuick('full')"
+                            class="px-2 py-0.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 text-[10px] font-bold transition">
+                            បង់គ្រប់ (Full)
+                        </button>
+                        <button type="button" onclick="setEditDepositQuick('half')"
+                            class="px-2 py-0.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 text-[10px] font-bold transition">
+                            កក់ 50%
+                        </button>
+                        <button type="button" onclick="setEditDepositQuick('zero')"
+                            class="px-2 py-0.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-800 text-[10px] font-bold transition">
+                            ០ ៛ (ជំពាក់)
+                        </button>
+                    </div>
+
+                    <!-- Balance Due Result -->
+                    <div class="p-2.5 bg-white rounded-xl border border-orange-100 flex justify-between items-center">
+                        <span class="font-bold text-stone-600 text-xs">ប្រាក់នៅខ្វះ (Balance Due):</span>
+                        <div class="text-right">
+                            <span id="editInvRemainingDisplay" class="font-en font-black text-sm text-emerald-600">0 ៛ (ទូទាត់គ្រប់)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Method & Status Dropdowns -->
+                <div class="grid grid-cols-2 gap-2.5">
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">វិធីសាស្ត្រទូទាត់ *</label>
+                        <select id="editInvMethod" required
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs font-semibold bg-white">
+                            <option value="ប្រាក់សុទ្ធ (៛)">ប្រាក់សុទ្ធ (៛)</option>
+                            <option value="ប្រាក់សុទ្ធ ($ USD)">ប្រាក់សុទ្ធ ($ USD)</option>
+                            <option value="KHQR (៛)">KHQR (៛) - Bank</option>
+                            <option value="ផ្សេងៗ">ផ្សេងៗ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="font-bold text-stone-700 block mb-1">ស្ថានភាពទូទាត់ *</label>
+                        <select id="editInvStatus" required
+                            class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs font-semibold bg-white">
+                            <option value="Paid (គ្រប់)">Paid (គ្រប់)</option>
+                            <option value="នៅខ្វះ">នៅខ្វះ</option>
+                            <option value="កក់">កក់</option>
+                            <option value="បានលុបចោល">បានលុបចោល</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Notes Input -->
+                <div>
+                    <label class="font-bold text-stone-700 block mb-1">ចំណាំបន្ថែម (Note / Cake Writing)</label>
+                    <input type="text" id="editInvNote" placeholder="ចំណាំពិសេស..."
+                        class="w-full p-2.5 rounded-2xl border border-orange-200 focus:outline-none focus:ring-2 focus:ring-bakery-caramel text-xs" />
+                </div>
+
+                <!-- Sync to Google Sheet Checkbox -->
+                <div class="p-3 bg-stone-50 rounded-2xl border border-stone-200 flex items-center justify-between">
+                    <label class="flex items-center gap-2 cursor-pointer select-none">
+                        <input type="checkbox" id="editInvSyncToSheet" checked class="w-4 h-4 rounded text-bakery-caramel focus:ring-bakery-caramel accent-bakery-caramel" />
+                        <span class="font-bold text-stone-700 text-xs">🔄 Sync ការកែប្រែនេះទៅ Google Sheet ភ្លាមៗ</span>
+                    </label>
+                </div>
+
+                <!-- Footer Buttons -->
+                <div class="mt-4 pt-3 border-t border-orange-100 flex gap-2">
+                    <button type="submit"
+                        class="flex-1 py-2.5 rounded-2xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shadow transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                        <i class="fa-solid fa-floppy-disk"></i>
+                        <span>💾 រក្សាទុកការកែប្រែ (Save)</span>
+                    </button>
+                    <button type="button" onclick="closeEditInvoiceModal()"
+                        class="px-4 py-2.5 rounded-2xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition cursor-pointer">
+                        បោះបង់
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
@@ -3223,10 +3532,10 @@
         // ================= GOOGLE SHEET SYNC ENGINE =================
         function getEffectiveGoogleSheetUrl() {
             const settings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || integrationSettings;
-            let url = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim())
-                ? settings.googleSheetUrl.trim()
+            let url = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) 
+                ? settings.googleSheetUrl.trim() 
                 : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
-
+            
             // ពិនិត្យការពារកុំឱ្យប្រើ Link docs.google.com ធម្មតា
             if (!url || (!url.includes('script.google.com') && !url.includes('script.googleusercontent.com'))) {
                 url = DEFAULT_GOOGLE_SHEET_URL;
@@ -3484,24 +3793,34 @@ function doPost(e) {
 function appendSaleRow(ss, inv) {
   const sheet = ss.getSheetByName(SHEET_SALES);
   const id = String(inv.id || ("BK-" + Date.now()));
+  const dateStr = inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  const timeStr = inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
+  const custName = inv.customerName || "អតិថិជនទូទៅ";
+  const custPhone = inv.customerPhone || "គ្មាន";
+  const itemsSummary = inv.itemsSummary || "";
+  const itemsCount = Number(inv.itemsCount || 1);
+  const totalKHR = Number(inv.totalKHR || 0);
+  const depositKHR = Number((inv.depositKHR !== undefined && inv.depositKHR !== null) ? inv.depositKHR : totalKHR);
+  const remainingKHR = Number(inv.remainingKHR || 0);
+  const status = inv.status || (remainingKHR > 0 ? "នៅខ្វះ" : "Paid (គ្រប់)");
+  const method = inv.method || "ប្រាក់សុទ្ធ (៛)";
+  const note = inv.note || "";
+  const photoLink = inv.photoLink || "";
+
   const existingIds = getExistingColumnValues(sheet, 1);
-  if (existingIds.indexOf(id) !== -1) return { status: "success", id: id, duplicated: true };
+  const existingIndex = existingIds.indexOf(id);
+  if (existingIndex !== -1) {
+    const targetRow = existingIndex + 2;
+    sheet.getRange(targetRow, 1, 1, 14).setValues([[
+      id, dateStr, timeStr, custName, custPhone, itemsSummary, itemsCount,
+      totalKHR, depositKHR, remainingKHR, status, method, note, photoLink
+    ]]);
+    return { status: "success", id: id, updated: true };
+  }
   
   sheet.appendRow([
-    id,
-    inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
-    inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm"),
-    inv.customerName || "អតិថិជនទូទៅ",
-    inv.customerPhone || "គ្មាន",
-    inv.itemsSummary || "",
-    Number(inv.itemsCount || 1),
-    Number(inv.totalKHR || 0),
-    Number(inv.depositKHR || (inv.totalKHR || 0)),
-    Number(inv.remainingKHR || 0),
-    inv.status || "Paid (គ្រប់)",
-    inv.method || "ប្រាក់សុទ្ធ (៛)",
-    inv.note || "",
-    inv.photoLink || ""
+    id, dateStr, timeStr, custName, custPhone, itemsSummary, itemsCount,
+    totalKHR, depositKHR, remainingKHR, status, method, note, photoLink
   ]);
   return { status: "success", id: id };
 }
@@ -3991,10 +4310,13 @@ function getExistingColumnValues(sheet, colIndex) {
                 return `
         <tr class="hover:bg-orange-50/40 transition">
             <td class="p-3 pl-4">
-                <div class="font-black text-bakery-dark font-en">${t.id}</div>
+                <div class="font-black text-bakery-dark font-en cursor-pointer hover:text-bakery-caramel flex items-center gap-1.5 group" onclick="viewInvoiceDetails('${t.id}')" title="ចុចដើម្បីមើលលម្អិតវិក្កយបត្រ">
+                    <span>${t.id}</span>
+                    <i class="fa-solid fa-circle-info text-[11px] text-stone-400 group-hover:text-bakery-caramel transition"></i>
+                </div>
                 ${custDisplay}
                 <div>${statusBadge}</div>
-                ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer mt-0.5">${t.note}</div>` : ''}
+                ${t.note ? `<div class="text-[9px] text-amber-700 font-khmer mt-0.5 max-w-[180px] truncate" title="${t.note}">${t.note}</div>` : ''}
             </td>
             <td class="p-3 text-stone-700 font-extrabold whitespace-nowrap">${t.date}</td>
             <td class="p-3 whitespace-nowrap">
@@ -4017,12 +4339,20 @@ function getExistingColumnValues(sheet, colIndex) {
                 <div class="text-[10px] text-stone-500 font-en">≈ $${(((t.totalKHR || 0)) / KHR_RATE).toFixed(2)}</div>
             </td>
             <td class="p-3 text-center whitespace-nowrap">
-                <button onclick="reprintInvoice('${t.id}')" class="p-1.5 text-stone-500 hover:text-bakery-caramel hover:bg-orange-100 rounded-lg transition" title="បោះពុម្ពវិក្កយបត្រ">
-                    <i class="fa-solid fa-print"></i>
-                </button>
-                <button onclick="deleteInvoice('${t.id}')" class="p-1.5 text-stone-400 hover:text-rose-600 hover:bg-red-50 rounded-lg transition ml-1" title="លុប">
-                    <i class="fa-solid fa-trash"></i>
-                </button>
+                <div class="flex items-center justify-center gap-1">
+                    <button onclick="viewInvoiceDetails('${t.id}')" class="w-8 h-8 flex items-center justify-center text-sky-600 bg-sky-50 hover:bg-sky-100 hover:text-sky-700 rounded-xl transition shadow-xs cursor-pointer" title="មើលលម្អិតវិក្កយបត្រ">
+                        <i class="fa-solid fa-eye text-xs"></i>
+                    </button>
+                    <button onclick="openEditInvoiceModal('${t.id}')" class="w-8 h-8 flex items-center justify-center text-amber-600 bg-amber-50 hover:bg-amber-100 hover:text-amber-700 rounded-xl transition shadow-xs cursor-pointer" title="កែប្រែវិក្កយបត្រ">
+                        <i class="fa-solid fa-pen-to-square text-xs"></i>
+                    </button>
+                    <button onclick="reprintInvoice('${t.id}')" class="w-8 h-8 flex items-center justify-center text-stone-600 bg-stone-100 hover:bg-stone-200 hover:text-stone-800 rounded-xl transition shadow-xs cursor-pointer" title="បោះពុម្ពវិក្កយបត្រ">
+                        <i class="fa-solid fa-print text-xs"></i>
+                    </button>
+                    <button onclick="deleteInvoice('${t.id}')" class="w-8 h-8 flex items-center justify-center text-rose-500 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 rounded-xl transition shadow-xs cursor-pointer" title="លុបវិក្កយបត្រ">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
             </td>
         </tr>
       `;
@@ -4041,6 +4371,288 @@ function getExistingColumnValues(sheet, colIndex) {
                 renderAnalytics();
                 renderExpenses();
                 showToast('បានលុបវិក្កយបត្ររួចរាល់', 'info');
+            }
+        }
+
+        // ================= INVOICE VIEW & EDIT FEATURES =================
+        let currentViewingInvoiceId = null;
+
+        function viewInvoiceDetails(invId) {
+            const tx = transactions.find(t => t.id === invId);
+            if (!tx) {
+                showToast('⚠️ រកមិនឃើញវិក្កយបត្រនេះទេ!', 'error');
+                return;
+            }
+
+            currentViewingInvoiceId = invId;
+
+            // Header & badges
+            document.getElementById('viewInvIdBadge').innerText = `#${tx.id}`;
+            const totalKHR = tx.totalKHR || 0;
+            const depositKHR = (tx.depositKHR !== undefined && tx.depositKHR !== null) ? tx.depositKHR : totalKHR;
+            const remainingKHR = (tx.remainingKHR !== undefined && tx.remainingKHR !== null) ? tx.remainingKHR : Math.max(0, totalKHR - depositKHR);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+
+            document.getElementById('viewInvTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
+            document.getElementById('viewInvTotalUSD').innerText = `≈ $${totalUSD}`;
+            document.getElementById('viewInvDepositKHR').innerText = `${depositKHR.toLocaleString()} ៛`;
+            document.getElementById('viewInvRemainingKHR').innerText = `${remainingKHR.toLocaleString()} ៛`;
+
+            const remBox = document.getElementById('viewInvRemainingBox');
+            const remDisplay = document.getElementById('viewInvRemainingKHR');
+            if (remainingKHR > 0) {
+                remBox.className = 'bg-rose-50/80 p-2.5 rounded-xl border border-rose-200';
+                remDisplay.className = 'text-sm font-black text-rose-600 font-en';
+            } else {
+                remBox.className = 'bg-white/80 p-2.5 rounded-xl border border-orange-100';
+                remDisplay.className = 'text-sm font-black text-emerald-600 font-en';
+            }
+
+            const isPaid = remainingKHR === 0 && (!tx.status || tx.status.includes('Paid') || tx.status.includes('គ្រប់'));
+            const statusBadge = document.getElementById('viewInvStatusBadge');
+            statusBadge.innerText = tx.status || (isPaid ? 'Paid (គ្រប់)' : 'នៅខ្វះ');
+            statusBadge.className = `inline-block px-2.5 py-1 rounded-full text-xs font-extrabold ${isPaid ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-amber-100 text-amber-800 border border-amber-200'}`;
+
+            const isKhqr = tx.method && (tx.method.includes('KHQR') || tx.method.toLowerCase().includes('bank') || tx.method.toLowerCase().includes('qr'));
+            const methodText = document.getElementById('viewInvMethodText');
+            methodText.innerHTML = `
+                <i class="fa-solid ${isKhqr ? 'fa-qrcode text-rose-600' : 'fa-money-bill-wave text-emerald-600'}"></i>
+                <span>${tx.method || 'ប្រាក់សុទ្ធ (៛)'}</span>
+            `;
+
+            // Order & Customer info
+            const cleanTime = formatCleanTime(tx.time || '');
+            document.getElementById('viewInvDateTime').innerText = `${tx.date || '-'} ${cleanTime ? '(' + cleanTime + ')' : ''}`;
+            document.getElementById('viewInvCustomer').innerText = (tx.customerName && tx.customerName !== 'គ្មាន') ? tx.customerName : 'អតិថិជនទូទៅ';
+            document.getElementById('viewInvPhone').innerText = (tx.customerPhone && tx.customerPhone !== 'គ្មាន') ? tx.customerPhone : 'គ្មាន';
+            document.getElementById('viewInvItemsCount').innerText = `${tx.itemsCount || 1} មុខ`;
+
+            // Items Purchased Breakdown
+            const itemsContainer = document.getElementById('viewInvItemsContainer');
+            if (Array.isArray(tx.items) && tx.items.length > 0) {
+                itemsContainer.innerHTML = tx.items.map(item => `
+                    <div class="flex justify-between items-center py-1.5 px-2 bg-stone-50 rounded-xl text-xs border border-stone-100">
+                        <div class="truncate max-w-[240px]">
+                            <span class="font-extrabold text-stone-800">${item.name || 'នំខេក'}</span>
+                            ${item.flavor ? `<span class="text-[10px] text-bakery-caramel ml-1">(${item.flavor})</span>` : ''}
+                            <span class="text-[11px] text-stone-500 font-en font-bold ml-1">x${item.qty || 1}</span>
+                        </div>
+                        <div class="font-black text-bakery-dark font-en text-xs">
+                            ${((item.priceKHR || 0) * (item.qty || 1)).toLocaleString()} ៛
+                        </div>
+                    </div>
+                `).join('');
+            } else if (tx.itemsSummary) {
+                const arr = tx.itemsSummary.split(', ');
+                itemsContainer.innerHTML = arr.map(itemStr => `
+                    <div class="flex justify-between items-center py-1.5 px-2 bg-stone-50 rounded-xl text-xs border border-stone-100">
+                        <span class="font-semibold text-stone-800 truncate max-w-[280px]">🧁 ${itemStr}</span>
+                    </div>
+                `).join('');
+            } else {
+                itemsContainer.innerHTML = `<div class="text-stone-400 italic py-2 text-center">គ្មានព័ត៌មានលម្អិតនៃមុខទំនិញឡើយ</div>`;
+            }
+
+            // Note
+            const noteBox = document.getElementById('viewInvNoteBox');
+            if (tx.note && tx.note.trim()) {
+                document.getElementById('viewInvNoteContent').innerText = tx.note;
+                noteBox.classList.remove('hidden');
+            } else {
+                noteBox.classList.add('hidden');
+            }
+
+            // Cake Image
+            const cakeBox = document.getElementById('viewInvCakeImageBox');
+            if (tx.cakeImage) {
+                document.getElementById('viewInvCakeImg').src = tx.cakeImage;
+                cakeBox.classList.remove('hidden');
+            } else {
+                cakeBox.classList.add('hidden');
+            }
+
+            document.getElementById('invoiceDetailsModal').classList.remove('hidden');
+        }
+
+        function closeInvoiceDetailsModal() {
+            const modal = document.getElementById('invoiceDetailsModal');
+            if (modal) modal.classList.add('hidden');
+            currentViewingInvoiceId = null;
+        }
+
+        function printFromViewModal() {
+            if (currentViewingInvoiceId) {
+                const id = currentViewingInvoiceId;
+                closeInvoiceDetailsModal();
+                reprintInvoice(id);
+            }
+        }
+
+        function editFromViewModal() {
+            if (currentViewingInvoiceId) {
+                const id = currentViewingInvoiceId;
+                closeInvoiceDetailsModal();
+                openEditInvoiceModal(id);
+            }
+        }
+
+        function openEditInvoiceModal(invId) {
+            const tx = transactions.find(t => t.id === invId);
+            if (!tx) {
+                showToast('⚠️ រកមិនឃើញវិក្កយបត្រនេះទេ!', 'error');
+                return;
+            }
+
+            document.getElementById('editInvId').value = tx.id;
+            document.getElementById('editInvIdBadge').innerText = `#${tx.id}`;
+            document.getElementById('editInvDate').value = tx.date || '';
+            document.getElementById('editInvTime').value = formatCleanTime(tx.time || '12:00');
+            document.getElementById('editInvCustName').value = (tx.customerName && tx.customerName !== 'អតិថិជនទូទៅ' && tx.customerName !== 'គ្មាន') ? tx.customerName : '';
+            document.getElementById('editInvCustPhone').value = (tx.customerPhone && tx.customerPhone !== 'គ្មាន') ? tx.customerPhone : '';
+            document.getElementById('editInvItemsCount').value = tx.itemsCount || 1;
+            document.getElementById('editInvItemsSummary').value = tx.itemsSummary || '';
+
+            const total = tx.totalKHR || 0;
+            const dep = (tx.depositKHR !== undefined && tx.depositKHR !== null) ? tx.depositKHR : total;
+            document.getElementById('editInvTotalKHR').value = total;
+            document.getElementById('editInvDepositKHR').value = dep;
+
+            // Payment method
+            const methodSelect = document.getElementById('editInvMethod');
+            if (tx.method) {
+                if (tx.method.includes('USD')) methodSelect.value = 'ប្រាក់សុទ្ធ ($ USD)';
+                else if (tx.method.includes('KHQR') || tx.method.toLowerCase().includes('bank') || tx.method.toLowerCase().includes('qr')) methodSelect.value = 'KHQR (៛)';
+                else if (tx.method.includes('ផ្សេងៗ')) methodSelect.value = 'ផ្សេងៗ';
+                else methodSelect.value = 'ប្រាក់សុទ្ធ (៛)';
+            } else {
+                methodSelect.value = 'ប្រាក់សុទ្ធ (៛)';
+            }
+
+            // Status
+            const statusSelect = document.getElementById('editInvStatus');
+            if (tx.status) {
+                if (tx.status.includes('Paid') || tx.status.includes('គ្រប់')) statusSelect.value = 'Paid (គ្រប់)';
+                else if (tx.status.includes('កក់')) statusSelect.value = 'កក់';
+                else if (tx.status.includes('លុបចោល')) statusSelect.value = 'បានលុបចោល';
+                else statusSelect.value = 'នៅខ្វះ';
+            } else {
+                statusSelect.value = (dep < total) ? 'នៅខ្វះ' : 'Paid (គ្រប់)';
+            }
+
+            document.getElementById('editInvNote').value = tx.note || '';
+
+            calculateEditInvoiceBalance();
+            document.getElementById('editInvoiceModal').classList.remove('hidden');
+        }
+
+        function closeEditInvoiceModal() {
+            const modal = document.getElementById('editInvoiceModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function calculateEditInvoiceBalance() {
+            const total = Math.max(0, parseInt(document.getElementById('editInvTotalKHR').value) || 0);
+            const dep = Math.max(0, parseInt(document.getElementById('editInvDepositKHR').value) || 0);
+            const rem = Math.max(0, total - dep);
+
+            document.getElementById('editInvUsdDisplay').innerText = `≈ $${(total / KHR_RATE).toFixed(2)}`;
+            const remDisplay = document.getElementById('editInvRemainingDisplay');
+
+            if (rem > 0) {
+                remDisplay.innerText = `${rem.toLocaleString()} ៛ (នៅខ្វះ)`;
+                remDisplay.className = 'font-en font-black text-sm text-rose-600';
+            } else {
+                remDisplay.innerText = `0 ៛ (ទូទាត់គ្រប់)`;
+                remDisplay.className = 'font-en font-black text-sm text-emerald-600';
+            }
+        }
+
+        function setEditDepositQuick(mode) {
+            const total = Math.max(0, parseInt(document.getElementById('editInvTotalKHR').value) || 0);
+            let dep = total;
+            if (mode === 'half') dep = Math.round((total / 2) / 100) * 100;
+            else if (mode === 'zero') dep = 0;
+
+            document.getElementById('editInvDepositKHR').value = dep;
+
+            const statusSelect = document.getElementById('editInvStatus');
+            if (dep >= total) {
+                statusSelect.value = 'Paid (គ្រប់)';
+            } else if (dep > 0) {
+                statusSelect.value = 'កក់';
+            } else {
+                statusSelect.value = 'នៅខ្វះ';
+            }
+
+            calculateEditInvoiceBalance();
+        }
+
+        async function handleSaveEditedInvoice(e) {
+            e.preventDefault();
+
+            const id = document.getElementById('editInvId').value;
+            const idx = transactions.findIndex(t => t.id === id);
+            if (idx === -1) {
+                showToast('⚠️ រកមិនឃើញវិក្កយបត្រនេះទេ!', 'error');
+                return;
+            }
+
+            const date = document.getElementById('editInvDate').value;
+            const time = formatCleanTime(document.getElementById('editInvTime').value);
+            const custName = document.getElementById('editInvCustName').value.trim() || 'អតិថិជនទូទៅ';
+            const custPhone = document.getElementById('editInvCustPhone').value.trim() || 'គ្មាន';
+            const itemsCount = Math.max(1, parseInt(document.getElementById('editInvItemsCount').value) || 1);
+            const itemsSummary = document.getElementById('editInvItemsSummary').value.trim();
+
+            const totalKHR = Math.max(0, parseInt(document.getElementById('editInvTotalKHR').value) || 0);
+            const depositKHR = Math.max(0, parseInt(document.getElementById('editInvDepositKHR').value) || 0);
+            const remainingKHR = Math.max(0, totalKHR - depositKHR);
+
+            const method = document.getElementById('editInvMethod').value;
+            let status = document.getElementById('editInvStatus').value;
+            if (status === 'Paid (គ្រប់)' && remainingKHR > 0) {
+                status = `នៅខ្វះ ${remainingKHR.toLocaleString()}៛`;
+            } else if (status === 'កក់' && remainingKHR > 0) {
+                status = `កក់ ${depositKHR.toLocaleString()}៛ (ខ្វះ ${remainingKHR.toLocaleString()}៛)`;
+            }
+
+            const note = document.getElementById('editInvNote').value.trim();
+            const syncToSheet = document.getElementById('editInvSyncToSheet').checked;
+
+            // Update transaction record
+            transactions[idx] = {
+                ...transactions[idx],
+                date,
+                time,
+                customerName: custName,
+                customerPhone: custPhone,
+                itemsCount,
+                itemsSummary,
+                totalKHR,
+                totalUSD: (totalKHR / KHR_RATE).toFixed(2),
+                depositKHR,
+                remainingKHR,
+                method,
+                status,
+                note
+            };
+
+            transactions[idx] = normalizeTransaction(transactions[idx]);
+
+            saveState();
+            renderAnalytics();
+            if (typeof renderExpenses === 'function') renderExpenses();
+
+            closeEditInvoiceModal();
+            showToast(`✅ បានកែប្រែវិក្កយបត្រ #${id} ជោគជ័យ!`, 'success');
+
+            // Send to Google Sheet if enabled
+            if (syncToSheet && getEffectiveGoogleSheetUrl()) {
+                await sendGoogleSheetPayload(
+                    { action: 'new_sale', invoice: transactions[idx] },
+                    true,
+                    '☁️ បាន Sync ការកែប្រែទៅ Google Sheet ជោគជ័យ!'
+                );
             }
         }
 
