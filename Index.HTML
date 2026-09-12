@@ -648,12 +648,32 @@
                 <div
                     class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 flex flex-col justify-between">
                     <div>
-                        <div class="flex justify-between items-center pb-3 border-b border-orange-100">
-                            <h3 class="font-extrabold text-base text-bakery-dark flex items-center gap-2">
-                                <i class="fa-solid fa-list-check text-bakery-caramel"></i>
-                                <span>ប្រវត្តិការចំណាយរបស់ហាង</span>
-                            </h3>
-                            <span class="text-xs text-stone-500 font-en font-bold" id="expenseCountText">0 items</span>
+                        <div class="flex justify-between items-center pb-3 border-b border-orange-100 flex-wrap gap-2">
+                            <div>
+                                <h3 class="font-extrabold text-base text-bakery-dark flex items-center gap-2">
+                                    <i class="fa-solid fa-list-check text-bakery-caramel"></i>
+                                    <span>ប្រវត្តិការចំណាយរបស់ហាង</span>
+                                </h3>
+                                <div class="text-[11px] text-stone-500 font-khmer mt-0.5 flex items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200 text-[10px]">
+                                        <i class="fa-solid fa-table text-emerald-600"></i> Tab: Expenses
+                                    </span>
+                                    <span>កត់ត្រាចូល Sheet ដោយស្វ័យប្រវត្តិ</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5">
+                                <button type="button" onclick="syncExpensesToGoogleSheet()" title="Sync ចំណាយទាំងអស់ទៅ Google Sheet"
+                                    class="py-1.5 px-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                                    <i class="fa-solid fa-cloud-arrow-up text-emerald-600"></i>
+                                    <span>Sync ទៅ Sheet</span>
+                                </button>
+                                <button type="button" onclick="pullExpensesFromGoogleSheet()" title="ទាញចំណាយពី Google Sheet ចូលម៉ាស៊ីន"
+                                    class="py-1.5 px-3 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                                    <i class="fa-solid fa-cloud-arrow-down text-sky-600"></i>
+                                    <span>ទាញពី Sheet</span>
+                                </button>
+                                <span class="text-xs text-stone-500 font-en font-bold ml-1" id="expenseCountText">0 items</span>
+                            </div>
                         </div>
 
                         <div class="overflow-x-auto mt-3 custom-scroll">
@@ -4389,9 +4409,10 @@
 
             // ៣. Sync ចំណាយ
             if (expenses && expenses.length > 0) {
+                const cleanExpenses = expenses.map(normalizeExpense).filter(Boolean);
                 await sendGoogleSheetPayload({
                     action: 'sync_expenses',
-                    expenses: expenses
+                    expenses: cleanExpenses
                 }, false);
             }
 
@@ -4699,10 +4720,39 @@ function getSalesData(ss) {
 // ==============================================================================
 // 4. HELPER FUNCTIONS: EXPENSES (ចំណាយ)
 // ==============================================================================
+function getExpensesSheet(ss) {
+  let sheet = ss.getSheetByName(SHEET_EXPENSES);
+  if (!sheet) {
+    sheet = ss.getSheetByName("ចំណាយ") || ss.getSheetByName("Expense") || ss.getSheetByName("expenses");
+  }
+  if (!sheet) {
+    initSheetsIfNotExist(ss);
+    sheet = ss.getSheetByName(SHEET_EXPENSES);
+  }
+  if (!sheet) {
+    sheet = ss.insertSheet(SHEET_EXPENSES);
+    sheet.appendRow(["ID", "កាលបរិច្ឆេទ", "មុខចំណាយ", "ប្រភេទ", "ចំនួនទឹកប្រាក់ (៛)", "កំណត់ចំណាំ"]);
+    sheet.getRange("A1:F1").setBackground("#EF4444").setFontColor("#FFFFFF").setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
 function appendExpenseRow(ss, exp) {
-  const sheet = ss.getSheetByName(SHEET_EXPENSES);
+  const sheet = getExpensesSheet(ss);
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow(["ID", "កាលបរិច្ឆេទ", "មុខចំណាយ", "ប្រភេទ", "ចំនួនទឹកប្រាក់ (៛)", "កំណត់ចំណាំ"]);
+    sheet.getRange("A1:F1").setBackground("#EF4444").setFontColor("#FFFFFF").setFontWeight("bold");
+    sheet.setFrozenRows(1);
+  }
   const id = String(exp.id || ("EXP-" + Date.now()));
-  const dateStr = exp.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  let dateStr = "";
+  if (exp.date) {
+    const d = new Date(exp.date);
+    dateStr = !isNaN(d.getTime()) ? Utilities.formatDate(d, "GMT+7", "yyyy-MM-dd") : String(exp.date);
+  } else {
+    dateStr = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  }
   const title = exp.title || "ចំណាយទូទៅ";
   const cat = exp.cat || "other";
   const amount = Number(exp.amount || 0);
@@ -4713,38 +4763,57 @@ function appendExpenseRow(ss, exp) {
 }
 
 function syncAllExpenses(ss, expList) {
-  const sheet = ss.getSheetByName(SHEET_EXPENSES);
+  const sheet = getExpensesSheet(ss);
   sheet.clearContents();
   sheet.appendRow(["ID", "កាលបរិច្ឆេទ", "មុខចំណាយ", "ប្រភេទ", "ចំនួនទឹកប្រាក់ (៛)", "កំណត់ចំណាំ"]);
+  sheet.getRange("A1:F1").setBackground("#EF4444").setFontColor("#FFFFFF").setFontWeight("bold");
+  sheet.setFrozenRows(1);
   
-  if (expList.length > 0) {
-    const rows = expList.map(exp => [
-      String(exp.id || ("EXP-" + Date.now())),
-      exp.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
-      exp.title || "",
-      exp.cat || "other",
-      Number(exp.amount || 0),
-      exp.note || ""
-    ]);
+  if (expList && expList.length > 0) {
+    const rows = expList.map(exp => {
+      let dateStr = "";
+      if (exp.date) {
+        const d = new Date(exp.date);
+        dateStr = !isNaN(d.getTime()) ? Utilities.formatDate(d, "GMT+7", "yyyy-MM-dd") : String(exp.date);
+      } else {
+        dateStr = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+      }
+      return [
+        String(exp.id || ("EXP-" + Date.now())),
+        dateStr,
+        exp.title || "",
+        exp.cat || "other",
+        Number(exp.amount || 0),
+        exp.note || ""
+      ];
+    });
     sheet.getRange(2, 1, rows.length, 6).setValues(rows);
   }
-  return { status: "success", count: expList.length };
+  return { status: "success", count: expList ? expList.length : 0 };
 }
 
 function getExpensesData(ss) {
-  const sheet = ss.getSheetByName(SHEET_EXPENSES);
+  const sheet = getExpensesSheet(ss);
+  if (!sheet) return [];
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
   
   const values = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
-  return values.map(row => ({
-    id: String(row[0] || ""),
-    date: row[1] ? (row[1] instanceof Date ? Utilities.formatDate(row[1], "GMT+7", "yyyy-MM-dd") : String(row[1])) : "",
-    title: String(row[2] || ""),
-    cat: String(row[3] || "other"),
-    amount: Number(row[4] || 0),
-    note: String(row[5] || "")
-  })).filter(e => e.id !== "");
+  return values.map(row => {
+    let dateStr = "";
+    if (row[1]) {
+      const d = new Date(row[1]);
+      dateStr = !isNaN(d.getTime()) ? Utilities.formatDate(d, "GMT+7", "yyyy-MM-dd") : String(row[1]);
+    }
+    return {
+      id: String(row[0] || ""),
+      date: dateStr,
+      title: String(row[2] || ""),
+      cat: String(row[3] || "other"),
+      amount: Number(row[4] || 0),
+      note: String(row[5] || "")
+    };
+  }).filter(e => e.id !== "");
 }
 
 // ==============================================================================
@@ -5236,7 +5305,17 @@ function sendTelegramApi(method, payload) {
                 }
 
                 if (remoteSales.length > 0) transactions = remoteSales.map(normalizeTransaction);
-                if (remoteExpenses.length > 0) expenses = remoteExpenses;
+                if (remoteExpenses.length > 0) {
+                    const normalizedRemote = remoteExpenses.map(normalizeExpense).filter(Boolean);
+                    const remoteIdSet = new Set(normalizedRemote.map(e => String(e.id)));
+                    (expenses || []).forEach(localExp => {
+                        if (localExp && localExp.id && !remoteIdSet.has(String(localExp.id))) {
+                            normalizedRemote.push(normalizeExpense(localExp));
+                        }
+                    });
+                    normalizedRemote.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+                    expenses = normalizedRemote;
+                }
 
                 saveState();
                 renderProducts();
@@ -5247,7 +5326,7 @@ function sendTelegramApi(method, payload) {
                 renderAnalytics();
 
                 confetti({ particleCount: 60, spread: 70 });
-                showToast(`🎉 បានទាញជោគជ័យ៖ ${products.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${remoteExpenses.length} ចំណាយ!`, 'success');
+                showToast(`🎉 បានទាញជោគជ័យ៖ ${products.length} មុខទំនិញ, ${remoteSales.length} ការលក់, ${expenses.length} ចំណាយ!`, 'success');
 
             } catch (err) {
                 console.error('Google Sheet Pull Error:', err);
@@ -5258,7 +5337,32 @@ function sendTelegramApi(method, payload) {
         }
 
         // ================= EXPENSES =================
-        function handleNewExpense(e) {
+        function normalizeExpense(exp) {
+            if (!exp) return null;
+            let cleanDate = exp.date || '';
+            if (cleanDate) {
+                const d = new Date(cleanDate);
+                if (!isNaN(d.getTime())) {
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    cleanDate = `${year}-${month}-${day}`;
+                }
+            }
+            if (!cleanDate) {
+                cleanDate = new Date().toISOString().split('T')[0];
+            }
+            return {
+                id: String(exp.id || ('EXP-' + Date.now().toString().slice(-5))),
+                date: cleanDate,
+                title: String(exp.title || 'ចំណាយទូទៅ'),
+                cat: String(exp.cat || 'other'),
+                amount: Number(exp.amount || 0),
+                note: String(exp.note || '')
+            };
+        }
+
+        async function handleNewExpense(e) {
             e.preventDefault();
             const title = document.getElementById('expenseTitleInput').value.trim();
             const cat = document.getElementById('expenseCategoryInput').value;
@@ -5271,18 +5375,14 @@ function sendTelegramApi(method, payload) {
                 return;
             }
 
-            const newExpense = {
+            const rawExpense = {
                 id: 'EXP-' + Date.now().toString().slice(-5),
                 title, cat, date, amount, note
             };
+            const newExpense = normalizeExpense(rawExpense);
 
             expenses.unshift(newExpense);
             saveState();
-
-            sendGoogleSheetPayload({
-                action: 'add_expense',
-                expense: newExpense
-            }, true);
 
             document.getElementById('expenseTitleInput').value = '';
             document.getElementById('expenseAmountInput').value = '';
@@ -5290,7 +5390,114 @@ function sendTelegramApi(method, payload) {
 
             renderExpenses();
             confetti({ particleCount: 40, spread: 50 });
-            showToast(`💸 បានកត់ត្រាចំណាយ "${title}" ចូល Google Sheet រួចរាល់!`, 'success');
+
+            // Sync ទៅ Google Sheet (Tab Expenses)
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const origHtml = submitBtn ? submitBtn.innerHTML : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> កំពុង Sync ចូល Sheet...';
+            }
+
+            try {
+                const res = await sendGoogleSheetPayload({
+                    action: 'add_expense',
+                    expense: newExpense
+                }, false);
+
+                if (res && res.success !== false) {
+                    showToast(`💸 បានកត់ត្រាចំណាយ "${title}" (${amount.toLocaleString()}៛) ចូល Tab "Expenses" ក្នុង Google Sheet ជោគជ័យ!`, 'success');
+                } else {
+                    showToast(`⚠️ បានកត់ត្រាក្នុងម៉ាស៊ីនរួចរាល់ ប៉ុន្តែមិនទាន់អាច Sync ទៅ Sheet`, 'warning');
+                }
+            } catch (err) {
+                console.warn('Sync expense error:', err);
+                showToast(`⚠️ បានកត់ត្រាក្នុងម៉ាស៊ីន ប៉ុន្តែមិនទាន់អាច Sync ទៅ Sheet`, 'warning');
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = origHtml;
+                }
+            }
+        }
+
+        async function syncExpensesToGoogleSheet(showNotice = true) {
+            const targetUrl = getEffectiveGoogleSheetUrl();
+            if (!targetUrl) {
+                showToast('⚠️ សូមបញ្ចូល Google Apps Script Web App URL ជាមុនសិន!', 'warning');
+                openSettingsModal();
+                return;
+            }
+            if (!expenses || expenses.length === 0) {
+                showToast('ℹ️ មិនទាន់មានទិន្នន័យចំណាយត្រូវ Sync ទេ!', 'info');
+                return;
+            }
+            const spinIcon = document.getElementById('syncSpinIcon');
+            if (spinIcon) spinIcon.classList.add('fa-spin');
+            if (showNotice) showToast(`⏳ កំពុង Sync កំណត់ត្រាចំណាយចំនួន ${expenses.length} មុខ ទៅ Google Sheet (Tab Expenses)...`, 'info');
+
+            try {
+                const cleanExpenses = expenses.map(normalizeExpense).filter(Boolean);
+                const res = await sendGoogleSheetPayload({
+                    action: 'sync_expenses',
+                    expenses: cleanExpenses
+                }, false);
+
+                if (res && res.success !== false) {
+                    if (showNotice) {
+                        confetti({ particleCount: 50, spread: 60 });
+                        showToast(`🎉 បាន Sync ចំណាយចំនួន ${cleanExpenses.length} មុខ ទៅ Tab "Expenses" ក្នុង Google Sheet រួចរាល់!`, 'success');
+                    }
+                }
+            } catch (err) {
+                console.error('Error syncing expenses:', err);
+                if (showNotice) showToast(`⚠️ មានបញ្ហាក្នុងការ Sync ចំណាយ៖ ${err.message}`, 'error');
+            } finally {
+                if (spinIcon) spinIcon.classList.remove('fa-spin');
+            }
+        }
+
+        async function pullExpensesFromGoogleSheet() {
+            const targetUrl = getEffectiveGoogleSheetUrl();
+            if (!targetUrl) {
+                showToast('⚠️ សូមបញ្ចូល Google Apps Script Web App URL ជាមុនសិន!', 'warning');
+                openSettingsModal();
+                return;
+            }
+            const spinIcon = document.getElementById('syncSpinIcon');
+            if (spinIcon) spinIcon.classList.add('fa-spin');
+            showToast('⏳ កំពុងទាញទិន្នន័យចំណាយពី Google Sheet (Tab Expenses)...', 'info');
+
+            try {
+                const fetchUrl = `${targetUrl}?action=sync_all&_t=${Date.now()}`;
+                const res = await fetch(fetchUrl);
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const data = await res.json();
+                const remoteExpenses = data.expenses || [];
+                if (remoteExpenses.length === 0) {
+                    showToast('ℹ️ មិនមានទិន្នន័យចំណាយក្នុង Google Sheet នៅឡើយទេ', 'info');
+                    return;
+                }
+
+                const normalizedRemote = remoteExpenses.map(normalizeExpense).filter(Boolean);
+                const remoteIdSet = new Set(normalizedRemote.map(e => String(e.id)));
+                (expenses || []).forEach(localExp => {
+                    if (localExp && localExp.id && !remoteIdSet.has(String(localExp.id))) {
+                        normalizedRemote.push(normalizeExpense(localExp));
+                    }
+                });
+                normalizedRemote.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+                expenses = normalizedRemote;
+                saveState();
+                renderExpenses();
+                confetti({ particleCount: 40, spread: 50 });
+                showToast(`🎉 បានទាញទិន្នន័យចំណាយចំនួន ${expenses.length} មុខ ពី Google Sheet រួចរាល់!`, 'success');
+            } catch (err) {
+                console.error('Pull Expenses Error:', err);
+                showToast(`⚠️ មិនអាចទាញទិន្នន័យចំណាយពី Sheet បានទេ (${err.message})`, 'error');
+            } finally {
+                if (spinIcon) spinIcon.classList.remove('fa-spin');
+            }
         }
 
         function renderExpenses() {
