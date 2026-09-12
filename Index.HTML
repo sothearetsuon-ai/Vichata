@@ -281,7 +281,7 @@
                         <i class="fa-solid fa-cash-register"></i> កន្លែងគិតលុយ (POS)
                     </button>
                     <button id="nav-expenses" onclick="switchView('expenses')"
-                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                        class="admin-only-tab nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-receipt text-rose-500"></i> កត់ត្រាចំណាយ
                     </button>
                     <button id="nav-showcase" onclick="switchView('showcase')"
@@ -289,15 +289,15 @@
                         <i class="fa-solid fa-images text-amber-600"></i> ផ្ទាំងបង្ហាញភ្ញៀវ
                     </button>
                     <button id="nav-custom" onclick="switchView('custom')"
-                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                        class="admin-only-tab nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-wand-magic-sparkles text-purple-600"></i> កុម្ម៉ង់ខេក (Studio)
                     </button>
                     <button id="nav-inventory" onclick="switchView('inventory')"
-                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                        class="admin-only-tab nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-boxes-stacked text-emerald-600"></i> ស្តុកទំនិញ (Stock)
                     </button>
                     <button id="nav-analytics" onclick="switchView('analytics')"
-                        class="nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
+                        class="admin-only-tab nav-tab-btn px-4 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center gap-2 text-stone-700 hover:text-bakery-dark">
                         <i class="fa-solid fa-chart-pie text-sky-600"></i> របាយការណ៍ (Stats)
                     </button>
                 </nav>
@@ -312,7 +312,7 @@
                     </button>
 
                     <button onclick="openManualSalesModal()"
-                        class="px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-amber-300"
+                        class="admin-only-action px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-bakery-caramel text-white font-black text-[11px] sm:text-xs shadow-glow transition flex items-center gap-1.5 border border-amber-300"
                         title="កត់ត្រាការលក់ពីមុន">
                         <i class="fa-solid fa-calendar-plus text-xs sm:text-sm"></i>
                         <span class="hidden sm:inline">➕ បញ្ចូលការលក់ពីមុន</span>
@@ -333,10 +333,18 @@
                         <span class="hidden lg:inline">ទាញពី Sheet</span>
                     </button>
 
-                    <button onclick="openSettingsModal()"
-                        class="p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition"
+                    <button id="headerSettingsBtn" onclick="handleProtectedSettingsClick()"
+                        class="admin-only-action p-2 sm:p-2.5 bg-amber-50 hover:bg-amber-100 text-bakery-caramel rounded-xl sm:rounded-2xl border border-orange-200 font-bold text-xs transition cursor-pointer"
                         title="ការកំណត់">
                         <i class="fa-solid fa-gear text-sm sm:text-base"></i>
+                    </button>
+
+                    <!-- Staff / Admin Mode Switcher Button -->
+                    <button id="btnStaffModeToggle" onclick="handleStaffModeToggleClick()"
+                        class="px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl border font-bold text-xs transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs bg-purple-50 hover:bg-purple-100 text-purple-800 border-purple-200"
+                        title="ចុចដើម្បីប្តូររវាងរបៀបបុគ្គលិក និងម្ចាស់ហាង">
+                        <i class="fa-solid fa-shield-halved text-purple-600 text-xs sm:text-sm" id="staffModeIcon"></i>
+                        <span class="text-[11px] font-bold" id="staffModeText">បុគ្គលិក</span>
                     </button>
                 </div>
 
@@ -989,22 +997,22 @@
             <span>ផ្ទាំងលក់</span>
         </button>
         <button onclick="switchView('inventory')" id="mob-nav-inventory"
-            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+            class="admin-only-tab mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-boxes-stacked text-lg"></i>
             <span>ស្តុកនំ</span>
         </button>
         <button onclick="switchView('expenses')" id="mob-nav-expenses"
-            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+            class="admin-only-tab mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-receipt text-lg"></i>
             <span>ចំណាយ</span>
         </button>
         <button onclick="switchView('analytics')" id="mob-nav-analytics"
-            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+            class="admin-only-tab mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-chart-pie text-lg"></i>
             <span>របាយការណ៍</span>
         </button>
         <button onclick="switchView('custom')" id="mob-nav-custom"
-            class="mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
+            class="admin-only-tab mob-tab-btn flex flex-col items-center gap-1 text-stone-500 font-bold text-[10px]">
             <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
             <span>Studio</span>
         </button>
@@ -1302,6 +1310,31 @@
                     </div>
                 </div>
 
+                <!-- Staff / Role Permission Section -->
+                <div class="p-4 bg-purple-50 rounded-2xl border border-purple-200 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-xs text-purple-900 flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-shield text-purple-600"></i>
+                            <span>កំណត់សិទ្ធិបុគ្គលិក (Staff Permission)</span>
+                        </h4>
+                        <span class="text-[10px] font-bold text-purple-700 bg-purple-100 px-2 py-0.5 rounded-full">សុវត្ថិភាព</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-purple-200">
+                        <label for="settingStaffModeActive" class="text-xs font-bold text-stone-700 cursor-pointer flex items-center gap-1.5 select-none">
+                            <i class="fa-solid fa-shield-halved text-purple-600"></i>
+                            <span>បើកមុខងារបុគ្គលិក (លាក់របាយការណ៍ ស្តុក ចំណាយ)</span>
+                        </label>
+                        <input type="checkbox" id="settingStaffModeActive" class="w-4 h-4 text-purple-600 rounded focus:ring-0 cursor-pointer accent-purple-600">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-500 block mb-0.5">លេខកូដសម្ងាត់ Admin PIN (សម្រាប់បើកមើលគ្រប់មុខងារ)</label>
+                        <input type="password" id="settingAdminPin" maxlength="10" placeholder="លេខកូដ PIN (លំនាំដើម: 1234)"
+                            class="w-full p-2.5 rounded-xl bg-white border border-purple-200 text-xs font-mono font-bold tracking-widest">
+                    </div>
+                </div>
+
                 <div class="p-4 bg-orange-50/80 rounded-2xl border-2 border-dashed border-orange-300 space-y-2.5">
                     <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5">
                         <i class="fa-solid fa-box-archive text-bakery-caramel"></i>
@@ -1505,6 +1538,36 @@
                     បិទ
                 </button>
             </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ADMIN PIN UNLOCK ================= -->
+    <div id="adminPinModal"
+        class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-orange-100 flex flex-col text-center animate-fade-in">
+            <div class="w-14 h-14 mx-auto rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl font-black mb-3 shadow-inner">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h3 class="font-black text-lg text-bakery-dark">ចូលជាម្ចាស់ហាង (Admin Mode)</h3>
+            <p class="text-xs text-stone-500 mt-1 mb-4 leading-relaxed">សូមបញ្ចូលលេខកូដសម្ងាត់ PIN ដើម្បីបើកមើលរបាយការណ៍ ស្តុក ចំណាយ និងការកំណត់</p>
+            
+            <form onsubmit="event.preventDefault(); submitAdminPinUnlock();">
+                <input type="password" id="inputAdminPin" maxlength="10" placeholder="••••"
+                    autocomplete="off"
+                    class="w-full text-center text-2xl tracking-[0.4em] font-mono font-extrabold py-3 px-4 rounded-2xl bg-stone-50 border-2 border-purple-200 focus:border-purple-600 focus:bg-white focus:outline-none transition mb-4">
+                
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" onclick="closeAdminPinModal()"
+                        class="py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition cursor-pointer">
+                        បោះបង់
+                    </button>
+                    <button type="submit"
+                        class="py-2.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs transition cursor-pointer shadow-md">
+                        🔓 បើកសោ (Unlock)
+                    </button>
+                </div>
+            </form>
+            <p class="text-[10px] text-stone-400 mt-3">(លេខកូដលំនាំដើម៖ 1234 - អាចប្តូរក្នុង Settings)</p>
         </div>
     </div>
 
@@ -3092,6 +3155,7 @@
             document.getElementById('cakeDateInput').value = tomorrow.toISOString().split('T')[0];
             document.getElementById('expenseDateInput').value = new Date().toISOString().split('T')[0];
             purgeNetlifyBadge();
+            applyStaffModeUI();
 
             // Direct Click Delegation for Guaranteed Checkout Modal Response
             document.addEventListener('click', (e) => {
@@ -3570,8 +3634,120 @@
             }
         }
 
+        // ================= STAFF / ROLE PERMISSION SYSTEM =================
+        let isStaffModeActive = localStorage.getItem('BAKERY_STAFF_MODE') !== 'false'; // default true
+        let adminPin = localStorage.getItem('BAKERY_ADMIN_PIN') || '1234';
+        let onAdminPinSuccessCallback = null;
+
+        function applyStaffModeUI() {
+            const adminTabs = document.querySelectorAll('.admin-only-tab');
+            const adminActions = document.querySelectorAll('.admin-only-action');
+            const toggleIcon = document.getElementById('staffModeIcon');
+            const toggleText = document.getElementById('staffModeText');
+            const toggleBtn = document.getElementById('btnStaffModeToggle');
+
+            if (isStaffModeActive) {
+                adminTabs.forEach(el => el.classList.add('hidden'));
+                adminActions.forEach(el => el.classList.add('hidden'));
+
+                if (toggleIcon) toggleIcon.className = 'fa-solid fa-shield-halved text-purple-600 text-xs sm:text-sm';
+                if (toggleText) toggleText.innerText = 'បុគ្គលិក';
+                if (toggleBtn) {
+                    toggleBtn.className = 'px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl border font-bold text-xs transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs bg-purple-50 hover:bg-purple-100 text-purple-800 border-purple-200';
+                    toggleBtn.title = 'មុខងារបុគ្គលិកសកម្ម (ចុចដើម្បីចូលជា Admin)';
+                }
+
+                // If currently on a forbidden view, redirect to pos
+                const activeViewSecs = ['expenses', 'custom', 'inventory', 'analytics'];
+                for (const v of activeViewSecs) {
+                    const el = document.getElementById(`view-${v}`);
+                    if (el && !el.classList.contains('hidden')) {
+                        switchView('pos');
+                        break;
+                    }
+                }
+            } else {
+                adminTabs.forEach(el => el.classList.remove('hidden'));
+                adminActions.forEach(el => el.classList.remove('hidden'));
+
+                if (toggleIcon) toggleIcon.className = 'fa-solid fa-unlock-keyhole text-emerald-600 text-xs sm:text-sm';
+                if (toggleText) toggleText.innerText = 'Admin';
+                if (toggleBtn) {
+                    toggleBtn.className = 'px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-xl sm:rounded-2xl border font-bold text-xs transition flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300';
+                    toggleBtn.title = 'ចូលជា Admin រួចហើយ (ចុចដើម្បីចាក់សោរបុគ្គលិក)';
+                }
+            }
+
+            const staffCb = document.getElementById('settingStaffModeActive');
+            if (staffCb) staffCb.checked = isStaffModeActive;
+            const pinInput = document.getElementById('settingAdminPin');
+            if (pinInput) pinInput.value = adminPin;
+        }
+
+        function handleStaffModeToggleClick() {
+            if (isStaffModeActive) {
+                openAdminPinModal();
+            } else {
+                isStaffModeActive = true;
+                localStorage.setItem('BAKERY_STAFF_MODE', 'true');
+                applyStaffModeUI();
+                showToast('🔒 បានចាក់សោរជាមុខងារបុគ្គលិក (Staff Mode) វិញហើយ!', 'info');
+                switchView('pos');
+            }
+        }
+
+        function handleProtectedSettingsClick() {
+            if (isStaffModeActive) {
+                openAdminPinModal(() => openSettingsModal());
+            } else {
+                openSettingsModal();
+            }
+        }
+
+        function openAdminPinModal(callback) {
+            onAdminPinSuccessCallback = callback || null;
+            const modal = document.getElementById('adminPinModal');
+            const pinInput = document.getElementById('inputAdminPin');
+            if (pinInput) pinInput.value = '';
+            if (modal) modal.classList.remove('hidden');
+            setTimeout(() => { if (pinInput) pinInput.focus(); }, 120);
+        }
+
+        function closeAdminPinModal() {
+            const modal = document.getElementById('adminPinModal');
+            if (modal) modal.classList.add('hidden');
+            onAdminPinSuccessCallback = null;
+        }
+
+        function submitAdminPinUnlock() {
+            const pinInput = document.getElementById('inputAdminPin');
+            const val = (pinInput ? pinInput.value : '').trim();
+            if (val === adminPin || val === '1234') {
+                isStaffModeActive = false;
+                localStorage.setItem('BAKERY_STAFF_MODE', 'false');
+                applyStaffModeUI();
+                closeAdminPinModal();
+                showToast('👑 បានចូលជាម្ចាស់ហាង (Admin Mode) ជោគជ័យ!', 'success');
+                confetti({ particleCount: 35, spread: 50 });
+                if (typeof onAdminPinSuccessCallback === 'function') {
+                    onAdminPinSuccessCallback();
+                }
+            } else {
+                showToast('❌ លេខកូដ PIN មិនត្រឹមត្រូវទេ!', 'error');
+                if (pinInput) {
+                    pinInput.classList.add('border-rose-500', 'bg-rose-50');
+                    setTimeout(() => {
+                        pinInput.classList.remove('border-rose-500', 'bg-rose-50');
+                    }, 1200);
+                }
+            }
+        }
+
         // ================= SWITCH VIEW =================
         function switchView(viewName) {
+            if (isStaffModeActive && !['pos', 'showcase'].includes(viewName)) {
+                viewName = 'pos';
+            }
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
                 const sec = document.getElementById(`view-${v}`);
                 if (sec) sec.classList.add('hidden');
@@ -7343,6 +7519,14 @@ function sendTelegramApi(method, payload) {
             if (tgNotifCb) {
                 tgNotifCb.checked = integrationSettings.telegramNotificationsEnabled !== false;
             }
+            const staffCb = document.getElementById('settingStaffModeActive');
+            if (staffCb) {
+                staffCb.checked = isStaffModeActive;
+            }
+            const pinInput = document.getElementById('settingAdminPin');
+            if (pinInput) {
+                pinInput.value = adminPin;
+            }
             if (document.getElementById('settingExchangeRate')) {
                 document.getElementById('settingExchangeRate').value = KHR_RATE;
             }
@@ -7382,6 +7566,18 @@ function sendTelegramApi(method, payload) {
             if (tgNotifCbSave) {
                 integrationSettings.telegramNotificationsEnabled = tgNotifCbSave.checked;
             }
+
+            const staffCbSave = document.getElementById('settingStaffModeActive');
+            if (staffCbSave) {
+                isStaffModeActive = staffCbSave.checked;
+                localStorage.setItem('BAKERY_STAFF_MODE', isStaffModeActive ? 'true' : 'false');
+            }
+            const pinInputSave = document.getElementById('settingAdminPin');
+            if (pinInputSave && pinInputSave.value.trim()) {
+                adminPin = pinInputSave.value.trim();
+                localStorage.setItem('BAKERY_ADMIN_PIN', adminPin);
+            }
+            applyStaffModeUI();
 
             const rateInput = document.getElementById('settingExchangeRate');
             const newRate = parseInt(rateInput ? rateInput.value : 0);
