@@ -247,12 +247,24 @@
 
                 <!-- Flavor Selection -->
                 <div class="space-y-1.5">
-                    <label class="font-extrabold text-stone-800 flex items-center gap-1.5">
-                        <i class="fa-solid fa-ice-cream text-amber-600"></i>
-                        <span>ជ្រើសរើសរសជាតិ (Flavor)៖</span>
-                    </label>
-                    <div class="grid grid-cols-3 gap-1.5" id="cakeFlavorGrid">
+                    <div class="flex items-center justify-between">
+                        <label class="font-extrabold text-stone-800 flex items-center gap-1.5">
+                            <i class="fa-solid fa-ice-cream text-amber-600"></i>
+                            <span>ជ្រើសរើសរសជាតិ (Flavor)៖</span>
+                        </label>
+                        <span class="text-[10px] text-amber-700 font-bold" id="selectedFlavorPreview"></span>
+                    </div>
+                    <div class="grid grid-cols-3 sm:grid-cols-5 gap-1.5 max-h-48 overflow-y-auto custom-scroll p-1 bg-stone-50/70 rounded-2xl border border-stone-200/80" id="cakeFlavorGrid">
                         <!-- Loaded by JS -->
+                    </div>
+                    <!-- Custom Flavor Input if 'ផ្សេងទៀត...' selected -->
+                    <div id="customFlavorInputGroup" class="hidden pt-1.5 space-y-1">
+                        <label class="text-[10px] font-bold text-amber-800 flex items-center gap-1">
+                            <i class="fa-solid fa-sparkles text-amber-500"></i>
+                            <span>បញ្ជាក់រសជាតិដែលចង់បាន (Custom Flavor) *</span>
+                        </label>
+                        <input type="text" id="customFlavorInput" placeholder="ឧទាហរណ៍៖ សូកូឡាលាយតយ, រសជាតិស្វាយទុំ, ក្រូចឆ្មារ..."
+                            class="w-full p-2.5 rounded-xl bg-white border-2 border-amber-400 text-xs font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-amber-500 shadow-2xs">
                     </div>
                 </div>
 
@@ -573,12 +585,21 @@
         ];
 
         const cakeFlavors = [
-            { id: 'vanilla', name: 'វ៉ានីឡា (Vanilla)', icon: '🍦' },
-            { id: 'chocolate', name: 'សូកូឡា (Choco)', icon: '🍫' },
-            { id: 'strawberry', name: 'ស្ត្របឺរី (Berry)', icon: '🍓' },
-            { id: 'matcha', name: 'តែបៃតង (Matcha)', icon: '🍵' },
-            { id: 'pandan', name: 'ស្លឹកតយ (Pandan)', icon: '🌿' },
-            { id: 'coffee', name: 'កាហ្វេ (Coffee)', icon: '☕' }
+            { id: 'pandan_coconut', name: 'តយដូង (Pandan Coconut)', icon: '🌿' },
+            { id: 'strawberry', name: 'ស្ត្រប៊ឺរី (Strawberry Fresh)', icon: '🍓' },
+            { id: 'chocolate', name: 'សូកូឡាខ្មៅ (Dark Chocolate)', icon: '🍫' },
+            { id: 'blueberry', name: 'ប៊្លូប៊ឺរី (Blueberry Cream)', icon: '🫐' },
+            { id: 'passion', name: 'ផាសិន (Passion Fruit)', icon: '🍈' },
+            { id: 'vanilla', name: 'វ៉ានីឡា (Vanilla Gold)', icon: '🍦' },
+            { id: 'coffee', name: 'កាហ្វេម៉ូកា (Coffee Mocha)', icon: '☕' },
+            { id: 'matcha', name: 'តែបៃតងជប៉ុន (Matcha)', icon: '🍵' },
+            { id: 'redvelvet', name: 'រ៉េដវេលវេត (Red Velvet)', icon: '🧁' },
+            { id: 'taro', name: 'ដំឡូងស្វាយ (Taro Mousse)', icon: '🍠' },
+            { id: 'cheesecake', name: 'ឈីសខេក (Cream Cheese)', icon: '🧀' },
+            { id: 'durian', name: 'ធុរេន (Durian Special)', icon: '🟡' },
+            { id: 'mango', name: 'ស្វាយទុំ (Fresh Mango)', icon: '🥭' },
+            { id: 'caramel', name: 'ការ៉ាមែល (Caramel Cream)', icon: '🍯' },
+            { id: 'other', name: 'ផ្សេងទៀត... (Other)', icon: '✨' }
         ];
 
         // --- 🌟 មុខងារការពារ និងផ្គូផ្គងរូបភាពស្វ័យប្រវត្ត (Bulletproof Product Image Normalization) ---
@@ -661,42 +682,100 @@
             return 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80';
         }
 
+        function getCachedProductImage(id, name) {
+            const cleanName = (name || '').trim().toLowerCase().replace(/\s+/g, '');
+            try {
+                const cache = JSON.parse(localStorage.getItem('BAKERY_SAVED_PRODUCT_IMAGES') || '{}');
+                let entry = null;
+                if (id && cache[String(id)]) entry = cache[String(id)];
+                if (!entry && name && cache[name.trim().toLowerCase()]) entry = cache[name.trim().toLowerCase()];
+                if (!entry && cleanName) {
+                    for (const key of Object.keys(cache)) {
+                        const ck = key.trim().toLowerCase().replace(/\s+/g, '');
+                        if (ck === cleanName || (ck.length > 5 && (ck.includes(cleanName) || cleanName.includes(ck)))) {
+                            entry = cache[key];
+                            break;
+                        }
+                    }
+                }
+                if (entry && isValidProductImage(entry.img)) return entry.img;
+                if (entry && Array.isArray(entry.images) && entry.images.length > 0 && isValidProductImage(entry.images[0])) return entry.images[0];
+            } catch(e) {}
+            try {
+                const prods = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS') || '[]');
+                let p = prods.find(x => String(x.id) === String(id));
+                if (!p && name) {
+                    p = prods.find(x => x.name && x.name.trim().toLowerCase() === name.trim().toLowerCase());
+                }
+                if (!p && cleanName) {
+                    p = prods.find(x => {
+                        if (!x.name) return false;
+                        const cn = x.name.trim().toLowerCase().replace(/\s+/g, '');
+                        return cn === cleanName || (cn.length > 5 && (cn.includes(cleanName) || cleanName.includes(cn)));
+                    });
+                }
+                if (p && isValidProductImage(p.img)) return p.img;
+                if (p && Array.isArray(p.images) && p.images.length > 0 && isValidProductImage(p.images[0])) return p.images[0];
+            } catch(e) {}
+            return null;
+        }
+
         function normalizeProduct(p) {
             if (!p) return p;
             let copy = { ...p };
 
-            let localItem = initialProducts.find(lp =>
+            // 1. If POS saved a custom image locally (base64 or custom URL), prioritize it!
+            const posImg = getCachedProductImage(copy.id, copy.name);
+            if (posImg && isValidProductImage(posImg)) {
+                copy.img = posImg;
+                copy.images = [posImg];
+                return copy;
+            }
+
+            // 2. If product itself has a valid image
+            if (isValidProductImage(copy.img)) {
+                copy.images = [copy.img];
+                return copy;
+            }
+            if (Array.isArray(copy.images) && copy.images.length > 0 && isValidProductImage(copy.images[0])) {
+                copy.img = copy.images[0];
+                return copy;
+            }
+
+            // 3. Fallback to initial catalog if matching
+            const initialItem = initialProducts.find(lp =>
                 String(lp.id) === String(copy.id) ||
                 (lp.name && copy.name && lp.name.trim().toLowerCase() === copy.name.trim().toLowerCase())
             );
-
-            if (!localItem) {
-                try {
-                    const saved = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS') || '[]');
-                    localItem = saved.find(sp =>
-                        String(sp.id) === String(copy.id) ||
-                        (sp.name && copy.name && sp.name.trim().toLowerCase() === copy.name.trim().toLowerCase())
-                    );
-                } catch(e) {}
+            if (initialItem && isValidProductImage(initialItem.img)) {
+                copy.img = initialItem.img;
+                copy.images = [initialItem.img];
+                return copy;
             }
 
-            if (!isValidProductImage(copy.img)) {
-                if (localItem && isValidProductImage(localItem.img)) {
-                    copy.img = localItem.img;
-                } else {
-                    copy.img = getSmartFallbackProductImage(copy.name, copy.cat);
-                }
-            }
-
-            if (!copy.images || !Array.isArray(copy.images) || copy.images.length === 0) {
-                copy.images = [copy.img];
-            }
-
+            // 4. Smart category/flavor auto-matching
+            copy.img = getSmartFallbackProductImage(copy.name, copy.cat) || FALLBACK_BAKERY_SVG;
+            copy.images = [copy.img];
             return copy;
         }
 
+        function getInitialProducts() {
+            try {
+                const localProds = JSON.parse(localStorage.getItem('BAKERY_PRODUCTS') || '[]');
+                if (Array.isArray(localProds) && localProds.length > 0) {
+                    const validList = localProds.filter(p => p && p.name && p.cat !== 'ingredients');
+                    if (validList.length > 0) {
+                        return validList.map(p => normalizeProduct(p));
+                    }
+                }
+            } catch (e) {
+                console.warn('Local products load warning:', e);
+            }
+            return initialProducts.map(p => normalizeProduct(p));
+        }
+
         // State Variables
-        let products = initialProducts.map(p => normalizeProduct(p));
+        let products = getInitialProducts();
         let activeCategory = 'all';
         let cart = [];
         let activeCakeCustomizing = null;
@@ -865,6 +944,11 @@
             document.getElementById('customModalImg').src = (isValidProductImage(p.img) ? p.img : null) || (p.images && isValidProductImage(p.images[0]) ? p.images[0] : null) || getSmartFallbackProductImage(p.name, p.cat) || FALLBACK_BAKERY_SVG;
             document.getElementById('cakeCustomMessage').value = '';
 
+            const customGroup = document.getElementById('customFlavorInputGroup');
+            const customInput = document.getElementById('customFlavorInput');
+            if (customGroup) customGroup.classList.add('hidden');
+            if (customInput) customInput.value = '';
+
             selectCakeTier(1, 0, '១ ជាន់ (ខ្នាតធម្មតា)');
             renderFlavorGrid();
             updateCustomizeModalPrice();
@@ -892,18 +976,35 @@
 
             container.innerHTML = cakeFlavors.map(f => {
                 const isSelected = selectedFlavor === f.name;
+                const isOther = f.name.includes('ផ្សេងទៀត');
+                const displayName = f.name.includes('(') ? f.name.split('(')[0].trim() : f.name;
                 return `
                     <button type="button" onclick="selectFlavor('${f.name}')"
-                        class="p-2 rounded-xl border text-center transition font-bold text-[11px] ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-900 shadow-xs' : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50'}">
-                        <span class="text-sm block">${f.icon}</span>
-                        <span class="truncate block">${f.name.split(' ')[0]}</span>
+                        class="p-2 rounded-xl border text-center transition font-bold text-[11px] ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-950 shadow-xs ring-2 ring-amber-400/60' : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50'} ${isOther ? 'bg-amber-50/50' : ''}">
+                        <span class="text-base block mb-0.5">${f.icon}</span>
+                        <span class="truncate block text-[10px] leading-tight font-extrabold">${displayName}</span>
                     </button>
                 `;
             }).join('');
+
+            const preview = document.getElementById('selectedFlavorPreview');
+            if (preview) {
+                preview.innerText = selectedFlavor.includes('ផ្សេងទៀត') ? '✨ ផ្សេងទៀត (សូមបញ្ជាក់ខាងក្រោម)' : selectedFlavor;
+            }
         }
 
         function selectFlavor(name) {
             selectedFlavor = name;
+            const customGroup = document.getElementById('customFlavorInputGroup');
+            const customInput = document.getElementById('customFlavorInput');
+            if (name.includes('ផ្សេងទៀត') || name.toLowerCase().includes('other')) {
+                if (customGroup) customGroup.classList.remove('hidden');
+                if (customInput) {
+                    setTimeout(() => customInput.focus(), 60);
+                }
+            } else {
+                if (customGroup) customGroup.classList.add('hidden');
+            }
             renderFlavorGrid();
         }
 
@@ -916,6 +1017,18 @@
 
         function confirmAddCustomCakeToCart() {
             if (!activeCakeCustomizing) return;
+
+            let finalFlavor = selectedFlavor;
+            if (selectedFlavor.includes('ផ្សេងទៀត') || selectedFlavor.toLowerCase().includes('other')) {
+                const customVal = (document.getElementById('customFlavorInput')?.value || '').trim();
+                if (!customVal) {
+                    showToast('⚠️ សូមបញ្ជាក់រសជាតិដែលអ្នកចង់បានក្នុងប្រអប់ «រសជាតិដែលចង់បាន»!', 'warning');
+                    const inp = document.getElementById('customFlavorInput');
+                    if (inp) inp.focus();
+                    return;
+                }
+                finalFlavor = `ផ្សេងទៀត (${customVal})`;
+            }
 
             const msg = (document.getElementById('cakeCustomMessage')?.value || '').trim();
             const candle = document.getElementById('cakeCandleSelect')?.value || 'ទៀនតូចធម្មតា (Free)';
@@ -930,7 +1043,7 @@
                 qty: 1,
                 isCake: true,
                 tier: selectedTier.label,
-                flavor: selectedFlavor,
+                flavor: finalFlavor,
                 message: msg || 'គ្មានអក្សរ',
                 candle: candle
             };
@@ -938,7 +1051,7 @@
             cart.push(cartItem);
             closeCakeCustomizeModal();
             updateCartUI();
-            showToast(`🎂 បានដាក់ «${activeCakeCustomizing.name}» ចូលកន្ត្រក!`, 'success');
+            showToast(`🎂 បានដាក់ «${activeCakeCustomizing.name}» (${finalFlavor}) ចូលកន្ត្រក!`, 'success');
             confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
         }
 
