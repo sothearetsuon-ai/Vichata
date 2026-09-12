@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="km" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>កុម្ម៉ង់នំខេកតាមអនឡាញ - ហាងនំខេកវិជ្ជដា (Vicheta Bakery)</title>
+    <meta name="description" content="កុម្ម៉ង់នំខេកខួបកំណើត នំប៉័ង និងភេសជ្ជៈតាមអនឡាញ ជាមួយហាងនំខេកវិជ្ជដា កោះរ៉ុងសន្លឹម។ ទូទាត់តាម KHQR ងាយស្រួល និងរហ័សទាន់ចិត្ត!">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #c86b27;
+            --primary-dark: #9f4f14;
+            --primary-light: #fff5eb;
+            --bg-cream: #faf7f2;
+        }
+
+        body {
+            font-family: 'Kantumruy Pro', 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-cream);
+            color: #2b2520;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .font-en {
+            font-family: 'Plus Jakarta Sans', 'Poppins', sans-serif;
+        }
+
+        .glass-header {
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(8px);
+        }
+
+        .custom-scroll::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #e2d7cc;
+            border-radius: 9999px;
+        }
+
+        .shadow-soft {
+            box-shadow: 0 10px 30px -5px rgba(200, 107, 39, 0.08), 0 4px 12px -2px rgba(0, 0, 0, 0.03);
+        }
+
+        .shadow-glow {
+            box-shadow: 0 8px 24px -4px rgba(200, 107, 39, 0.28);
+        }
+
+        @keyframes pulse-slow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .animate-bounce-gentle {
+            animation: pulse-slow 2.5s infinite ease-in-out;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col pb-24 sm:pb-28">
+
+    <!-- ================= TOP HEADER ================= -->
+    <header class="glass-header sticky top-0 z-40 border-b border-orange-200/60 shadow-xs transition-all">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 h-16 sm:h-20 flex items-center justify-between">
+            <!-- Brand Info -->
+            <div class="flex items-center gap-2.5 sm:gap-3">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-400 flex items-center justify-center text-white text-xl shadow-glow">
+                    <i class="fa-solid fa-cake-candles"></i>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-base sm:text-xl text-stone-900 tracking-tight leading-tight">
+                        ហាងនំខេក<span class="text-amber-600">វិជ្ជដា</span>
+                    </h1>
+                    <p class="text-[10px] sm:text-xs text-stone-500 font-medium flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+                        <span class="text-emerald-700 font-bold">បើកទទួលកុម្ម៉ង់ 24/7</span>
+                        <span>• កោះរ៉ុងសន្លឹម</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Header Quick Actions -->
+            <div class="flex items-center gap-2">
+                <a href="tel:0978707000" class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl sm:rounded-2xl bg-orange-50 hover:bg-orange-100 text-amber-700 flex items-center justify-center text-sm sm:text-base border border-orange-200 transition active:scale-95" title="ទាក់ទងទូរស័ព្ទ">
+                    <i class="fa-solid fa-phone"></i>
+                </a>
+                <button onclick="openCartDrawer()" class="relative py-2 px-3 sm:px-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-xs sm:text-sm shadow-glow flex items-center gap-2 transition cursor-pointer active:scale-95">
+                    <i class="fa-solid fa-basket-shopping text-sm sm:text-base"></i>
+                    <span class="hidden xs:inline">កន្ត្រក</span>
+                    <span id="cartCountBadge" class="bg-white text-orange-700 text-[10px] sm:text-xs font-black px-1.5 py-0.5 rounded-full min-w-[20px] text-center font-en">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= HERO BANNER ================= -->
+    <section class="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-4 sm:pt-6">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-orange-500 via-amber-500 to-amber-600 p-5 sm:p-7 text-white shadow-soft">
+            <div class="relative z-10 max-w-lg space-y-1.5 sm:space-y-2">
+                <span class="inline-flex items-center gap-1 bg-white/20 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] sm:text-xs font-black tracking-wide uppercase border border-white/30">
+                    <i class="fa-solid fa-sparkles text-amber-200"></i> Fresh & Delicious
+                </span>
+                <h2 class="text-xl sm:text-3xl font-black leading-tight tracking-tight">
+                    កុម្ម៉ង់នំខេកខួបកំណើត & នំឆ្ងាញ់ៗពីចម្ងាយ
+                </h2>
+                <p class="text-xs sm:text-sm text-orange-100 font-medium leading-relaxed">
+                    ផ្ញើជូនមនុស្សជាទីស្រឡាញ់នៅកោះរ៉ុងសន្លឹម • អាចជ្រើសរើសរសជាតិ សរសេរអក្សរលើនំ និងទូទាត់តាម KHQR ភ្លាមៗ!
+                </p>
+                <div class="pt-2 flex flex-wrap items-center gap-3 text-[11px] font-bold text-white/95">
+                    <span class="flex items-center gap-1.5 bg-black/15 px-2.5 py-1 rounded-xl"><i class="fa-solid fa-qrcode text-amber-200"></i> ទូទាត់តាម KHQR គ្រប់ធនាគារ</span>
+                    <span class="flex items-center gap-1.5 bg-black/15 px-2.5 py-1 rounded-xl"><i class="fa-solid fa-truck-fast text-amber-200"></i> ដឹកជញ្ជូនរហ័ស ឬមកយកផ្ទាល់</span>
+                </div>
+            </div>
+            <!-- Decorative Cake Icon in Background -->
+            <div class="absolute -right-6 -bottom-8 text-white/15 text-9xl pointer-events-none transform -rotate-12">
+                <i class="fa-solid fa-cake-candles"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= SEARCH & CATEGORY FILTER ================= -->
+    <section class="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-4 space-y-3 sticky top-16 sm:top-20 z-30 py-2 glass-header border-b border-orange-200/40">
+        <!-- Search Input -->
+        <div class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-sm"></i>
+            <input type="text" id="searchInput" oninput="renderProducts()" placeholder="ស្វែងរកឈ្មោះនំខេក, នំប៉័ង, ភេសជ្ជៈ, ទៀន..."
+                class="w-full pl-10 pr-10 py-2.5 sm:py-3 rounded-2xl bg-white border border-orange-200/80 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs sm:text-sm font-semibold shadow-2xs">
+            <button onclick="clearSearch()" id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 text-xs w-6 h-6 rounded-full bg-stone-100 flex items-center justify-center">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Categories Chips -->
+        <div class="flex items-center gap-1.5 overflow-x-auto pb-1 custom-scroll" id="categoryChips">
+            <!-- Rendered by JS -->
+        </div>
+    </section>
+
+    <!-- ================= PRODUCT CATALOG GRID ================= -->
+    <main class="max-w-4xl mx-auto w-full px-4 sm:px-6 pt-4 flex-1">
+        <div class="flex items-center justify-between mb-3">
+            <h3 class="font-extrabold text-sm sm:text-base text-stone-900 flex items-center gap-2" id="catalogTitle">
+                <span>🎂 បញ្ជីនំ និងមុខទំនិញទាំងអស់</span>
+            </h3>
+            <span class="text-xs text-stone-500 font-bold" id="productCountDisplay">កំពុងផ្ទុក...</span>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4" id="productGrid">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptySearchState" class="hidden text-center py-12 space-y-3">
+            <div class="w-16 h-16 rounded-full bg-orange-100 text-amber-600 flex items-center justify-center mx-auto text-2xl">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <h4 class="font-bold text-stone-700 text-base">រកមិនឃើញទំនិញដែលអ្នកស្វែងរកទេ</h4>
+            <p class="text-xs text-stone-500">សូមសាកល្បងស្វែងរកឈ្មោះផ្សេង ឬចុចលើប្រភេទ "ទាំងអស់"</p>
+            <button onclick="resetCategoryFilter()" class="py-2 px-4 bg-amber-500 hover:bg-amber-600 text-white font-bold text-xs rounded-xl transition shadow-xs cursor-pointer">
+                បង្ហាញទំនិញទាំងអស់
+            </button>
+        </div>
+    </main>
+
+    <!-- ================= FLOATING BOTTOM CART BAR (MOBILE/DESKTOP) ================= -->
+    <div id="floatingCartBar" class="fixed bottom-4 left-4 right-4 max-w-md mx-auto z-40 transition-all transform translate-y-32 opacity-0 pointer-events-none">
+        <div onclick="openCartDrawer()" class="bg-gradient-to-r from-stone-900 via-stone-800 to-amber-950 text-white rounded-3xl p-3 sm:p-3.5 shadow-2xl border border-amber-500/40 flex items-center justify-between cursor-pointer hover:scale-[1.02] active:scale-95 transition-all">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-white text-lg font-bold shadow-glow relative">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <span id="floatingCartCount" class="absolute -top-1.5 -right-1.5 bg-rose-600 text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-stone-900 font-en">0</span>
+                </div>
+                <div>
+                    <div class="text-xs font-bold text-amber-200" id="floatingCartItemSummary">0 មុខទំនិញ</div>
+                    <div class="text-base sm:text-lg font-black font-en tracking-tight text-white" id="floatingCartTotalKHR">0 ៛</div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-amber-500/20 px-3.5 py-2 rounded-2xl border border-amber-400/30 text-amber-300 font-extrabold text-xs">
+                <span>ពិនិត្យ & ទូទាត់</span>
+                <i class="fa-solid fa-arrow-right text-xs"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: CAKE CUSTOMIZATION (រសជាតិ & អក្សរលើនំ) ================= -->
+    <div id="cakeCustomizeModal" class="fixed inset-0 bg-stone-900/80 backdrop-blur-md z-50 hidden flex items-end sm:items-center justify-center p-0 sm:p-4 transition-opacity">
+        <div class="bg-white rounded-t-3xl sm:rounded-3xl shadow-2xl max-w-lg w-full p-5 sm:p-6 border border-orange-100 flex flex-col max-h-[90vh] overflow-hidden animate-slide-up sm:animate-fade-in">
+            <!-- Header -->
+            <div class="flex justify-between items-start pb-3 border-b border-orange-100">
+                <div class="flex items-center gap-3">
+                    <img id="customModalImg" src="" alt="Cake" class="w-14 h-14 rounded-2xl object-cover border border-orange-200">
+                    <div>
+                        <h4 class="font-black text-base text-stone-900" id="customModalName">ឈ្មោះនំខេក</h4>
+                        <div class="text-xs font-bold text-amber-600 font-en" id="customModalBasePrice">0 ៛</div>
+                    </div>
+                </div>
+                <button onclick="closeCakeCustomizeModal()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Body -->
+            <div class="overflow-y-auto custom-scroll flex-1 py-3 space-y-4 pr-1 text-xs">
+                <!-- Size / Tier Option -->
+                <div class="space-y-1.5">
+                    <label class="font-extrabold text-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-layer-group text-amber-600"></i>
+                        <span>ជ្រើសរើសទំហំ / ចំនួនជាន់នំ៖</span>
+                    </label>
+                    <div class="grid grid-cols-2 gap-2" id="cakeTierOptions">
+                        <button type="button" onclick="selectCakeTier(1, 0, '១ ជាន់ (ខ្នាតធម្មតា)')" id="tierBtn-1"
+                            class="tier-btn p-2.5 rounded-2xl border-2 border-amber-500 bg-amber-50 text-left font-bold transition">
+                            <div class="text-stone-900 font-extrabold">🎂 ១ ជាន់ (ធម្មតា)</div>
+                            <div class="text-[10px] text-stone-500">សម្រាប់ ៤-៦ នាក់</div>
+                        </button>
+                        <button type="button" onclick="selectCakeTier(2, 40000, '២ ជាន់ (ពិធីធំ)')" id="tierBtn-2"
+                            class="tier-btn p-2.5 rounded-2xl border-2 border-stone-200 bg-white hover:border-amber-300 text-left font-bold transition">
+                            <div class="text-stone-900 font-extrabold">🎂 ២ ជាន់ (+40,000៛)</div>
+                            <div class="text-[10px] text-stone-500">សម្រាប់ ៨-១២ នាក់</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Flavor Selection -->
+                <div class="space-y-1.5">
+                    <label class="font-extrabold text-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-ice-cream text-amber-600"></i>
+                        <span>ជ្រើសរើសរសជាតិ (Flavor)៖</span>
+                    </label>
+                    <div class="grid grid-cols-3 gap-1.5" id="cakeFlavorGrid">
+                        <!-- Loaded by JS -->
+                    </div>
+                </div>
+
+                <!-- Custom Message on Cake -->
+                <div class="space-y-1.5 p-3 rounded-2xl bg-amber-50/70 border border-amber-200/80">
+                    <label class="font-extrabold text-stone-900 flex items-center justify-between">
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-pen-nib text-amber-600"></i>
+                            <span>សរសេរអក្សរលើនំខេក (Free ឥតគិតថ្លៃ)៖</span>
+                        </span>
+                        <span class="text-[10px] text-stone-500 font-normal">ឧ. Happy Birthday Sovann</span>
+                    </label>
+                    <input type="text" id="cakeCustomMessage" maxlength="40" placeholder="បញ្ចូលអក្សរជូនពរដែលចង់សរសេរលើនំ..."
+                        class="w-full p-2.5 rounded-xl bg-white border border-amber-300 focus:outline-none focus:ring-2 focus:ring-amber-500 text-xs font-bold text-stone-900 placeholder:text-stone-400">
+                </div>
+
+                <!-- Free Candle Selection -->
+                <div class="space-y-1.5">
+                    <label class="font-extrabold text-stone-800 flex items-center gap-1.5">
+                        <i class="fa-solid fa-fire text-amber-600"></i>
+                        <span>ទៀនខួបកំណើត (ឥតគិតថ្លៃ)៖</span>
+                    </label>
+                    <select id="cakeCandleSelect" class="w-full p-2.5 rounded-xl bg-white border border-stone-200 font-bold text-xs text-stone-800">
+                        <option value="ទៀនតូចធម្មតា (Free)">🕯️ ទៀនតូចធម្មតា (Free ថែមជូន)</option>
+                        <option value="មិនយកទៀន">❌ មិនត្រូវការទៀនទេ</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Footer Action -->
+            <div class="pt-3 border-t border-orange-100 flex items-center justify-between gap-3">
+                <div>
+                    <div class="text-[10px] text-stone-500 font-bold uppercase">តម្លៃសរុបនំនេះ</div>
+                    <div class="text-base sm:text-lg font-black text-amber-600 font-en" id="customModalTotalPrice">0 ៛</div>
+                </div>
+                <button type="button" onclick="confirmAddCustomCakeToCart()"
+                    class="py-3 px-5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-extrabold text-xs sm:text-sm shadow-glow transition flex items-center gap-2 cursor-pointer active:scale-95">
+                    <i class="fa-solid fa-cart-plus"></i>
+                    <span>ដាក់ចូលកន្ត្រកកុម្ម៉ង់</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= DRAWER: CART & CHECKOUT ================= -->
+    <div id="cartDrawerBackdrop" class="fixed inset-0 bg-stone-900/80 backdrop-blur-sm z-50 hidden transition-opacity" onclick="closeCartDrawer()"></div>
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-white z-50 shadow-2xl flex flex-col transform translate-x-full transition-transform duration-300 ease-out">
+        <!-- Drawer Header -->
+        <div class="p-4 sm:p-5 border-b border-orange-100 flex items-center justify-between glass-header">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center font-bold">
+                    <i class="fa-solid fa-basket-shopping text-base"></i>
+                </div>
+                <div>
+                    <h3 class="font-extrabold text-base text-stone-900">កន្ត្រកកុម្ម៉ង់របស់អ្នក</h3>
+                    <p class="text-[10px] text-stone-500 font-medium" id="cartDrawerSubtitle">មាន 0 មុខទំនិញ</p>
+                </div>
+            </div>
+            <button onclick="closeCartDrawer()" class="w-8 h-8 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-500 flex items-center justify-center cursor-pointer transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Content -->
+        <div class="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scroll text-xs">
+            <!-- Step 1: Cart Items List -->
+            <div class="space-y-2.5" id="cartItemsContainer">
+                <!-- Rendered by JS -->
+            </div>
+
+            <!-- Empty Cart State -->
+            <div id="cartEmptyState" class="text-center py-10 space-y-3">
+                <div class="w-16 h-16 rounded-full bg-orange-50 text-amber-500 flex items-center justify-center mx-auto text-2xl">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                </div>
+                <h4 class="font-bold text-stone-700 text-sm">កន្ត្រករបស់អ្នកមិនទាន់មានទំនិញនៅឡើយទេ</h4>
+                <p class="text-[11px] text-stone-400">សូមជ្រើសរើសនំខេក ឬទំនិញដែលអ្នកពេញចិត្តដើម្បីកុម្ម៉ង់</p>
+            </div>
+
+            <!-- Step 2: Customer Details Form (Shown when cart has items) -->
+            <div id="checkoutFormSection" class="space-y-3 pt-3 border-t border-orange-100 hidden">
+                <h4 class="font-extrabold text-xs text-stone-900 flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-pen text-amber-600"></i>
+                    <span>ព័ត៌មានអ្នកទទួលនំ & ការដឹកជញ្ជូន</span>
+                </h4>
+
+                <!-- Order Type (Pickup or Delivery) -->
+                <div class="grid grid-cols-2 gap-2">
+                    <label class="p-2.5 rounded-xl border-2 border-amber-500 bg-amber-50 flex items-center gap-2 cursor-pointer transition has-checked:border-amber-500 has-checked:bg-amber-50">
+                        <input type="radio" name="orderType" value="pickup" checked onchange="toggleOrderType(this.value)" class="text-amber-600 accent-amber-600">
+                        <span class="font-extrabold text-stone-800 text-[11px]">🛍️ មកយកផ្ទាល់នៅហាង</span>
+                    </label>
+                    <label class="p-2.5 rounded-xl border-2 border-stone-200 hover:border-amber-300 flex items-center gap-2 cursor-pointer transition">
+                        <input type="radio" name="orderType" value="delivery" onchange="toggleOrderType(this.value)" class="text-amber-600 accent-amber-600">
+                        <span class="font-extrabold text-stone-800 text-[11px]">🛵 សេវាដឹកជញ្ជូន</span>
+                    </label>
+                </div>
+
+                <!-- Customer Name & Phone -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ឈ្មោះរបស់អ្នក *</label>
+                        <input type="text" id="custName" placeholder="ឈ្មោះអ្នកកុម្ម៉ង់" required
+                            class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs font-semibold focus:outline-none focus:border-amber-500 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-600 block mb-0.5">លេខទូរស័ព្ទ (Phone/Telegram) *</label>
+                        <input type="tel" id="custPhone" placeholder="012 345 678" required
+                            class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs font-semibold font-en focus:outline-none focus:border-amber-500 focus:bg-white">
+                    </div>
+                </div>
+
+                <!-- Delivery Address (if Delivery selected) -->
+                <div id="deliveryAddressGroup" class="hidden space-y-1">
+                    <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ទីតាំង / អាសយដ្ឋានដឹកជញ្ជូន *</label>
+                    <input type="text" id="custAddress" placeholder="បញ្ជាក់ឈ្មោះសណ្ឋាគារ រមណីយដ្ឋាន ឬទីតាំងទទួលនំ..."
+                        class="w-full p-2.5 rounded-xl bg-stone-50 border border-stone-200 text-xs font-semibold focus:outline-none focus:border-amber-500 focus:bg-white">
+                </div>
+
+                <!-- Pickup/Delivery Date & Time -->
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ថ្ងៃទទួលនំ *</label>
+                        <input type="date" id="custDate" required
+                            class="w-full p-2 rounded-xl bg-stone-50 border border-stone-200 text-xs font-bold text-stone-800">
+                    </div>
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ម៉ោងទទួលនំ *</label>
+                        <input type="time" id="custTime" required
+                            class="w-full p-2 rounded-xl bg-stone-50 border border-stone-200 text-xs font-bold text-stone-800 font-en">
+                    </div>
+                </div>
+
+                <!-- Additional Note -->
+                <div>
+                    <label class="text-[10px] font-bold text-stone-600 block mb-0.5">ចំណាំបន្ថែម (Optional)</label>
+                    <textarea id="custNote" rows="2" placeholder="ចំណាំពិសេសផ្សេងៗ..."
+                        class="w-full p-2 rounded-xl bg-stone-50 border border-stone-200 text-xs font-medium"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Drawer Footer: Total & Proceed -->
+        <div class="p-4 sm:p-5 border-t border-orange-100 bg-stone-50 space-y-3">
+            <div class="space-y-1">
+                <div class="flex justify-between text-xs text-stone-500 font-medium">
+                    <span>ចំនួនមុខទំនិញ៖</span>
+                    <span id="drawerSummaryCount" class="font-bold text-stone-800 font-en">0 មុខ</span>
+                </div>
+                <div class="flex justify-between items-baseline">
+                    <span class="text-xs font-extrabold text-stone-900">តម្លៃសរុប (Total)៖</span>
+                    <div class="text-right">
+                        <div class="text-lg font-black text-amber-600 font-en" id="drawerTotalKHR">0 ៛</div>
+                        <div class="text-[11px] font-bold text-stone-400 font-en" id="drawerTotalUSD">≈ $0.00</div>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="btnProceedToPay" onclick="proceedToKhqrPayment()" disabled
+                class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 disabled:from-stone-300 disabled:to-stone-400 disabled:cursor-not-allowed text-white font-extrabold text-sm shadow-glow transition flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+                <i class="fa-solid fa-qrcode text-base"></i>
+                <span>បន្តទៅទូទាត់ប្រាក់តាម KHQR</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: KHQR PAYMENT & SLIP UPLOAD ================= -->
+    <div id="paymentModal" class="fixed inset-0 bg-stone-900/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-5 sm:p-6 border border-orange-100 text-center space-y-3.5 my-auto animate-fade-in">
+            <!-- Header -->
+            <div class="flex items-center justify-between pb-2 border-b border-stone-100">
+                <div class="flex items-center gap-2 text-left">
+                    <div class="w-8 h-8 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-extrabold text-xs text-stone-900">ស្កេនទូទាត់ប្រាក់ KHQR</h4>
+                        <p class="text-[10px] text-stone-400">Bakong / ABA / All Banks</p>
+                    </div>
+                </div>
+                <button onclick="closePaymentModal()" class="text-stone-400 hover:text-stone-600 cursor-pointer">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- QR Display Box -->
+            <div class="p-3 bg-gradient-to-b from-red-50 to-white rounded-2xl border-2 border-dashed border-red-200 flex flex-col items-center">
+                <div class="text-xs font-bold text-stone-800 mb-1" id="payModalMerchantName">ហាងនំខេកវិជ្ជដា</div>
+                <div class="relative p-2 bg-white rounded-2xl shadow-sm border border-red-100">
+                    <img id="payModalQrImg" src="" alt="KHQR" class="w-44 h-44 object-contain mx-auto rounded-xl">
+                </div>
+                <div class="text-lg sm:text-xl font-black text-red-600 font-en mt-2" id="payModalAmountKHR">0 ៛</div>
+                <div class="text-xs font-bold text-stone-500 font-en" id="payModalAmountUSD">≈ $0.00</div>
+            </div>
+
+            <!-- Upload Payment Slip Box -->
+            <div class="space-y-2 text-left">
+                <label class="text-[11px] font-extrabold text-stone-800 flex items-center justify-between">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-receipt text-amber-600"></i>
+                        <span>ភ្ជាប់រូបវិក្កយបត្របង់លុយ (Slip)៖</span>
+                    </span>
+                    <span class="text-[10px] text-amber-600 font-bold">* ចាំបាច់</span>
+                </label>
+
+                <div class="relative">
+                    <input type="file" id="slipFileInput" accept="image/*" onchange="handleSlipSelected(event)" class="hidden">
+                    <label for="slipFileInput" class="w-full p-3 rounded-2xl bg-amber-50/60 hover:bg-amber-100/60 border-2 border-dashed border-amber-300 flex flex-col items-center justify-center gap-1.5 cursor-pointer transition">
+                        <div id="slipPlaceholder">
+                            <i class="fa-solid fa-camera text-xl text-amber-600"></i>
+                            <span class="text-xs font-bold text-stone-700 block mt-1">ចុចទីនេះដើម្បីថត ឬរើសរូប Slip</span>
+                            <span class="text-[10px] text-stone-400 block">PNG, JPG ឬ Screenshot វិក្កយបត្រ</span>
+                        </div>
+                        <img id="slipPreviewImg" src="" alt="Slip Preview" class="hidden max-h-32 rounded-xl object-contain shadow-xs">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Final Order Button -->
+            <button type="button" id="btnConfirmFinalOrder" onclick="submitFinalOrder()"
+                class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-sm shadow-glow transition flex items-center justify-center gap-2 cursor-pointer active:scale-95">
+                <i class="fa-solid fa-circle-check"></i>
+                <span id="btnConfirmFinalOrderText">បានទូទាត់ & បញ្ជាក់ការកុម្ម៉ង់</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= MODAL: ORDER SUCCESS ================= -->
+    <div id="orderSuccessModal" class="fixed inset-0 bg-stone-900/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center space-y-4 border border-emerald-100 animate-scale-up">
+            <div class="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto text-3xl shadow-glow">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <div>
+                <h3 class="font-black text-xl text-stone-900">ការកុម្ម៉ង់បានជោគជ័យ! 🎉</h3>
+                <p class="text-xs text-stone-500 font-medium mt-1">ហាងយើងខ្ញុំបានទទួលព័ត៌មានកុម្ម៉ង់ និងកំពុងរៀបចំនំជូនលោកអ្នក</p>
+            </div>
+
+            <!-- Order Ticket Summary -->
+            <div class="p-4 bg-orange-50/70 rounded-2xl border border-orange-200 text-left space-y-2 text-xs">
+                <div class="flex justify-between items-center pb-1.5 border-b border-orange-200/60 font-bold">
+                    <span class="text-stone-500">លេខកុម្ម៉ង់៖</span>
+                    <span class="text-amber-700 font-mono font-black" id="successOrderId">#ORD-0000</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-stone-500">ឈ្មោះអតិថិជន៖</span>
+                    <span class="font-bold text-stone-800" id="successCustName">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-stone-500">ថ្ងៃ-ម៉ោងទទួលនំ៖</span>
+                    <span class="font-bold text-stone-800" id="successDateTime">-</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-stone-500">សរុបទឹកប្រាក់៖</span>
+                    <span class="font-black text-amber-600 font-en" id="successTotalKHR">0 ៛</span>
+                </div>
+            </div>
+
+            <!-- Action buttons -->
+            <div class="space-y-2 pt-1">
+                <a href="https://t.me/vicheta_order_bot" target="_blank"
+                    class="w-full py-3 px-4 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs flex items-center justify-center gap-2 transition shadow-xs">
+                    <i class="fa-brands fa-telegram text-base"></i>
+                    <span>ឆាតសួរព័ត៌មានតាម Telegram</span>
+                </a>
+                <button type="button" onclick="finishOrderAndReload()"
+                    class="w-full py-2.5 px-4 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 font-bold text-xs transition cursor-pointer">
+                    ត្រឡប់ទៅកាន់ទំព័រដើម
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // Store Configuration & Endpoints
+        const STORE_INFO = {
+            name: 'ហាងនំខេកវិជ្ជដា',
+            phone: '0978707000',
+            address: 'កោះរ៉ុងសន្លឹម',
+            tagline: 'កោះរ៉ុងសន្លឹម • 0978707000'
+        };
+
+        const GOOGLE_SHEET_URL = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
+        const TELEGRAM_BOT_TOKEN = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
+        const TELEGRAM_CHAT_ID = '8970210109';
+        const KHR_RATE = 4100;
+        const DEFAULT_KHQR_URL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://bakong.nbc.gov.kh';
+        const FALLBACK_BAKERY_SVG = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300' viewBox='0 0 400 300'%3E%3Crect width='400' height='300' fill='%23fff3ea'/%3E%3Ctext x='50%25' y='46%25' dominant-baseline='middle' text-anchor='middle' font-size='50'%3E%F0%9F%8E%82%3C/text%3E%3Ctext x='50%25' y='68%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' font-weight='bold' fill='%23c86b27'%3E%E1%9E%A0%E1%9E%Bguide%E1%9E%93%E1%9F%86%E1%9E%81%E1%9F%81%E1%9E%80%E1%9E%9C%E1%9E%B7%E1%9E%87%E1%9F%92%E1%9E%87%E1%9E%8Ran%3C/text%3E%3C/svg%3E";
+
+        // Preloaded Bakery Catalog
+        const initialProducts = [
+            { id: 1, name: 'នំខេកស្ត្របឺរីស្រស់ (Strawberry Shortcake)', cat: 'cakes', priceKHR: 65000, stock: 12, img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=800&q=80', badge: 'ពេញនិយម' },
+            { id: 2, name: 'នំខេកសូកូឡាឡាវ៉ា (Choco Lava Cake)', cat: 'cakes', priceKHR: 55000, stock: 8, img: 'https://images.unsplash.com/photo-1606890737304-57a1ca8a5b62?auto=format&fit=crop&w=800&q=80', badge: 'លក់ដាច់' },
+            { id: 3, name: 'នំប៉័ងប៊័រស្រួយ (French Butter Croissant)', cat: 'breads', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80', badge: 'ដុតថ្មីៗ' },
+            { id: 4, name: 'នំប៉័ងខ្ទឹមឈីសកូរ៉េ (Korean Garlic Cheese)', cat: 'breads', priceKHR: 12000, stock: 14, img: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=800&q=80', badge: 'Hot' },
+            { id: 5, name: 'នំម៉ាកការ៉ុងបារាំង ៦គ្រាប់ (Macarons Box)', cat: 'pastries', priceKHR: 28000, stock: 18, img: 'https://images.unsplash.com/photo-1569864358642-9d1684040f43?auto=format&fit=crop&w=800&q=80', badge: 'កញ្ចប់កាដូ' },
+            { id: 6, name: 'កាហ្វេទឹកដោះគោទឹកកក (Iced Milk Coffee)', cat: 'drinks', priceKHR: 7000, stock: 50, img: 'https://images.unsplash.com/photo-1517701550927-30cf4ba1dba5?auto=format&fit=crop&w=800&q=80', badge: 'ប្រចាំហាង' },
+            { id: 7, name: 'តែបៃតងទឹកដោះគោ (Iced Green Tea)', cat: 'drinks', priceKHR: 7000, stock: 40, img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?auto=format&fit=crop&w=800&q=80', badge: 'ត្រជាក់ចិត្ត' },
+            { id: 'acc-1', name: 'ទៀនវិលភ្លេងផ្កាឈូក (Musical Lotus Candle)', cat: 'accessories', priceKHR: 8000, stock: 25, img: 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80', badge: 'Hot' },
+            { id: 'acc-2', name: 'ទៀនលេខខួបកំណើត 0-9 (Number Candles)', cat: 'accessories', priceKHR: 2000, stock: 60, img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80', badge: 'ពេញនិយម' },
+            { id: 'acc-3', name: 'មួកខួបកំណើតចម្រុះពណ៌ (Party Hats)', cat: 'accessories', priceKHR: 4000, stock: 30, img: 'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=600&q=80', badge: 'Party' },
+            { id: 'acc-5', name: 'ទៀនផាវភ្លើង Sparklers (កញ្ចប់ 6ដើម)', cat: 'accessories', priceKHR: 6000, stock: 20, img: 'https://images.unsplash.com/photo-1514517521153-1be72277b32f?auto=format&fit=crop&w=600&q=80', badge: 'Hot' },
+            { id: 'acc-7', name: 'មកុដព្រះនាងមានភ្លើង LED (Princess Crown)', cat: 'accessories', priceKHR: 6000, stock: 15, img: 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=600&q=80', badge: 'New' }
+        ];
+
+        const categories = [
+            { id: 'all', label: 'ទាំងអស់' },
+            { id: 'cakes', label: '🎂 នំខេក' },
+            { id: 'breads', label: '🥖 នំប៉័ង' },
+            { id: 'pastries', label: '🥐 នំផេស្ទ្រី' },
+            { id: 'drinks', label: '☕ ភេសជ្ជៈ' },
+            { id: 'accessories', label: '🎉 គ្រឿងបន្ថែម' }
+        ];
+
+        const cakeFlavors = [
+            { id: 'vanilla', name: 'វ៉ានីឡា (Vanilla)', icon: '🍦' },
+            { id: 'chocolate', name: 'សូកូឡា (Choco)', icon: '🍫' },
+            { id: 'strawberry', name: 'ស្ត្របឺរី (Berry)', icon: '🍓' },
+            { id: 'matcha', name: 'តែបៃតង (Matcha)', icon: '🍵' },
+            { id: 'pandan', name: 'ស្លឹកតយ (Pandan)', icon: '🌿' },
+            { id: 'coffee', name: 'កាហ្វេ (Coffee)', icon: '☕' }
+        ];
+
+        // State Variables
+        let products = [...initialProducts];
+        let activeCategory = 'all';
+        let cart = [];
+        let activeCakeCustomizing = null;
+        let selectedTier = { count: 1, extraKHR: 0, label: '១ ជាន់ (ខ្នាតធម្មតា)' };
+        let selectedFlavor = cakeFlavors[0].name;
+        let uploadedSlipBase64 = null;
+
+        // ================= INITIALIZATION =================
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+            renderFlavorGrid();
+            initDefaultDates();
+            fetchLiveProductsFromSheet();
+        });
+
+        function initDefaultDates() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            const dateInput = document.getElementById('custDate');
+            if (dateInput) {
+                dateInput.value = tomorrow.toISOString().split('T')[0];
+                dateInput.min = today.toISOString().split('T')[0];
+            }
+
+            const timeInput = document.getElementById('custTime');
+            if (timeInput) {
+                timeInput.value = "14:00";
+            }
+        }
+
+        // Fetch live product list from Google Apps Script Web App
+        async function fetchLiveProductsFromSheet() {
+            try {
+                const res = await fetch(GOOGLE_SHEET_URL);
+                const data = await res.json();
+                if (data && data.status === 'success' && Array.isArray(data.products) && data.products.length > 0) {
+                    // Filter out internal ingredients
+                    const live = data.products.filter(p => p.cat !== 'ingredients');
+                    if (live.length > 0) {
+                        products = live;
+                        renderProducts();
+                    }
+                }
+            } catch (err) {
+                console.warn('Using preloaded products. Google Sheet fetch note:', err);
+            }
+        }
+
+        // ================= RENDER CATEGORIES & PRODUCTS =================
+        function renderCategories() {
+            const container = document.getElementById('categoryChips');
+            if (!container) return;
+
+            container.innerHTML = categories.map(c => `
+                <button onclick="selectCategory('${c.id}')"
+                    class="px-3.5 py-1.5 rounded-2xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${activeCategory === c.id
+                        ? 'bg-amber-600 text-white shadow-sm'
+                        : 'bg-white text-stone-600 hover:bg-orange-50 border border-orange-200/60'}">
+                    ${c.label}
+                </button>
+            `).join('');
+        }
+
+        function selectCategory(catId) {
+            activeCategory = catId;
+            renderCategories();
+            renderProducts();
+        }
+
+        function renderProducts() {
+            const query = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+            const clearBtn = document.getElementById('clearSearchBtn');
+            if (clearBtn) {
+                clearBtn.classList.toggle('hidden', query.length === 0);
+            }
+
+            const filtered = products.filter(p => {
+                const matchCat = activeCategory === 'all' || p.cat === activeCategory;
+                const matchQuery = !query || p.name.toLowerCase().includes(query);
+                return matchCat && matchQuery;
+            });
+
+            const countDisplay = document.getElementById('productCountDisplay');
+            if (countDisplay) {
+                countDisplay.innerText = `${filtered.length} មុខ`;
+            }
+
+            const emptyState = document.getElementById('emptySearchState');
+            const grid = document.getElementById('productGrid');
+
+            if (filtered.length === 0) {
+                if (grid) grid.innerHTML = '';
+                if (emptyState) emptyState.classList.remove('hidden');
+                return;
+            }
+
+            if (emptyState) emptyState.classList.add('hidden');
+
+            grid.innerHTML = filtered.map(p => {
+                const img = p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG;
+                const priceUSD = (p.priceKHR / KHR_RATE).toFixed(2);
+                const isCake = p.cat === 'cakes';
+
+                return `
+                    <div class="glass-card rounded-3xl overflow-hidden border border-orange-200/70 shadow-soft hover:shadow-glow transition-all duration-300 flex flex-col group">
+                        <!-- Image Area -->
+                        <div class="relative h-32 sm:h-44 overflow-hidden bg-stone-100 cursor-pointer" onclick="${isCake ? `openCakeCustomizeModal('${p.id}')` : `quickAddToCart('${p.id}')`}">
+                            <img src="${img}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.onerror=null; this.src=FALLBACK_BAKERY_SVG;" loading="lazy">
+                            ${p.badge ? `<span class="absolute top-2 left-2 bg-amber-500 text-white text-[9px] sm:text-[10px] font-black px-2 py-0.5 rounded-full shadow-xs">${p.badge}</span>` : ''}
+                            ${isCake ? `<span class="absolute bottom-2 right-2 bg-black/60 backdrop-blur-md text-white text-[9px] sm:text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1"><i class="fa-solid fa-wand-magic-sparkles text-amber-300"></i> រៀបចំតាមចិត្ត</span>` : ''}
+                        </div>
+
+                        <!-- Info Area -->
+                        <div class="p-3 sm:p-4 flex-1 flex flex-col justify-between space-y-2">
+                            <div>
+                                <h4 class="font-extrabold text-xs sm:text-sm text-stone-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
+                                    ${p.name}
+                                </h4>
+                            </div>
+
+                            <div class="flex items-end justify-between pt-1 border-t border-orange-100/60">
+                                <div>
+                                    <div class="text-sm sm:text-base font-black text-amber-600 font-en">${Number(p.priceKHR).toLocaleString()} ៛</div>
+                                    <div class="text-[10px] text-stone-400 font-en font-bold">≈ $${priceUSD}</div>
+                                </div>
+
+                                <button onclick="${isCake ? `openCakeCustomizeModal('${p.id}')` : `quickAddToCart('${p.id}')`}"
+                                    class="py-1.5 px-3 sm:px-3.5 rounded-xl bg-orange-50 hover:bg-amber-600 text-amber-700 hover:text-white border border-amber-200 hover:border-amber-600 font-extrabold text-xs transition-all flex items-center gap-1 cursor-pointer active:scale-90 shadow-2xs">
+                                    <i class="fa-solid ${isCake ? 'fa-wand-magic-sparkles' : 'fa-plus'} text-xs"></i>
+                                    <span>${isCake ? 'រៀបចំ' : 'កុម្ម៉ង់'}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            if (input) input.value = '';
+            renderProducts();
+        }
+
+        function resetCategoryFilter() {
+            activeCategory = 'all';
+            clearSearch();
+            renderCategories();
+            renderProducts();
+        }
+
+        // ================= CAKE CUSTOMIZATION MODAL =================
+        function openCakeCustomizeModal(productId) {
+            const p = products.find(x => String(x.id) === String(productId));
+            if (!p) return;
+
+            activeCakeCustomizing = p;
+            selectedTier = { count: 1, extraKHR: 0, label: '១ ជាន់ (ខ្នាតធម្មតា)' };
+            selectedFlavor = cakeFlavors[0].name;
+
+            document.getElementById('customModalName').innerText = p.name;
+            document.getElementById('customModalBasePrice').innerText = `${Number(p.priceKHR).toLocaleString()} ៛ (≈ $${(p.priceKHR / KHR_RATE).toFixed(2)})`;
+            document.getElementById('customModalImg').src = p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG;
+            document.getElementById('cakeCustomMessage').value = '';
+
+            selectCakeTier(1, 0, '១ ជាន់ (ខ្នាតធម្មតា)');
+            renderFlavorGrid();
+            updateCustomizeModalPrice();
+
+            document.getElementById('cakeCustomizeModal').classList.remove('hidden');
+        }
+
+        function closeCakeCustomizeModal() {
+            document.getElementById('cakeCustomizeModal').classList.add('hidden');
+            activeCakeCustomizing = null;
+        }
+
+        function selectCakeTier(count, extraKHR, label) {
+            selectedTier = { count, extraKHR, label };
+            document.querySelectorAll('.tier-btn').forEach((b, idx) => {
+                const isActive = (idx + 1) === count;
+                b.className = `tier-btn p-2.5 rounded-2xl border-2 text-left font-bold transition ${isActive ? 'border-amber-500 bg-amber-50' : 'border-stone-200 bg-white hover:border-amber-300'}`;
+            });
+            updateCustomizeModalPrice();
+        }
+
+        function renderFlavorGrid() {
+            const container = document.getElementById('cakeFlavorGrid');
+            if (!container) return;
+
+            container.innerHTML = cakeFlavors.map(f => {
+                const isSelected = selectedFlavor === f.name;
+                return `
+                    <button type="button" onclick="selectFlavor('${f.name}')"
+                        class="p-2 rounded-xl border text-center transition font-bold text-[11px] ${isSelected ? 'border-amber-500 bg-amber-50 text-amber-900 shadow-xs' : 'border-stone-200 bg-white text-stone-700 hover:bg-stone-50'}">
+                        <span class="text-sm block">${f.icon}</span>
+                        <span class="truncate block">${f.name.split(' ')[0]}</span>
+                    </button>
+                `;
+            }).join('');
+        }
+
+        function selectFlavor(name) {
+            selectedFlavor = name;
+            renderFlavorGrid();
+        }
+
+        function updateCustomizeModalPrice() {
+            if (!activeCakeCustomizing) return;
+            const total = Number(activeCakeCustomizing.priceKHR || 0) + Number(selectedTier.extraKHR || 0);
+            const totalUSD = (total / KHR_RATE).toFixed(2);
+            document.getElementById('customModalTotalPrice').innerText = `${total.toLocaleString()} ៛ (≈ $${totalUSD})`;
+        }
+
+        function confirmAddCustomCakeToCart() {
+            if (!activeCakeCustomizing) return;
+
+            const msg = (document.getElementById('cakeCustomMessage')?.value || '').trim();
+            const candle = document.getElementById('cakeCandleSelect')?.value || 'ទៀនតូចធម្មតា (Free)';
+            const finalPrice = Number(activeCakeCustomizing.priceKHR || 0) + Number(selectedTier.extraKHR || 0);
+
+            const cartItem = {
+                cartItemId: 'item_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
+                productId: activeCakeCustomizing.id,
+                name: activeCakeCustomizing.name,
+                img: activeCakeCustomizing.img || (activeCakeCustomizing.images && activeCakeCustomizing.images[0]) || FALLBACK_BAKERY_SVG,
+                priceKHR: finalPrice,
+                qty: 1,
+                isCake: true,
+                tier: selectedTier.label,
+                flavor: selectedFlavor,
+                message: msg || 'គ្មានអក្សរ',
+                candle: candle
+            };
+
+            cart.push(cartItem);
+            closeCakeCustomizeModal();
+            updateCartUI();
+            showToast(`🎂 បានដាក់ «${activeCakeCustomizing.name}» ចូលកន្ត្រក!`, 'success');
+            confetti({ particleCount: 30, spread: 50, origin: { y: 0.8 } });
+        }
+
+        // ================= QUICK ADD NON-CAKES TO CART =================
+        function quickAddToCart(productId) {
+            const p = products.find(x => String(x.id) === String(productId));
+            if (!p) return;
+
+            const existing = cart.find(x => String(x.productId) === String(p.id) && !x.isCake);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    cartItemId: 'item_' + Date.now(),
+                    productId: p.id,
+                    name: p.name,
+                    img: p.img || (p.images && p.images[0]) || FALLBACK_BAKERY_SVG,
+                    priceKHR: Number(p.priceKHR),
+                    qty: 1,
+                    isCake: false
+                });
+            }
+
+            updateCartUI();
+            showToast(`🛒 បានដាក់ «${p.name}» ចូលកន្ត្រក!`, 'success');
+        }
+
+        // ================= CART MANAGEMENT =================
+        function updateCartUI() {
+            const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+            const totalKHR = cart.reduce((sum, item) => sum + (item.priceKHR * item.qty), 0);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+
+            // Header badge
+            const headerBadge = document.getElementById('cartCountBadge');
+            if (headerBadge) headerBadge.innerText = totalQty;
+
+            // Floating Bottom Bar
+            const floatBar = document.getElementById('floatingCartBar');
+            if (floatBar) {
+                if (totalQty > 0) {
+                    floatBar.classList.remove('translate-y-32', 'opacity-0', 'pointer-events-none');
+                    document.getElementById('floatingCartCount').innerText = totalQty;
+                    document.getElementById('floatingCartItemSummary').innerText = `${totalQty} មុខទំនិញក្នុងកន្ត្រក`;
+                    document.getElementById('floatingCartTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
+                } else {
+                    floatBar.classList.add('translate-y-32', 'opacity-0', 'pointer-events-none');
+                }
+            }
+
+            // Drawer Items
+            renderCartDrawerItems(totalQty, totalKHR, totalUSD);
+        }
+
+        function renderCartDrawerItems(totalQty, totalKHR, totalUSD) {
+            const container = document.getElementById('cartItemsContainer');
+            const emptyState = document.getElementById('cartEmptyState');
+            const checkoutSection = document.getElementById('checkoutFormSection');
+            const proceedBtn = document.getElementById('btnProceedToPay');
+
+            if (!container) return;
+
+            document.getElementById('cartDrawerSubtitle').innerText = `មាន ${totalQty} មុខទំនិញ`;
+            document.getElementById('drawerSummaryCount').innerText = `${totalQty} មុខ`;
+            document.getElementById('drawerTotalKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
+            document.getElementById('drawerTotalUSD').innerText = `≈ $${totalUSD}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                checkoutSection.classList.add('hidden');
+                if (proceedBtn) proceedBtn.disabled = true;
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            checkoutSection.classList.remove('hidden');
+            if (proceedBtn) proceedBtn.disabled = false;
+
+            container.innerHTML = cart.map((item, index) => {
+                const subtotal = item.priceKHR * item.qty;
+                return `
+                    <div class="p-3 bg-stone-50 rounded-2xl border border-orange-100 flex items-start gap-3">
+                        <img src="${item.img}" alt="${item.name}" class="w-14 h-14 rounded-xl object-cover border border-orange-200/70">
+                        <div class="flex-1 min-w-0 space-y-1">
+                            <div class="flex items-start justify-between gap-1">
+                                <h5 class="font-extrabold text-stone-900 text-xs truncate">${item.name}</h5>
+                                <button onclick="removeCartItem('${item.cartItemId}')" class="text-stone-400 hover:text-rose-600 p-0.5" title="លុបមុខនេះ">
+                                    <i class="fa-solid fa-trash-can text-xs"></i>
+                                </button>
+                            </div>
+
+                            ${item.isCake ? `
+                                <div class="text-[10px] text-amber-800 bg-amber-100/70 px-2 py-0.5 rounded-lg inline-block font-semibold">
+                                    ${item.tier} • ${item.flavor}
+                                </div>
+                                ${item.message && item.message !== 'គ្មានអក្សរ' ? `<div class="text-[10px] text-stone-600 truncate font-medium">✍️ "${item.message}"</div>` : ''}
+                            ` : ''}
+
+                            <div class="flex items-center justify-between pt-1">
+                                <div class="font-black text-amber-600 font-en text-xs">${subtotal.toLocaleString()} ៛</div>
+                                <div class="flex items-center gap-2 bg-white px-2 py-0.5 rounded-xl border border-stone-200">
+                                    <button onclick="changeCartItemQty('${item.cartItemId}', -1)" class="text-stone-500 hover:text-stone-800 font-black">-</button>
+                                    <span class="font-en font-bold text-xs px-1">${item.qty}</span>
+                                    <button onclick="changeCartItemQty('${item.cartItemId}', 1)" class="text-stone-500 hover:text-stone-800 font-black">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function changeCartItemQty(cartItemId, delta) {
+            const item = cart.find(x => x.cartItemId === cartItemId);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) {
+                cart = cart.filter(x => x.cartItemId !== cartItemId);
+            }
+            updateCartUI();
+        }
+
+        function removeCartItem(cartItemId) {
+            cart = cart.filter(x => x.cartItemId !== cartItemId);
+            updateCartUI();
+        }
+
+        function openCartDrawer() {
+            document.getElementById('cartDrawerBackdrop').classList.remove('hidden');
+            document.getElementById('cartDrawer').classList.remove('translate-x-full');
+        }
+
+        function closeCartDrawer() {
+            document.getElementById('cartDrawerBackdrop').classList.add('hidden');
+            document.getElementById('cartDrawer').classList.add('translate-x-full');
+        }
+
+        function toggleOrderType(type) {
+            const addrGroup = document.getElementById('deliveryAddressGroup');
+            if (addrGroup) {
+                addrGroup.classList.toggle('hidden', type !== 'delivery');
+            }
+        }
+
+        // ================= STEP 3: KHQR PAYMENT MODAL =================
+        function proceedToKhqrPayment() {
+            const name = (document.getElementById('custName')?.value || '').trim();
+            const phone = (document.getElementById('custPhone')?.value || '').trim();
+            const date = document.getElementById('custDate')?.value;
+            const time = document.getElementById('custTime')?.value;
+            const isDelivery = document.querySelector('input[name="orderType"]:checked')?.value === 'delivery';
+            const address = (document.getElementById('custAddress')?.value || '').trim();
+
+            if (!name) {
+                alert('⚠️ សូមបញ្ចូលឈ្មោះរបស់អ្នកជាមុនសិន!');
+                document.getElementById('custName')?.focus();
+                return;
+            }
+
+            if (!phone) {
+                alert('⚠️ សូមបញ្ចូលលេខទូរស័ព្ទរបស់អ្នក!');
+                document.getElementById('custPhone')?.focus();
+                return;
+            }
+
+            if (isDelivery && !address) {
+                alert('⚠️ សម្រាប់ការដឹកជញ្ជូន សូមបញ្ជាក់ទីតាំងទទួលនំ!');
+                document.getElementById('custAddress')?.focus();
+                return;
+            }
+
+            if (!date || !time) {
+                alert('⚠️ សូមជ្រើសរើសថ្ងៃ និងម៉ោងទទួលនំ!');
+                return;
+            }
+
+            const totalKHR = cart.reduce((sum, item) => sum + (item.priceKHR * item.qty), 0);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+
+            // Populate Payment Modal
+            document.getElementById('payModalAmountKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
+            document.getElementById('payModalAmountUSD').innerText = `≈ $${totalUSD}`;
+            document.getElementById('payModalMerchantName').innerText = STORE_INFO.name;
+            
+            // Check for custom KHQR in localStorage from POS or use default
+            const customKhqr = localStorage.getItem('BAKERY_CUSTOM_KHQR');
+            document.getElementById('payModalQrImg').src = customKhqr || DEFAULT_KHQR_URL;
+
+            // Reset slip upload
+            uploadedSlipBase64 = null;
+            document.getElementById('slipPreviewImg').classList.add('hidden');
+            document.getElementById('slipPlaceholder').classList.remove('hidden');
+            document.getElementById('slipFileInput').value = '';
+
+            closeCartDrawer();
+            document.getElementById('paymentModal').classList.remove('hidden');
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').classList.add('hidden');
+        }
+
+        function handleSlipSelected(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                uploadedSlipBase64 = e.target.result;
+                const preview = document.getElementById('slipPreviewImg');
+                const placeholder = document.getElementById('slipPlaceholder');
+                preview.src = uploadedSlipBase64;
+                preview.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ================= FINAL ORDER SUBMISSION =================
+        async function submitFinalOrder() {
+            if (!uploadedSlipBase64) {
+                alert('⚠️ សូមភ្ជាប់រូបភាពវិក្កយបត្រ (Payment Slip) ដែលអ្នកបានស្កេនបង់លុយរួច!');
+                document.getElementById('slipFileInput').click();
+                return;
+            }
+
+            const btn = document.getElementById('btnConfirmFinalOrder');
+            const btnText = document.getElementById('btnConfirmFinalOrderText');
+            btn.disabled = true;
+            btnText.innerText = 'កំពុងបញ្ជូនការកុម្ម៉ង់... ⏳';
+
+            const name = document.getElementById('custName').value.trim();
+            const phone = document.getElementById('custPhone').value.trim();
+            const orderType = document.querySelector('input[name="orderType"]:checked').value;
+            const address = document.getElementById('custAddress').value.trim();
+            const pickupDate = document.getElementById('custDate').value;
+            const pickupTime = document.getElementById('custTime').value;
+            const note = document.getElementById('custNote').value.trim();
+
+            const totalKHR = cart.reduce((sum, item) => sum + (item.priceKHR * item.qty), 0);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+            const orderId = `ORD-${Date.now().toString().slice(-4)}`;
+
+            // Build items summary string
+            const itemsSummary = cart.map(item => {
+                let detail = `${item.name} x${item.qty}`;
+                if (item.isCake && item.message && item.message !== 'គ្មានអក្សរ') {
+                    detail += ` [អក្សរ: "${item.message}"]`;
+                }
+                return detail;
+            }).join(', ');
+
+            // Full note payload
+            const fullNote = `[ONLINE] ${orderType === 'delivery' ? 'ដឹកជញ្ជូន' : 'មកយកផ្ទាល់'} | ថ្ងៃទទួល: ${pickupDate} ${pickupTime}${address ? ' | ទីតាំង: ' + address : ''}${note ? ' | ចំណាំ: ' + note : ''}`;
+
+            const orderPayload = {
+                id: orderId,
+                date: pickupDate,
+                time: pickupTime,
+                totalKHR: totalKHR,
+                depositKHR: totalKHR,
+                remainingKHR: 0,
+                status: 'បានទូទាត់ ១០០% (Online)',
+                customerName: name,
+                customerPhone: phone,
+                method: 'KHQR Online (៛)',
+                itemsSummary: itemsSummary,
+                itemsCount: cart.length,
+                note: fullNote,
+                items: cart
+            };
+
+            try {
+                // 1. Send Instant Notification to Store Telegram Bot
+                await sendTelegramOrderNotification(orderPayload, uploadedSlipBase64);
+
+                // 2. Save Order into Google Sheet
+                await sendOrderToGoogleSheet(orderPayload);
+
+                // 3. Show Success Screen
+                closePaymentModal();
+                showOrderSuccessScreen(orderPayload);
+
+                // Clear cart
+                cart = [];
+                updateCartUI();
+            } catch (err) {
+                console.error('Order submission error:', err);
+                alert('⚠️ ការកុម្ម៉ង់ត្រូវបានកត់ត្រា ប៉ុន្តែជួបបញ្ហាបណ្តាញមួយចំនួន។ សូមទាក់ទងទូរស័ព្ទហាង 0978707000 ដើម្បីផ្ទៀងផ្ទាត់!');
+                closePaymentModal();
+                showOrderSuccessScreen(orderPayload);
+            } finally {
+                btn.disabled = false;
+                btnText.innerText = 'បានទូទាត់ & បញ្ជាក់ការកុម្ម៉ង់';
+            }
+        }
+
+        // Send Order to Telegram Bot
+        async function sendTelegramOrderNotification(order, slipPhotoBase64) {
+            if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) return;
+
+            const caption = `🎂 <b>មានការកុម្ម៉ង់នំថ្មីពីចម្ងាយ (Online Order)!</b> 🎉\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 <b>លេខកុម្ម៉ង់:</b> <code>#${order.id}</code>\n` +
+                `👤 <b>អតិថិជន:</b> <b>${order.customerName}</b>\n` +
+                `📞 <b>ទូរស័ព្ទ:</b> <code>${order.customerPhone}</code>\n` +
+                `📅 <b>ថ្ងៃ & ម៉ោងទទួលនំ:</b> <b>${order.date} ម៉ោង ${order.time}</b>\n` +
+                `📦 <b>វិធីទទួល:</b> ${order.note.includes('ដឹកជញ្ជូន') ? '🛵 សេវាដឹកជញ្ជូន' : '🛍️ មកយកផ្ទាល់នៅហាង'}\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🍰 <b>ទំនិញដែលបានកុម្ម៉ង់ (${order.itemsCount}):</b>\n` +
+                order.items.map((it, i) => `  ${i + 1}. <b>${it.name}</b> x${it.qty}${it.isCake && it.message && it.message !== 'គ្មានអក្សរ' ? `\n      ✍️ អក្សរលើនំ: <i>"${it.message}"</i>` : ''}`).join('\n') + `\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `💰 <b>ទឹកប្រាក់សរុប:</b> <b>${order.totalKHR.toLocaleString()} ៛</b> (≈ $${(order.totalKHR / KHR_RATE).toFixed(2)})\n` +
+                `💳 <b>វិធីទូទាត់:</b> 📱 KHQR (បានផ្ញើរូប Slip មកជាមួយ)\n` +
+                (order.note ? `📝 <b>ព័ត៌មានបន្ថែម:</b> <i>${order.note}</i>\n` : '');
+
+            try {
+                // If slip image exists, sendPhoto
+                if (slipPhotoBase64 && slipPhotoBase64.startsWith('data:image')) {
+                    const blob = base64ToBlob(slipPhotoBase64);
+                    if (blob) {
+                        const fd = new FormData();
+                        fd.append('chat_id', TELEGRAM_CHAT_ID);
+                        fd.append('photo', blob, 'slip.jpg');
+                        fd.append('caption', caption);
+                        fd.append('parse_mode', 'HTML');
+                        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, {
+                            method: 'POST',
+                            body: fd
+                        });
+                        return;
+                    }
+                }
+
+                // Fallback to text message
+                await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: TELEGRAM_CHAT_ID,
+                        text: caption,
+                        parse_mode: 'HTML'
+                    })
+                });
+            } catch (err) {
+                console.warn('Telegram notification failed:', err);
+            }
+        }
+
+        // Send Order to Google Sheet
+        async function sendOrderToGoogleSheet(order) {
+            if (!GOOGLE_SHEET_URL) return;
+            try {
+                await fetch(GOOGLE_SHEET_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({
+                        action: 'new_sale',
+                        invoice: order
+                    })
+                });
+            } catch (err) {
+                console.warn('Google Sheet send order failed:', err);
+            }
+        }
+
+        function showOrderSuccessScreen(order) {
+            document.getElementById('successOrderId').innerText = `#${order.id}`;
+            document.getElementById('successCustName').innerText = order.customerName;
+            document.getElementById('successDateTime').innerText = `${order.date} ម៉ោង ${order.time}`;
+            document.getElementById('successTotalKHR').innerText = `${order.totalKHR.toLocaleString()} ៛ (≈ $${(order.totalKHR / KHR_RATE).toFixed(2)})`;
+
+            document.getElementById('orderSuccessModal').classList.remove('hidden');
+            confetti({ particleCount: 80, spread: 80, origin: { y: 0.6 } });
+        }
+
+        function finishOrderAndReload() {
+            document.getElementById('orderSuccessModal').classList.add('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Helper: Convert Base64 to Blob for FormData upload
+        function base64ToBlob(base64) {
+            try {
+                const parts = base64.split(';base64,');
+                const contentType = parts[0].split(':')[1];
+                const raw = window.atob(parts[1]);
+                const rawLength = raw.length;
+                const uInt8Array = new Uint8Array(rawLength);
+                for (let i = 0; i < rawLength; ++i) {
+                    uInt8Array[i] = raw.charCodeAt(i);
+                }
+                return new Blob([uInt8Array], { type: contentType });
+            } catch (e) {
+                return null;
+            }
+        }
+
+        // Quick Toast Helper
+        function showToast(msg, type = 'info') {
+            const existing = document.getElementById('quickToast');
+            if (existing) existing.remove();
+
+            const toast = document.createElement('div');
+            toast.id = 'quickToast';
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 z-50 py-2.5 px-4 rounded-2xl bg-stone-900/90 backdrop-blur-md text-white font-bold text-xs shadow-2xl flex items-center gap-2 animate-bounce-gentle';
+            toast.innerHTML = `<span>${msg}</span>`;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.4s ease';
+                setTimeout(() => toast.remove(), 400);
+            }, 2500);
+        }
+    </script>
+</body>
+
+</html>
