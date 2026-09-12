@@ -263,7 +263,7 @@
                             <span
                                 class="bg-amber-100 text-amber-900 text-[9px] sm:text-[10px] px-2 py-0.5 rounded-full font-black border border-amber-300 flex items-center gap-1 shadow-2xs"
                                 title="កំណែប្រែចុងក្រោយ">
-                                ⚡ v2.7
+                                ⚡ v2.8
                             </span>
                         </div>
                         <p class="text-[10px] sm:text-xs text-stone-600 font-semibold truncate max-w-[180px] sm:max-w-none"
@@ -6334,16 +6334,15 @@ function sendTelegramApi(method, payload) {
             const isPinterestPage = (url.includes('pinterest.com/pin/') || url.includes('pin.it/') || (url.includes('pinterest.com') && !url.includes('pinimg.com')));
             if (isPinterestPage) {
                 // សាកល្បង Auto-Resolve តាមរយៈ Google Apps Script Web App
-                const settings = JSON.parse(localStorage.getItem('pos_settings') || '{}');
-                const scriptUrl = (settings && settings.googleSheetUrl && settings.googleSheetUrl.trim()) 
-                    ? settings.googleSheetUrl.trim() 
-                    : (integrationSettings.googleSheetUrl || DEFAULT_GOOGLE_SHEET_URL);
+                const scriptUrl = getEffectiveGoogleSheetUrl();
                 
                 if (scriptUrl && scriptUrl.includes('/macros/s/')) {
                     showToast('🔍 កំពុងស្រង់យករូបភាពផ្ទាល់ពី Pinterest... ⏳', 'info');
+                    
+                    // 1. សាកល្បងតាម Fetch ធម្មតា
                     try {
                         const fetchUrl = `${scriptUrl}?action=resolve_pinterest&url=${encodeURIComponent(url)}`;
-                        const res = await fetch(fetchUrl);
+                        const res = await fetch(fetchUrl, { method: 'GET', redirect: 'follow' });
                         if (res.ok) {
                             const data = await res.json();
                             if (data && data.status === 'success' && data.imageUrl) {
@@ -6355,7 +6354,46 @@ function sendTelegramApi(method, payload) {
                             }
                         }
                     } catch (e) {
-                        console.warn('Auto resolve pinterest failed:', e);
+                        console.warn('Auto resolve pinterest via fetch failed:', e);
+                    }
+
+                    // 2. សាកល្បងតាម JSONP (ជំនួយពិសេសសម្រាប់ទូរស័ព្ទដៃ Safari / Chrome កុំឱ្យជាប់ CORS)
+                    try {
+                        const jsonpData = await new Promise((resolve, reject) => {
+                            const cbName = 'cb_pin_' + Math.floor(Math.random() * 1000000);
+                            const timer = setTimeout(() => {
+                                delete window[cbName];
+                                if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
+                                reject(new Error('JSONP Timeout'));
+                            }, 7000);
+
+                            window[cbName] = function(resp) {
+                                clearTimeout(timer);
+                                delete window[cbName];
+                                if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
+                                resolve(resp);
+                            };
+
+                            const scriptTag = document.createElement('script');
+                            scriptTag.src = `${scriptUrl}?action=resolve_pinterest&url=${encodeURIComponent(url)}&callback=${cbName}`;
+                            scriptTag.onerror = () => {
+                                clearTimeout(timer);
+                                delete window[cbName];
+                                if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
+                                reject(new Error('JSONP Load Error'));
+                            };
+                            document.body.appendChild(scriptTag);
+                        });
+
+                        if (jsonpData && jsonpData.status === 'success' && jsonpData.imageUrl) {
+                            appendOrReplaceBatchImage(jsonpData.imageUrl);
+                            renderBatchPreviews();
+                            input.value = '';
+                            showToast('🎉 បានស្រង់យករូបភាព Pinterest HD ដោយជោគជ័យ!', 'success');
+                            return;
+                        }
+                    } catch (errJsonp) {
+                        console.warn('Auto resolve pinterest via JSONP failed:', errJsonp);
                     }
                 }
 
