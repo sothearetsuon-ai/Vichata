@@ -567,12 +567,19 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div
                     class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-3xl shadow-soft border border-orange-100 space-y-4">
-                    <div class="flex items-center gap-2 pb-3 border-b border-orange-100">
-                        <div
-                            class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
-                            <i class="fa-solid fa-plus"></i>
+                    <div class="flex items-center justify-between pb-3 border-b border-orange-100 flex-wrap gap-2">
+                        <div class="flex items-center gap-2">
+                            <div
+                                class="w-9 h-9 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold">
+                                <i class="fa-solid fa-plus"></i>
+                            </div>
+                            <h3 class="font-extrabold text-base text-bakery-dark">កត់ត្រាការចំណាយថ្មី</h3>
                         </div>
-                        <h3 class="font-extrabold text-base text-bakery-dark">កត់ត្រាការចំណាយថ្មី</h3>
+                        <button type="button" onclick="sendExpensesSummaryToTelegram()"
+                            class="py-1.5 px-3 bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs cursor-pointer active:scale-95">
+                            <i class="fa-brands fa-telegram text-sky-500 text-sm"></i>
+                            <span>ផ្ញើចំណាយទៅ Telegram</span>
+                        </button>
                     </div>
 
                     <form onsubmit="handleNewExpense(event)" class="space-y-3.5 text-xs">
@@ -811,6 +818,10 @@
                         class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-amber-50 text-bakery-crust hover:bg-amber-100 font-extrabold text-xs border border-amber-200 transition flex items-center gap-1.5 shadow-xs">
                         <i class="fa-solid fa-cloud-arrow-up text-amber-600"></i> Sync ស្តុក & គ្រឿងផ្សំ
                     </button>
+                    <button onclick="sendStockSummaryToTelegram()"
+                        class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-sky-50 text-sky-700 hover:bg-sky-100 font-extrabold text-xs border border-sky-200 transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95">
+                        <i class="fa-brands fa-telegram text-sky-500 text-sm"></i> ផ្ញើស្តុកទៅ Telegram
+                    </button>
                     <button onclick="openMultiUploadModal()"
                         class="flex-1 sm:flex-none px-3.5 py-2 rounded-xl bg-bakery-caramel text-white font-extrabold text-xs shadow hover:bg-orange-700 transition flex items-center gap-1.5">
                         <i class="fa-solid fa-plus"></i> បន្ថែមទំនិញ
@@ -899,6 +910,11 @@
                     <button onclick="applyCustomDateRange()"
                         class="w-full sm:w-auto px-4 py-2 bg-bakery-caramel hover:bg-orange-700 text-white rounded-xl font-extrabold shadow-soft transition">
                         ត្រងមើល
+                    </button>
+                    <button onclick="sendSalesSummaryToTelegram()"
+                        class="w-full sm:w-auto px-3.5 py-2 bg-sky-500 hover:bg-sky-600 text-white rounded-xl font-extrabold shadow-soft transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 text-xs">
+                        <i class="fa-brands fa-telegram text-sm"></i>
+                        <span>ផ្ញើរបាយការណ៍ទៅ Telegram</span>
                     </button>
                     <span class="text-xs text-stone-500 font-bold ml-auto" id="reportRangeIndicator">បង្ហាញទិន្នន័យ៖
                         ថ្ងៃនេះ</span>
@@ -1358,17 +1374,52 @@
                 </div>
 
                 <!-- Telegram Bot Section -->
-                <div class="p-4 bg-sky-50 rounded-2xl border border-sky-200 space-y-2">
-                    <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5"><i
-                            class="fa-brands fa-telegram text-sky-500"></i> Telegram Bot</h4>
-                    <input type="text" id="telegramBotToken" placeholder="Bot Token"
-                        class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
-                    <input type="text" id="telegramChatId" placeholder="Chat ID"
-                        class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
-                    <button onclick="testTelegramMessageWithPhoto()"
-                        class="px-3 py-1.5 bg-sky-500 hover:bg-sky-600 text-white rounded-xl text-xs font-bold transition">
-                        <i class="fa-solid fa-paper-plane mr-1"></i> តេស្តផ្ញើ Telegram
-                    </button>
+                <div class="p-4 bg-sky-50 rounded-2xl border border-sky-200 space-y-2.5">
+                    <div class="flex items-center justify-between">
+                        <h4 class="font-extrabold text-xs text-stone-800 flex items-center gap-1.5">
+                            <i class="fa-brands fa-telegram text-sky-500 text-base"></i>
+                            <span>Telegram Bot & Menu ពិនិត្យរបាយការណ៍</span>
+                        </h4>
+                        <span class="text-[10px] font-bold text-sky-700 bg-sky-100 px-2 py-0.5 rounded-full">Bot Active</span>
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-500 block mb-0.5">Bot Token</label>
+                        <input type="text" id="telegramBotToken" placeholder="Bot Token"
+                            class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
+                    </div>
+
+                    <div>
+                        <label class="text-[10px] font-bold text-stone-500 block mb-0.5">Chat ID (អ្នកគ្រប់គ្រង)</label>
+                        <input type="text" id="telegramChatId" placeholder="Chat ID"
+                            class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
+                    </div>
+
+                    <div class="p-2.5 bg-white/90 rounded-xl border border-sky-200/70 text-[11px] space-y-1">
+                        <div class="font-bold text-sky-900 flex items-center gap-1">
+                            <i class="fa-solid fa-list-check text-sky-600"></i>
+                            <span>ប៊ូតុង Menu លើ Telegram (ចុចមួយប៉ក់ចេញរបាយការណ៍):</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-1 text-[10px] text-stone-700 pt-0.5 font-semibold">
+                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📊 <b>របាយការណ៍លក់</b> (ចំណូល/វិក្កយបត្រ)</div>
+                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📦 <b>ពិនិត្យស្តុក</b> (ទំនិញជិតអស់)</div>
+                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">💸 <b>ពិនិត្យចំណាយ</b> (ចំណាយថ្ងៃនេះ)</div>
+                            <div class="bg-sky-50/70 p-1.5 rounded-lg border border-sky-100">📈 <b>សង្ខេបថ្ងៃនេះ</b> (ប្រាក់ចំណេញសុទ្ធ)</div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2 pt-1">
+                        <button type="button" onclick="setupTelegramMenuAndWebhook()"
+                            class="py-2.5 px-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>🤖 ដំឡើង Menu លើ Telegram</span>
+                        </button>
+                        <button type="button" onclick="testTelegramMessageWithPhoto()"
+                            class="py-2.5 px-3 bg-white hover:bg-stone-100 text-sky-700 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
+                            <i class="fa-solid fa-paper-plane text-sky-500"></i>
+                            <span>តេស្តផ្ញើ Telegram</span>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -3225,6 +3276,257 @@
             }
         }
 
+        // ================= TELEGRAM BOT INTERACTIVE MENU & QUICK SEND =================
+        async function setupTelegramMenuAndWebhook() {
+            const token = document.getElementById('telegramBotToken').value.trim() || integrationSettings.telegramBotToken;
+            const chatId = document.getElementById('telegramChatId').value.trim() || integrationSettings.telegramChatId;
+            const webAppUrl = getEffectiveGoogleSheetUrl();
+
+            if (!token) {
+                showToast('⚠️ សូមបញ្ចូល Telegram Bot Token ជាមុនសិន!', 'warning');
+                return;
+            }
+
+            showToast('⏳ កំពុងដំឡើង Telegram Menu និង Webhook...', 'info');
+
+            try {
+                // 1. Set Official Telegram Bot Commands Menu
+                const cmdRes = await fetch(`https://api.telegram.org/bot${token}/setMyCommands`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        commands: [
+                            { command: 'start', description: '🏠 បើកផ្ទាំង Menu មេ' },
+                            { command: 'sales', description: '📊 របាយការណ៍លក់ថ្ងៃនេះ' },
+                            { command: 'stock', description: '📦 ពិនិត្យស្តុក និងទំនិញជិតអស់' },
+                            { command: 'expenses', description: '💸 របាយការណ៍ចំណាយថ្ងៃនេះ' },
+                            { command: 'summary', description: '📈 សង្ខេបចំណូល-ចំណាយ និងប្រាក់ចំណេញ' },
+                            { command: 'help', description: 'ℹ️ ជំនួយ និងរបៀបប្រើប្រាស់' }
+                        ]
+                    })
+                });
+                const cmdData = await cmdRes.json();
+                if (!cmdData.ok) {
+                    throw new Error('Bot Token មិនត្រឹមត្រូវ: ' + (cmdData.description || ''));
+                }
+
+                // 2. Set Webhook to Google Apps Script if URL exists
+                let webhookNotice = '';
+                if (webAppUrl) {
+                    const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: webAppUrl })
+                    });
+                    const whData = await whRes.json();
+                    if (whData.ok) {
+                        webhookNotice = ' និងបានភ្ជាប់ Webhook ជាមួយ Google Sheet';
+                    }
+                }
+
+                // 3. Send greeting message with Persistent Reply Keyboard if Chat ID exists
+                if (chatId) {
+                    await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            chat_id: chatId,
+                            text: `🎉 <b>បានដំឡើង Telegram Menu ជោគជ័យ!</b> 🎂\n\n🏪 <b>${storeInfo.name || 'ហាងនំខេកវិជ្ជដា'} (Bakery POS)</b>\nលោកអ្នកអាចចុចប៊ូតុង Menu ខាងក្រោមដើម្បីពិនិត្យរបាយការណ៍លក់ ស្តុក និងចំណាយបានគ្រប់ពេល 24/7៖`,
+                            parse_mode: 'HTML',
+                            reply_markup: {
+                                keyboard: [
+                                    [{ text: '📊 របាយការណ៍លក់' }, { text: '📦 ពិនិត្យស្តុក' }],
+                                    [{ text: '💸 ពិនិត្យចំណាយ' }, { text: '📈 សង្ខេបថ្ងៃនេះ' }]
+                                ],
+                                resize_keyboard: true,
+                                persistent: true
+                            }
+                        })
+                    });
+                }
+
+                showToast(`🎉 បានដំឡើង Telegram Menu${webhookNotice} ជោគជ័យ!`, 'success');
+                confetti({ particleCount: 60, spread: 70 });
+            } catch (err) {
+                console.error('setupTelegramMenuAndWebhook error:', err);
+                showToast(`⚠️ បរាជ័យក្នុងការដំឡើង Telegram: ${err.message}`, 'error');
+            }
+        }
+
+        async function sendSalesSummaryToTelegram() {
+            const token = integrationSettings.telegramBotToken;
+            const chatId = integrationSettings.telegramChatId;
+            if (!token || !chatId) {
+                showToast('⚠️ សូមបញ្ចូល Telegram Bot Token និង Chat ID ក្នុង Settings ជាមុនសិន!', 'warning');
+                openSettingsModal();
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            const todaySales = transactions.filter(t => t.date === today);
+            const totalKHR = todaySales.reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+            const cashSales = todaySales.filter(t => t.method && (t.method.includes('ប្រាក់សុទ្ធ') || t.method.toLowerCase().includes('cash'))).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const khqrSales = todaySales.filter(t => t.method && (t.method.includes('KHQR') || t.method.toLowerCase().includes('bank') || t.method.toLowerCase().includes('qr'))).reduce((sum, t) => sum + (t.totalKHR || 0), 0);
+            const unpaid = todaySales.reduce((sum, t) => sum + (t.remainingKHR || 0), 0);
+
+            let recentText = '';
+            if (todaySales.length > 0) {
+                recentText = todaySales.slice(-3).reverse().map((t, i) => {
+                    const cust = (t.customerName && t.customerName !== 'អតិថិជនទូទៅ' && t.customerName !== 'គ្មាន') ? ` (${t.customerName})` : '';
+                    return `  ${i + 1}. <b>#${t.id}</b>${cust} — <code>${(t.totalKHR || 0).toLocaleString()} ៛</code> [${t.method || 'Cash'}]`;
+                }).join('\n');
+            } else {
+                recentText = '  <i>មិនទាន់មានការលក់នៅថ្ងៃនេះទេ</i>';
+            }
+
+            const text = `📊 <b>របាយការណ៍លក់ប្រចាំថ្ងៃ (${today})</b>\n` +
+                `🏪 <b>${storeInfo.name || 'ហាងនំខេកវិជ្ជដា'}</b> • ម៉ោង៖ <code>${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</code>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 ចំនួនវិក្កយបត្រថ្ងៃនេះ៖ <b>${todaySales.length} វិក្កយបត្រ</b>\n` +
+                `💰 ចំណូលលក់សរុប៖ <b>${totalKHR.toLocaleString()} ៛</b> (≈ $${totalUSD})\n` +
+                `💵 សាច់ប្រាក់ (Cash)៖ <b>${cashSales.toLocaleString()} ៛</b>\n` +
+                `📱 ស្កេន KHQR (Bank)៖ <b>${khqrSales.toLocaleString()} ៛</b>\n` +
+                (unpaid > 0 ? `⚠️ ប្រាក់នៅខ្វះសរុប៖ <b>${unpaid.toLocaleString()} ៛</b>\n` : `✅ បានទូទាត់គ្រប់ចំនួន ១០០%\n`) +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `📋 <b>ការលក់ចុងក្រោយថ្ងៃនេះ៖</b>\n${recentText}`;
+
+            try {
+                showToast('កំពុងផ្ញើរបាយការណ៍លក់ទៅ Telegram... ⏳', 'info');
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: '📊 របាយការណ៍លក់', callback_data: 'cmd_sales' }, { text: '📦 ពិនិត្យស្តុក', callback_data: 'cmd_stock' }],
+                                [{ text: '💸 ពិនិត្យចំណាយ', callback_data: 'cmd_expenses' }, { text: '📈 សង្ខេបថ្ងៃនេះ', callback_data: 'cmd_summary' }]
+                            ]
+                        }
+                    })
+                });
+                showToast('✈️ បានផ្ញើរបាយការណ៍លក់ទៅ Telegram ជោគជ័យ!', 'success');
+            } catch (err) {
+                showToast('⚠️ បរាជ័យក្នុងការផ្ញើទៅ Telegram!', 'error');
+            }
+        }
+
+        async function sendStockSummaryToTelegram() {
+            const token = integrationSettings.telegramBotToken;
+            const chatId = integrationSettings.telegramChatId;
+            if (!token || !chatId) {
+                showToast('⚠️ សូមបញ្ចូល Telegram Bot Token និង Chat ID ក្នុង Settings ជាមុនសិន!', 'warning');
+                openSettingsModal();
+                return;
+            }
+
+            const lowStock = products.filter(p => Number(p.stock || 0) <= 5);
+            const inStock = products.filter(p => Number(p.stock || 0) > 5);
+
+            let lowStockText = '';
+            if (lowStock.length > 0) {
+                lowStockText = `⚠️ <b>ទំនិញជិតអស់ពីស្តុក (Low Stock):</b>\n` +
+                    lowStock.map(p => `  • <b>${p.name}</b>៖ នៅសល់ <b>${p.stock || 0}</b> ${(p.stock || 0) <= 0 ? '(អស់)' : ''}`).join('\n');
+            } else {
+                lowStockText = `✅ <b>ទំនិញទាំងអស់មានស្តុកគ្រប់គ្រាន់!</b> (គ្មានទំនិញជិតអស់ទេ)`;
+            }
+
+            const samples = products.slice(0, 5);
+            let sampleText = '';
+            if (samples.length > 0) {
+                sampleText = `\n━━━━━━━━━━━━━━━━━━\n📋 <b>ស្តុកទំនិញមួយចំនួន៖</b>\n` +
+                    samples.map(p => `  • ${p.name}៖ <code>${p.stock || 0}</code> (លក់: ${(p.priceKHR || 0).toLocaleString()}៛)`).join('\n');
+            }
+
+            const text = `📦 <b>របាយការណ៍ស្តុកទំនិញ (Inventory Status)</b>\n` +
+                `🏪 <b>${storeInfo.name || 'ហាងនំខេកវិជ្ជដា'}</b> • ម៉ោង៖ <code>${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</code>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🔢 មុខទំនិញសរុប៖ <b>${products.length} មុខ</b>\n` +
+                `✅ ទំនិញមានស្តុក៖ <b>${inStock.length} មុខ</b>\n` +
+                `⚠️ ជិតអស់/អស់ស្តុក៖ <b>${lowStock.length} មុខ</b>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                lowStockText + sampleText;
+
+            try {
+                showToast('កំពុងផ្ញើរបាយការណ៍ស្តុកទៅ Telegram... ⏳', 'info');
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: '🔄 Refresh ស្តុក', callback_data: 'cmd_stock' }, { text: '📊 របាយការណ៍លក់', callback_data: 'cmd_sales' }],
+                                [{ text: '💸 ពិនិត្យចំណាយ', callback_data: 'cmd_expenses' }, { text: '📈 សង្ខេបថ្ងៃនេះ', callback_data: 'cmd_summary' }]
+                            ]
+                        }
+                    })
+                });
+                showToast('✈️ បានផ្ញើរបាយការណ៍ស្តុកទៅ Telegram ជោគជ័យ!', 'success');
+            } catch (err) {
+                showToast('⚠️ បរាជ័យក្នុងការផ្ញើទៅ Telegram!', 'error');
+            }
+        }
+
+        async function sendExpensesSummaryToTelegram() {
+            const token = integrationSettings.telegramBotToken;
+            const chatId = integrationSettings.telegramChatId;
+            if (!token || !chatId) {
+                showToast('⚠️ សូមបញ្ចូល Telegram Bot Token និង Chat ID ក្នុង Settings ជាមុនសិន!', 'warning');
+                openSettingsModal();
+                return;
+            }
+
+            const today = new Date().toISOString().split('T')[0];
+            const todayExp = expenses.filter(e => e.date === today);
+            const totalKHR = todayExp.reduce((sum, e) => sum + (Number(e.amount) || 0), 0);
+            const totalUSD = (totalKHR / KHR_RATE).toFixed(2);
+
+            let expListText = '';
+            if (todayExp.length > 0) {
+                expListText = todayExp.map((e, idx) => {
+                    return `  ${idx + 1}. <b>${e.title || 'ចំណាយ'}</b> — <code>${(Number(e.amount) || 0).toLocaleString()} ៛</code> (${e.cat || 'ទូទៅ'})`;
+                }).join('\n');
+            } else {
+                expListText = '  <i>មិនទាន់មានការកត់ត្រាចំណាយនៅថ្ងៃនេះទេ</i>';
+            }
+
+            const text = `💸 <b>របាយការណ៍ចំណាយប្រចាំថ្ងៃ (${today})</b>\n` +
+                `🏪 <b>${storeInfo.name || 'ហាងនំខេកវិជ្ជដា'}</b> • ម៉ោង៖ <code>${new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</code>\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `🧾 ចំនួនប្រតិបត្តិការចំណាយ៖ <b>${todayExp.length} លើក</b>\n` +
+                `📉 ចំណាយសរុបថ្ងៃនេះ៖ <b>${totalKHR.toLocaleString()} ៛</b> (≈ $${totalUSD})\n` +
+                `━━━━━━━━━━━━━━━━━━\n` +
+                `📋 <b>បញ្ជីចំណាយថ្ងៃនេះ៖</b>\n${expListText}`;
+
+            try {
+                showToast('កំពុងផ្ញើរបាយការណ៍ចំណាយទៅ Telegram... ⏳', 'info');
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: text,
+                        parse_mode: 'HTML',
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: '🔄 Refresh ចំណាយ', callback_data: 'cmd_expenses' }, { text: '📊 របាយការណ៍លក់', callback_data: 'cmd_sales' }],
+                                [{ text: '📦 ពិនិត្យស្តុក', callback_data: 'cmd_stock' }, { text: '📈 សង្ខេបថ្ងៃនេះ', callback_data: 'cmd_summary' }]
+                            ]
+                        }
+                    })
+                });
+                showToast('✈️ បានផ្ញើរបាយការណ៍ចំណាយទៅ Telegram ជោគជ័យ!', 'success');
+            } catch (err) {
+                showToast('⚠️ បរាជ័យក្នុងការផ្ញើទៅ Telegram!', 'error');
+            }
+        }
+
         // ================= SWITCH VIEW =================
         function switchView(viewName) {
             ['pos', 'expenses', 'showcase', 'custom', 'inventory', 'analytics'].forEach(v => {
@@ -3726,73 +4028,156 @@
 
         // ================= GOOGLE APPS SCRIPT CODE VIEWER =================
         const APPS_SCRIPT_TEMPLATE_CODE = `/**
- * 🎂 ប្រព័ន្ធគ្រប់គ្រង និងស៊ីងទិន្នន័យហាងនំខេកវិជ្ជដា (Bakery POS Apps Script)
- * របៀបដំឡើង៖
- * 1. Google Sheet > Extensions > Apps Script
- * 2. Paste កូដនេះទាំងស្រុង > Save
- * 3. Deploy > New deployment > Web app
- * 4. Who has access: Anyone (អ្នកណាក៏បាន)
- * 5. Copy Web App URL មកដាក់ក្នុង Settings នៃ POS!
+ * ==============================================================================
+ * 🎂 ប្រព័ន្ធគ្រប់គ្រង និងស៊ីងទិន្នន័យហាងនំខេកវិជ្ជដា (Bakery POS Google Apps Script)
+ * ==============================================================================
+ * 
+ * របៀបដំឡើង (Setup Instructions):
+ * 1. បើក Google Sheet របស់អ្នក
+ * 2. ចុច Extensions (ផ្នែកបន្ថែម) > Apps Script
+ * 3. លុបកូដចាស់ទាំងអស់ចេញ ហើយ Copy & Paste កូដខាងក្រោមនេះទាំងស្រុង
+ * 4. ចុច Save (រូបផ្លែថាស)
+ * 5. ចុច Deploy (ដាក់ឱ្យប្រើប្រាស់) > New deployment (ការដាក់ឱ្យប្រើប្រាស់ថ្មី)
+ * 6. ជ្រើសរើស Select type (រូបកង់ធ្មេញ) > Web app
+ * 7. កំណត់ដូចខាងក្រោម៖
+ *    - Description: Bakery POS API v2
+ *    - Execute as: Me (អាសយដ្ឋានអ៊ីមែលរបស់អ្នក)
+ *    - Who has access: Anyone (អ្នកណាក៏បាន - សំខាន់បំផុត!)
+ * 8. ចុច Deploy > Authorize access (ផ្តល់សិទ្ធិ) > Advanced > Go to Untitled (unsafe) > Allow
+ * 9. Copy "Web app URL" (ដែលមានទម្រង់ https://script.google.com/macros/s/.../exec)
+ * 10. យក URL នោះទៅបិទភ្ជាប់ (Paste) ក្នុងប្រអប់ Settings នៃកម្មវិធី POS របស់អ្នកជាការស្រេច!
  */
 
 const SHEET_SALES = "Sales";
 const SHEET_PRODUCTS = "Products";
 const SHEET_EXPENSES = "Expenses";
+const TELEGRAM_BOT_TOKEN = "8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4";
 
+// ==============================================================================
+// 1. GET REQUEST (ទាញទិន្នន័យពី Sheet ទៅកាន់ POS)
+// ==============================================================================
 function doGet(e) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     initSheetsIfNotExist(ss);
+    
+    const sales = getSalesData(ss);
+    const products = getProductsData(ss);
+    const expenses = getExpensesData(ss);
+    
     const result = {
       status: "success",
-      sales: getSalesData(ss),
-      products: getProductsData(ss),
-      expenses: getExpensesData(ss)
+      sales: sales,
+      products: products,
+      expenses: expenses,
+      timestamp: new Date().toISOString()
     };
-    return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+    
+    return ContentService.createTextOutput(JSON.stringify(result))
+      .setMimeType(ContentService.MimeType.JSON);
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      message: err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
+// ==============================================================================
+// 2. POST REQUEST (ទទួលការលក់, ចំណាយ, និងទំនិញពី POS ចូល Sheet & Telegram Webhook)
+// ==============================================================================
 function doPost(e) {
   try {
     const ss = SpreadsheetApp.getActiveSpreadsheet();
     initSheetsIfNotExist(ss);
+    
     let data = {};
-    if (e.postData && e.postData.contents) data = JSON.parse(e.postData.contents);
-    else if (e.parameter) data = e.parameter;
+    if (e.postData && e.postData.contents) {
+      data = JSON.parse(e.postData.contents);
+    } else if (e.parameter) {
+      data = e.parameter;
+    }
+
+    // --- ករណីពិសេស: TELEGRAM WEBHOOK (ទទួលសារ និង Menu ពី Telegram) ---
+    if (data.message || data.callback_query) {
+      handleTelegramWebhook(ss, data);
+      return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
     
     const action = data.action || "";
     
-    if (action === "new_sale") {
-      return ContentService.createTextOutput(JSON.stringify(appendSaleRow(ss, data.invoice || data))).setMimeType(ContentService.MimeType.JSON);
+    // --- ករណី ១: កត់ត្រា ឬកែប្រែការលក់ (New or Edit Sale) ---
+    if (action === "new_sale" || action === "edit_sale" || action === "update_sale") {
+      const inv = data.invoice || data;
+      const res = appendSaleRow(ss, inv);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
+    
+    // --- ករណី ២: បញ្ជូនការលក់ជាច្រើនក្នុងពេលតែមួយ (Batch Sales Sync) ---
     if (action === "sync_sales" || action === "batch_sales") {
-      return ContentService.createTextOutput(JSON.stringify(batchAppendSales(ss, data.sales || data.transactions || []))).setMimeType(ContentService.MimeType.JSON);
+      const list = data.sales || data.transactions || [];
+      const res = batchAppendSales(ss, list);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
+    
+    // --- ករណី ៣: កត់ត្រាចំណាយ (Add Expense) ---
     if (action === "add_expense") {
-      return ContentService.createTextOutput(JSON.stringify(appendExpenseRow(ss, data.expense || data))).setMimeType(ContentService.MimeType.JSON);
+      const exp = data.expense || data;
+      const res = appendExpenseRow(ss, exp);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
+    
+    // --- ករណី ៤: ស៊ីងចំណាយទាំងអស់ (Sync Expenses) ---
     if (action === "sync_expenses") {
-      return ContentService.createTextOutput(JSON.stringify(syncAllExpenses(ss, data.expenses || []))).setMimeType(ContentService.MimeType.JSON);
+      const expList = data.expenses || [];
+      const res = syncAllExpenses(ss, expList);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
+    
+    // --- ករណី ៥: ស៊ីងទំនិញ ឬកែសម្រួលស្តុក (Sync Products / Update Stock) ---
     if (action === "sync_products" || action === "update_stock" || action === "sync_all") {
+      // សម្គាល់៖ មិនបង្កើតជួរលក់ក្លែងក្លាយជាដាច់ខាត! ដំណើរការតែ Products ប៉ុណ្ណោះ
       const prodList = (data.products || []).concat(data.ingredients || []);
-      return ContentService.createTextOutput(JSON.stringify(syncAllProducts(ss, prodList))).setMimeType(ContentService.MimeType.JSON);
+      let res = { status: "success", message: "Products updated" };
+      if (prodList.length > 0) {
+        res = syncAllProducts(ss, prodList);
+      }
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
+    
+    // បើសិនជាមាន invoice ច្បាស់លាស់ ទើបកត់ត្រាចូលការលក់
     if (data.invoice) {
-      return ContentService.createTextOutput(JSON.stringify(appendSaleRow(ss, data.invoice))).setMimeType(ContentService.MimeType.JSON);
+      const res = appendSaleRow(ss, data.invoice);
+      return ContentService.createTextOutput(JSON.stringify(res))
+        .setMimeType(ContentService.MimeType.JSON);
     }
-    return ContentService.createTextOutput(JSON.stringify({ status: "success", message: "No action performed" })).setMimeType(ContentService.MimeType.JSON);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "success",
+      message: "No action performed"
+    })).setMimeType(ContentService.MimeType.JSON);
+    
   } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ status: "error", message: err.toString() })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: "error",
+      message: err.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
   }
 }
 
+// ==============================================================================
+// 3. HELPER FUNCTIONS: SALES (ការលក់)
+// ==============================================================================
 function appendSaleRow(ss, inv) {
   const sheet = ss.getSheetByName(SHEET_SALES);
   const id = String(inv.id || ("BK-" + Date.now()));
+  
   const dateStr = inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
   const timeStr = inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
   const custName = inv.customerName || "អតិថិជនទូទៅ";
@@ -3807,128 +4192,224 @@ function appendSaleRow(ss, inv) {
   const note = inv.note || "";
   const photoLink = inv.photoLink || "";
 
+  // ត្រួតពិនិត្យមើលថាតើវិក្កយបត្រនេះមានរួចហើយឬនៅ
   const existingIds = getExistingColumnValues(sheet, 1);
   const existingIndex = existingIds.indexOf(id);
+  
   if (existingIndex !== -1) {
-    const targetRow = existingIndex + 2;
+    // ប្រសិនបើមានរួចហើយ (ករណីកែប្រែវិក្កយបត្រ) ធ្វើការ Update ជួរចាស់នោះ
+    const targetRow = existingIndex + 2; // បូក ២ ព្រោះជួរទី ១ ជា Header
     sheet.getRange(targetRow, 1, 1, 14).setValues([[
-      id, dateStr, timeStr, custName, custPhone, itemsSummary, itemsCount,
-      totalKHR, depositKHR, remainingKHR, status, method, note, photoLink
+      id,
+      dateStr,
+      timeStr,
+      custName,
+      custPhone,
+      itemsSummary,
+      itemsCount,
+      totalKHR,
+      depositKHR,
+      remainingKHR,
+      status,
+      method,
+      note,
+      photoLink
     ]]);
-    return { status: "success", id: id, updated: true };
+    return { status: "success", id: id, updated: true, message: "Invoice updated successfully" };
   }
   
   sheet.appendRow([
-    id, dateStr, timeStr, custName, custPhone, itemsSummary, itemsCount,
-    totalKHR, depositKHR, remainingKHR, status, method, note, photoLink
+    id,
+    dateStr,
+    timeStr,
+    custName,
+    custPhone,
+    itemsSummary,
+    itemsCount,
+    totalKHR,
+    depositKHR,
+    remainingKHR,
+    status,
+    method,
+    note,
+    photoLink
   ]);
-  return { status: "success", id: id };
+  
+  return { status: "success", id: id, photoUrl: photoLink };
 }
 
-function batchAppendSales(ss, list) {
-  if (!Array.isArray(list) || list.length === 0) return { status: "success", count: 0 };
+function batchAppendSales(ss, salesList) {
+  if (!Array.isArray(salesList) || salesList.length === 0) {
+    return { status: "success", count: 0 };
+  }
+  
   const sheet = ss.getSheetByName(SHEET_SALES);
-  const existingSet = new Set(getExistingColumnValues(sheet, 1));
-  const rows = [];
-  list.forEach(inv => {
+  const existingIds = getExistingColumnValues(sheet, 1);
+  const existingSet = new Set(existingIds);
+  
+  const rowsToAdd = [];
+  salesList.forEach(inv => {
     const id = String(inv.id || ("BK-" + Date.now()));
     if (!existingSet.has(id)) {
       existingSet.add(id);
-      rows.push([
-        id, inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
+      rowsToAdd.push([
+        id,
+        inv.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
         inv.time || Utilities.formatDate(new Date(), "GMT+7", "HH:mm"),
-        inv.customerName || "អតិថិជនទូទៅ", inv.customerPhone || "គ្មាន",
-        inv.itemsSummary || "", Number(inv.itemsCount || 1), Number(inv.totalKHR || 0),
-        Number(inv.depositKHR || (inv.totalKHR || 0)), Number(inv.remainingKHR || 0),
-        inv.status || "Paid (គ្រប់)", inv.method || "ប្រាក់សុទ្ធ (៛)", inv.note || "", inv.photoLink || ""
+        inv.customerName || "អតិថិជនទូទៅ",
+        inv.customerPhone || "គ្មាន",
+        inv.itemsSummary || "",
+        Number(inv.itemsCount || 1),
+        Number(inv.totalKHR || 0),
+        Number(inv.depositKHR || (inv.totalKHR || 0)),
+        Number(inv.remainingKHR || 0),
+        inv.status || "Paid (គ្រប់)",
+        inv.method || "ប្រាក់សុទ្ធ (៛)",
+        inv.note || "",
+        inv.photoLink || ""
       ]);
     }
   });
-  if (rows.length > 0) sheet.getRange(sheet.getLastRow() + 1, 1, rows.length, 14).setValues(rows);
-  return { status: "success", addedCount: rows.length };
+  
+  if (rowsToAdd.length > 0) {
+    const lastRow = sheet.getLastRow();
+    sheet.getRange(lastRow + 1, 1, rowsToAdd.length, 14).setValues(rowsToAdd);
+  }
+  
+  return { status: "success", addedCount: rowsToAdd.length };
 }
 
 function getSalesData(ss) {
   const sheet = ss.getSheetByName(SHEET_SALES);
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
-  return sheet.getRange(2, 1, lastRow - 1, 14).getValues().map(r => ({
-    id: String(r[0] || ""),
-    date: r[1] ? (r[1] instanceof Date ? Utilities.formatDate(r[1], "GMT+7", "yyyy-MM-dd") : String(r[1])) : "",
-    time: r[2] ? (r[2] instanceof Date ? Utilities.formatDate(r[2], "GMT+7", "HH:mm") : String(r[2])) : "",
-    customerName: String(r[3] || "អតិថិជនទូទៅ"),
-    customerPhone: String(r[4] || "គ្មាន"),
-    itemsSummary: String(r[5] || ""),
-    itemsCount: Number(r[6] || 1),
-    totalKHR: Number(r[7] || 0),
-    depositKHR: Number(r[8] || 0),
-    remainingKHR: Number(r[9] || 0),
-    status: String(r[10] || "Paid (គ្រប់)"),
-    method: String(r[11] || "ប្រាក់សុទ្ធ (៛)"),
-    note: String(r[12] || ""),
-    photoLink: String(r[13] || "")
+  
+  const values = sheet.getRange(2, 1, lastRow - 1, 14).getValues();
+  return values.map(row => ({
+    id: String(row[0] || ""),
+    date: row[1] ? (row[1] instanceof Date ? Utilities.formatDate(row[1], "GMT+7", "yyyy-MM-dd") : String(row[1])) : "",
+    time: row[2] ? (row[2] instanceof Date ? Utilities.formatDate(row[2], "GMT+7", "HH:mm") : String(row[2])) : "",
+    customerName: String(row[3] || "អតិថិជនទូទៅ"),
+    customerPhone: String(row[4] || "គ្មាន"),
+    itemsSummary: String(row[5] || ""),
+    itemsCount: Number(row[6] || 1),
+    totalKHR: Number(row[7] || 0),
+    depositKHR: Number(row[8] || 0),
+    remainingKHR: Number(row[9] || 0),
+    status: String(row[10] || "Paid (គ្រប់)"),
+    method: String(row[11] || "ប្រាក់សុទ្ធ (៛)"),
+    note: String(row[12] || ""),
+    photoLink: String(row[13] || "")
   })).filter(s => s.id !== "");
 }
 
+// ==============================================================================
+// 4. HELPER FUNCTIONS: EXPENSES (ចំណាយ)
+// ==============================================================================
 function appendExpenseRow(ss, exp) {
   const sheet = ss.getSheetByName(SHEET_EXPENSES);
   const id = String(exp.id || ("EXP-" + Date.now()));
-  sheet.appendRow([id, exp.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"), exp.title || "", exp.cat || "other", Number(exp.amount || 0), exp.note || ""]);
+  const dateStr = exp.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  const title = exp.title || "ចំណាយទូទៅ";
+  const cat = exp.cat || "other";
+  const amount = Number(exp.amount || 0);
+  const note = exp.note || "";
+  
+  sheet.appendRow([id, dateStr, title, cat, amount, note]);
   return { status: "success", id: id };
 }
 
-function syncAllExpenses(ss, list) {
+function syncAllExpenses(ss, expList) {
   const sheet = ss.getSheetByName(SHEET_EXPENSES);
   sheet.clearContents();
   sheet.appendRow(["ID", "កាលបរិច្ឆេទ", "មុខចំណាយ", "ប្រភេទ", "ចំនួនទឹកប្រាក់ (៛)", "កំណត់ចំណាំ"]);
-  if (list && list.length > 0) {
-    const rows = list.map(e => [String(e.id || ("EXP-" + Date.now())), e.date || "", e.title || "", e.cat || "other", Number(e.amount || 0), e.note || ""]);
+  
+  if (expList.length > 0) {
+    const rows = expList.map(exp => [
+      String(exp.id || ("EXP-" + Date.now())),
+      exp.date || Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd"),
+      exp.title || "",
+      exp.cat || "other",
+      Number(exp.amount || 0),
+      exp.note || ""
+    ]);
     sheet.getRange(2, 1, rows.length, 6).setValues(rows);
   }
-  return { status: "success", count: list ? list.length : 0 };
+  return { status: "success", count: expList.length };
 }
 
 function getExpensesData(ss) {
   const sheet = ss.getSheetByName(SHEET_EXPENSES);
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
-  return sheet.getRange(2, 1, lastRow - 1, 6).getValues().map(r => ({
-    id: String(r[0] || ""),
-    date: r[1] ? (r[1] instanceof Date ? Utilities.formatDate(r[1], "GMT+7", "yyyy-MM-dd") : String(r[1])) : "",
-    title: String(r[2] || ""), cat: String(r[3] || "other"), amount: Number(r[4] || 0), note: String(r[5] || "")
+  
+  const values = sheet.getRange(2, 1, lastRow - 1, 6).getValues();
+  return values.map(row => ({
+    id: String(row[0] || ""),
+    date: row[1] ? (row[1] instanceof Date ? Utilities.formatDate(row[1], "GMT+7", "yyyy-MM-dd") : String(row[1])) : "",
+    title: String(row[2] || ""),
+    cat: String(row[3] || "other"),
+    amount: Number(row[4] || 0),
+    note: String(row[5] || "")
   })).filter(e => e.id !== "");
 }
 
-function syncAllProducts(ss, list) {
+// ==============================================================================
+// 5. HELPER FUNCTIONS: PRODUCTS (ទំនិញ & គ្រឿងផ្សំ)
+// ==============================================================================
+function syncAllProducts(ss, prodList) {
   const sheet = ss.getSheetByName(SHEET_PRODUCTS);
   sheet.clearContents();
   sheet.appendRow(["ID", "ឈ្មោះទំនិញ", "ប្រភេទ", "ស្លាក", "តម្លៃលក់ (៛)", "ស្តុកនៅសល់", "តំណភ្ជាប់រូបភាព"]);
-  if (list && list.length > 0) {
-    const rows = list.map(p => [String(p.id || ""), p.name || "", p.cat || "cakes", p.badge || "", Number(p.priceKHR || 0), Number(p.stock !== undefined ? p.stock : 10), (p.img && typeof p.img === 'string' && p.img.startsWith('http')) ? p.img : ""]);
+  
+  if (prodList.length > 0) {
+    const rows = prodList.map(p => [
+      String(p.id || ""),
+      p.name || "",
+      p.cat || "cakes",
+      p.badge || "",
+      Number(p.priceKHR || 0),
+      Number(p.stock !== undefined ? p.stock : 10),
+      (p.img && typeof p.img === 'string' && p.img.startsWith('http')) ? p.img : ""
+    ]);
     sheet.getRange(2, 1, rows.length, 7).setValues(rows);
   }
-  return { status: "success", count: list ? list.length : 0 };
+  return { status: "success", count: prodList.length };
 }
 
 function getProductsData(ss) {
   const sheet = ss.getSheetByName(SHEET_PRODUCTS);
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
-  return sheet.getRange(2, 1, lastRow - 1, 7).getValues().map(r => ({
-    id: isNaN(r[0]) ? String(r[0]) : Number(r[0]),
-    name: String(r[1] || ""), cat: String(r[2] || "cakes"), badge: String(r[3] || ""),
-    priceKHR: Number(r[4] || 0), stock: Number(r[5] !== undefined ? r[5] : 0), img: String(r[6] || "")
+  
+  const values = sheet.getRange(2, 1, lastRow - 1, 7).getValues();
+  return values.map(row => ({
+    id: isNaN(row[0]) ? String(row[0]) : Number(row[0]),
+    name: String(row[1] || ""),
+    cat: String(row[2] || "cakes"),
+    badge: String(row[3] || ""),
+    priceKHR: Number(row[4] || 0),
+    stock: Number(row[5] !== undefined ? row[5] : 0),
+    img: String(row[6] || "")
   })).filter(p => p.name !== "");
 }
 
+// ==============================================================================
+// 6. INITIALIZATION & UTILITIES
+// ==============================================================================
 function initSheetsIfNotExist(ss) {
   let sales = ss.getSheetByName(SHEET_SALES);
   if (!sales) {
     sales = ss.insertSheet(SHEET_SALES);
-    sales.appendRow(["ID វិក្កយបត្រ", "កាលបរិច្ឆេទ", "ម៉ោង", "ឈ្មោះអតិថិជន", "លេខទូរស័ព្ទ", "មុខទំនិញដែលបានទិញ", "ចំនួនសរុប", "ទឹកប្រាក់សរុប (៛)", "ប្រាក់បានកក់/បង់ (៛)", "ប្រាក់នៅខ្វះ (៛)", "ស្ថានភាព", "វិធីទូទាត់", "កំណត់ចំណាំ", "តំណភ្ជាប់រូបភាព"]);
+    sales.appendRow([
+      "ID វិក្កយបត្រ", "កាលបរិច្ឆេទ", "ម៉ោង", "ឈ្មោះអតិថិជន", "លេខទូរស័ព្ទ",
+      "មុខទំនិញដែលបានទិញ", "ចំនួនសរុប", "ទឹកប្រាក់សរុប (៛)", "ប្រាក់បានកក់/បង់ (៛)",
+      "ប្រាក់នៅខ្វះ (៛)", "ស្ថានភាព", "វិធីទូទាត់", "កំណត់ចំណាំ", "តំណភ្ជាប់រូបភាព"
+    ]);
     sales.getRange("A1:N1").setBackground("#E07A5F").setFontColor("#FFFFFF").setFontWeight("bold");
     sales.setFrozenRows(1);
   }
+  
   let products = ss.getSheetByName(SHEET_PRODUCTS);
   if (!products) {
     products = ss.insertSheet(SHEET_PRODUCTS);
@@ -3936,6 +4417,7 @@ function initSheetsIfNotExist(ss) {
     products.getRange("A1:G1").setBackground("#3B82F6").setFontColor("#FFFFFF").setFontWeight("bold");
     products.setFrozenRows(1);
   }
+  
   let expenses = ss.getSheetByName(SHEET_EXPENSES);
   if (!expenses) {
     expenses = ss.insertSheet(SHEET_EXPENSES);
@@ -3948,8 +4430,312 @@ function initSheetsIfNotExist(ss) {
 function getExistingColumnValues(sheet, colIndex) {
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
-  return sheet.getRange(2, colIndex, lastRow - 1, 1).getValues().map(r => String(r[0]));
-}`;
+  const vals = sheet.getRange(2, colIndex, lastRow - 1, 1).getValues();
+  return vals.map(r => String(r[0]));
+}
+
+// ==============================================================================
+// 7. TELEGRAM BOT WEBHOOK & INTERACTIVE MENU HANDLERS
+// ==============================================================================
+function handleTelegramWebhook(ss, data) {
+  let chatId = null;
+  let text = "";
+  let isCallback = false;
+  let callbackQueryId = null;
+
+  if (data.message) {
+    chatId = data.message.chat ? data.message.chat.id : null;
+    text = (data.message.text || "").trim();
+  } else if (data.callback_query) {
+    isCallback = true;
+    callbackQueryId = data.callback_query.id;
+    chatId = data.callback_query.message && data.callback_query.message.chat ? data.callback_query.message.chat.id : null;
+    text = (data.callback_query.data || "").trim();
+  }
+
+  if (!chatId) return;
+
+  if (isCallback && callbackQueryId) {
+    sendTelegramApi("answerCallbackQuery", { callback_query_id: callbackQueryId });
+  }
+
+  const cleanText = text.toLowerCase();
+
+  // 1. MENU / START / HELP
+  if (cleanText === "/start" || cleanText === "/menu" || cleanText === "/help" || cleanText === "menu" || text.includes("ជំនួយ") || text.includes("ម៉ឺនុយ") || text.includes("មេ")) {
+    sendTelegramMainMenu(chatId);
+    return;
+  }
+
+  // 2. SALES REPORT (របាយការណ៍លក់)
+  if (cleanText === "/sales" || cleanText === "cmd_sales" || text.includes("របាយការណ៍លក់") || text.includes("ការលក់") || cleanText.includes("sale")) {
+    sendTelegramSalesReport(ss, chatId);
+    return;
+  }
+
+  // 3. STOCK REPORT (ពិនិត្យស្តុក)
+  if (cleanText === "/stock" || cleanText === "cmd_stock" || text.includes("ពិនិត្យស្តុក") || text.includes("ស្តុក") || cleanText.includes("stock")) {
+    sendTelegramStockReport(ss, chatId);
+    return;
+  }
+
+  // 4. EXPENSE REPORT (ពិនិត្យចំណាយ)
+  if (cleanText === "/expenses" || cleanText === "cmd_expenses" || text.includes("ពិនិត្យចំណាយ") || text.includes("ចំណាយ") || cleanText.includes("expense")) {
+    sendTelegramExpensesReport(ss, chatId);
+    return;
+  }
+
+  // 5. DAILY SUMMARY (សង្ខេបថ្ងៃនេះ / ចំណេញ-ខាត)
+  if (cleanText === "/summary" || cleanText === "cmd_summary" || text.includes("សង្ខេប") || text.includes("ចំណេញ") || cleanText.includes("summary")) {
+    sendTelegramSummaryReport(ss, chatId);
+    return;
+  }
+
+  // DEFAULT FALLBACK
+  sendTelegramMainMenu(chatId, "👋 ខ្ញុំបានទទួលសាររបស់អ្នក។ សូមជ្រើសរើស Menu ខាងក្រោមដើម្បីពិនិត្យរបាយការណ៍៖");
+}
+
+function sendTelegramMainMenu(chatId, customText) {
+  const msg = customText || "👋 <b>សូមស្វាគមន៍មកកាន់ប្រព័ន្ធ Telegram Bot ហាងនំខេកវិជ្ជដា!</b> 🎂\n\nសូមចុចប៊ូតុង Menu ខាងក្រោម ដើម្បីពិនិត្យទិន្នន័យជាក់ស្តែង៖";
+  
+  const replyMarkup = {
+    keyboard: [
+      [{ text: "📊 របាយការណ៍លក់" }, { text: "📦 ពិនិត្យស្តុក" }],
+      [{ text: "💸 ពិនិត្យចំណាយ" }, { text: "📈 សង្ខេបថ្ងៃនេះ" }]
+    ],
+    resize_keyboard: true,
+    persistent: true
+  };
+
+  sendTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text: msg,
+    parse_mode: "HTML",
+    reply_markup: replyMarkup
+  });
+}
+
+function sendTelegramSalesReport(ss, chatId) {
+  var sales = getSalesData(ss);
+  var today = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  var timeNow = Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
+
+  var todaySales = sales.filter(function(s) { return s.date === today; });
+  var totalKHR = todaySales.reduce(function(sum, s) { return sum + (s.totalKHR || 0); }, 0);
+  var totalUSD = (totalKHR / 4000).toFixed(2);
+  var cashSales = todaySales.filter(function(s) { return s.method && (s.method.indexOf("ប្រាក់សុទ្ធ") !== -1 || s.method.toLowerCase().indexOf("cash") !== -1); }).reduce(function(sum, s) { return sum + (s.totalKHR || 0); }, 0);
+  var khqrSales = todaySales.filter(function(s) { return s.method && (s.method.indexOf("KHQR") !== -1 || s.method.toLowerCase().indexOf("bank") !== -1 || s.method.toLowerCase().indexOf("qr") !== -1); }).reduce(function(sum, s) { return sum + (s.totalKHR || 0); }, 0);
+  var totalUnpaid = todaySales.reduce(function(sum, s) { return sum + (s.remainingKHR || 0); }, 0);
+
+  var recentText = "";
+  if (todaySales.length > 0) {
+    var recent3 = todaySales.slice(-3).reverse();
+    recentText = recent3.map(function(s, idx) {
+      var cust = (s.customerName && s.customerName !== "អតិថិជនទូទៅ" && s.customerName !== "គ្មាន") ? " (" + s.customerName + ")" : "";
+      return "  " + (idx + 1) + ". <b>#" + s.id + "</b>" + cust + " — <code>" + (s.totalKHR || 0).toLocaleString() + " ៛</code> [" + s.method + "]";
+    }).join("\n");
+  } else {
+    recentText = "  <i>មិនទាន់មានការលក់នៅថ្ងៃនេះទេ</i>";
+  }
+
+  var text = "📊 <b>របាយការណ៍លក់ប្រចាំថ្ងៃ (" + today + ")</b>\n" +
+    "🏪 <b>ហាងនំខេកវិជ្ជដា</b> • ម៉ោង៖ <code>" + timeNow + "</code>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "🧾 ចំនួនវិក្កយបត្រថ្ងៃនេះ៖ <b>" + todaySales.length + " វិក្កយបត្រ</b>\n" +
+    "💰 ចំណូលសរុប៖ <b>" + totalKHR.toLocaleString() + " ៛</b> (≈ $" + totalUSD + ")\n" +
+    "💵 សាច់ប្រាក់ (Cash)៖ <b>" + cashSales.toLocaleString() + " ៛</b>\n" +
+    "📱 ស្កេន KHQR (Bank)៖ <b>" + khqrSales.toLocaleString() + " ៛</b>\n" +
+    (totalUnpaid > 0 ? ("⚠️ ប្រាក់នៅខ្វះសរុប៖ <b>" + totalUnpaid.toLocaleString() + " ៛</b>\n") : "✅ បានទូទាត់គ្រប់ចំនួន ១០០%\n") +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "📋 <b>ការលក់ចុងក្រោយថ្ងៃនេះ៖</b>\n" + recentText;
+
+  var inlineMarkup = {
+    inline_keyboard: [
+      [
+        { text: "🔄 Refresh លក់", callback_data: "cmd_sales" },
+        { text: "📦 ពិនិត្យស្តុក", callback_data: "cmd_stock" }
+      ],
+      [
+        { text: "💸 ចំណាយ", callback_data: "cmd_expenses" },
+        { text: "📈 សង្ខេបថ្ងៃនេះ", callback_data: "cmd_summary" }
+      ]
+    ]
+  };
+
+  sendTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text: text,
+    parse_mode: "HTML",
+    reply_markup: inlineMarkup
+  });
+}
+
+function sendTelegramStockReport(ss, chatId) {
+  var products = getProductsData(ss);
+  var timeNow = Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
+
+  var lowStock = products.filter(function(p) { return Number(p.stock) <= 5; });
+  var inStock = products.filter(function(p) { return Number(p.stock) > 5; });
+
+  var lowStockText = "";
+  if (lowStock.length > 0) {
+    lowStockText = "⚠️ <b>ទំនិញជិតអស់ពីស្តុក (Low Stock):</b>\n" +
+      lowStock.map(function(p) { return "  • <b>" + p.name + "</b>៖ នៅសល់ <b>" + p.stock + "</b> " + (p.stock <= 0 ? '(អស់)' : ''); }).join("\n");
+  } else {
+    lowStockText = "✅ <b>ទំនិញទាំងអស់មានស្តុកគ្រប់គ្រាន់!</b> (គ្មានទំនិញជិតអស់ទេ)";
+  }
+
+  var sampleText = "";
+  var samples = products.slice(0, 5);
+  if (samples.length > 0) {
+    sampleText = "\n━━━━━━━━━━━━━━━━━━\n📋 <b>ស្តុកទំនិញមួយចំនួន៖</b>\n" +
+      samples.map(function(p) { return "  • " + p.name + "៖ <code>" + p.stock + "</code> (លក់: " + (p.priceKHR || 0).toLocaleString() + "៛)"; }).join("\n");
+  }
+
+  var text = "📦 <b>របាយការណ៍ស្តុកទំនិញ (Inventory Status)</b>\n" +
+    "🏪 <b>ហាងនំខេកវិជ្ជដា</b> • ម៉ោង៖ <code>" + timeNow + "</code>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "🔢 មុខទំនិញសរុប៖ <b>" + products.length + " មុខ</b>\n" +
+    "✅ ទំនិញមានស្តុក៖ <b>" + inStock.length + " មុខ</b>\n" +
+    "⚠️ ជិតអស់/អស់ស្តុក៖ <b>" + lowStock.length + " មុខ</b>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    lowStockText + sampleText;
+
+  var inlineMarkup = {
+    inline_keyboard: [
+      [
+        { text: "🔄 Refresh ស្តុក", callback_data: "cmd_stock" },
+        { text: "📊 របាយការណ៍លក់", callback_data: "cmd_sales" }
+      ],
+      [
+        { text: "💸 ចំណាយ", callback_data: "cmd_expenses" },
+        { text: "📈 សង្ខេបថ្ងៃនេះ", callback_data: "cmd_summary" }
+      ]
+    ]
+  };
+
+  sendTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text: text,
+    parse_mode: "HTML",
+    reply_markup: inlineMarkup
+  });
+}
+
+function sendTelegramExpensesReport(ss, chatId) {
+  var expenses = getExpensesData(ss);
+  var today = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  var timeNow = Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
+
+  var todayExpenses = expenses.filter(function(e) { return e.date === today; });
+  var totalExpKHR = todayExpenses.reduce(function(sum, e) { return sum + (e.amount || 0); }, 0);
+  var totalExpUSD = (totalExpKHR / 4000).toFixed(2);
+
+  var expListText = "";
+  if (todayExpenses.length > 0) {
+    expListText = todayExpenses.map(function(e, idx) {
+      return "  " + (idx + 1) + ". <b>" + (e.title || "ចំណាយ") + "</b> — <code>" + (e.amount || 0).toLocaleString() + " ៛</code> (" + (e.cat || "ទូទៅ") + ")";
+    }).join("\n");
+  } else {
+    expListText = "  <i>មិនទាន់មានការកត់ត្រាចំណាយនៅថ្ងៃនេះទេ</i>";
+  }
+
+  var text = "💸 <b>របាយការណ៍ចំណាយប្រចាំថ្ងៃ (" + today + ")</b>\n" +
+    "🏪 <b>ហាងនំខេកវិជ្ជដា</b> • ម៉ោង៖ <code>" + timeNow + "</code>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "🧾 ចំនួនប្រតិបត្តិការចំណាយ៖ <b>" + todayExpenses.length + " លើក</b>\n" +
+    "📉 ចំណាយសរុបថ្ងៃនេះ៖ <b>" + totalExpKHR.toLocaleString() + " ៛</b> (≈ $" + totalExpUSD + ")\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "📋 <b>បញ្ជីចំណាយថ្ងៃនេះ៖</b>\n" + expListText;
+
+  var inlineMarkup = {
+    inline_keyboard: [
+      [
+        { text: "🔄 Refresh ចំណាយ", callback_data: "cmd_expenses" },
+        { text: "📊 របាយការណ៍លក់", callback_data: "cmd_sales" }
+      ],
+      [
+        { text: "📦 ពិនិត្យស្តុក", callback_data: "cmd_stock" },
+        { text: "📈 សង្ខេបថ្ងៃនេះ", callback_data: "cmd_summary" }
+      ]
+    ]
+  };
+
+  sendTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text: text,
+    parse_mode: "HTML",
+    reply_markup: inlineMarkup
+  });
+}
+
+function sendTelegramSummaryReport(ss, chatId) {
+  var sales = getSalesData(ss);
+  var expenses = getExpensesData(ss);
+  var today = Utilities.formatDate(new Date(), "GMT+7", "yyyy-MM-dd");
+  var timeNow = Utilities.formatDate(new Date(), "GMT+7", "HH:mm");
+
+  var todaySales = sales.filter(function(s) { return s.date === today; });
+  var totalSalesKHR = todaySales.reduce(function(sum, s) { return sum + (s.totalKHR || 0); }, 0);
+
+  var todayExpenses = expenses.filter(function(e) { return e.date === today; });
+  var totalExpKHR = todayExpenses.reduce(function(sum, e) { return sum + (e.amount || 0); }, 0);
+
+  var netProfit = totalSalesKHR - totalExpKHR;
+  var netUSD = (netProfit / 4000).toFixed(2);
+  var isProfitable = netProfit >= 0;
+
+  var text = "📈 <b>សង្ខេបចំណូល-ចំណាយ និងប្រាក់ចំណេញ (" + today + ")</b>\n" +
+    "🏪 <b>ហាងនំខេកវិជ្ជដា</b> • ម៉ោង៖ <code>" + timeNow + "</code>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "💰 ចំណូលលក់ (Sales)៖ <b>+" + totalSalesKHR.toLocaleString() + " ៛</b>\n" +
+    "📉 ការចំណាយ (Expenses)៖ <b>-" + totalExpKHR.toLocaleString() + " ៛</b>\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    (isProfitable ? "🟢" : "🔴") + " <b>ប្រាក់ចំណេញសុទ្ធ (Net Profit)៖</b>\n" +
+    "👉 <b>" + netProfit.toLocaleString() + " ៛</b> (≈ $" + netUSD + ")\n" +
+    "━━━━━━━━━━━━━━━━━━\n" +
+    "🧾 ការលក់សរុប៖ <b>" + todaySales.length + " វិក្កយបត្រ</b>\n" +
+    "📑 ចំណាយសរុប៖ <b>" + todayExpenses.length + " លើក</b>";
+
+  var inlineMarkup = {
+    inline_keyboard: [
+      [
+        { text: "🔄 Refresh សង្ខេប", callback_data: "cmd_summary" },
+        { text: "📊 លក់ថ្ងៃនេះ", callback_data: "cmd_sales" }
+      ],
+      [
+        { text: "📦 ស្តុកទំនិញ", callback_data: "cmd_stock" },
+        { text: "💸 ចំណាយថ្ងៃនេះ", callback_data: "cmd_expenses" }
+      ]
+    ]
+  };
+
+  sendTelegramApi("sendMessage", {
+    chat_id: chatId,
+    text: text,
+    parse_mode: "HTML",
+    reply_markup: inlineMarkup
+  });
+}
+
+function sendTelegramApi(method, payload) {
+  try {
+    const url = "https://api.telegram.org/bot" + TELEGRAM_BOT_TOKEN + "/" + method;
+    const options = {
+      method: "post",
+      contentType: "application/json",
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    };
+    const res = UrlFetchApp.fetch(url, options);
+    return JSON.parse(res.getContentText());
+  } catch (e) {
+    Logger.log("Telegram API Error: " + e.toString());
+    return { ok: false, error: e.toString() };
+  }
+}
+
+`;
 
         function openAppsScriptModal() {
             const modal = document.getElementById('appsScriptModal');
