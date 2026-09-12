@@ -1395,6 +1395,15 @@
                             class="w-full p-2 rounded-xl bg-white border border-stone-200 text-xs font-mono">
                     </div>
 
+                    <!-- Toggle Telegram Notifications -->
+                    <div class="flex items-center justify-between p-2.5 rounded-xl bg-white border border-stone-200">
+                        <label for="settingTelegramNotifications" class="text-xs font-bold text-stone-700 cursor-pointer flex items-center gap-1.5 select-none">
+                            <i class="fa-solid fa-bell text-amber-500"></i>
+                            <span>ផ្ញើដំណឹងវិក្កយបត្រស្វ័យប្រវត្តិទៅ Telegram</span>
+                        </label>
+                        <input type="checkbox" id="settingTelegramNotifications" class="w-4 h-4 text-bakery-caramel rounded focus:ring-0 cursor-pointer accent-orange-600">
+                    </div>
+
                     <div class="p-2.5 bg-white/90 rounded-xl border border-sky-200/70 text-[11px] space-y-1">
                         <div class="font-bold text-sky-900 flex items-center gap-1">
                             <i class="fa-solid fa-list-check text-sky-600"></i>
@@ -1418,6 +1427,14 @@
                             class="py-2.5 px-3 bg-white hover:bg-stone-100 text-sky-700 border border-sky-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95">
                             <i class="fa-solid fa-paper-plane text-sky-500"></i>
                             <span>តេស្តផ្ញើ Telegram</span>
+                        </button>
+                    </div>
+
+                    <div class="pt-1">
+                        <button type="button" onclick="stopTelegramBotLoop()"
+                            class="w-full py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-2xs">
+                            <i class="fa-solid fa-bell-slash text-rose-600"></i>
+                            <span>🛑 បិទសាររំខាន / កុំឱ្យលោតសារដដែលៗ (Stop Bot Spam)</span>
                         </button>
                     </div>
                 </div>
@@ -3020,12 +3037,14 @@
         let integrationSettings = JSON.parse(localStorage.getItem('BAKERY_INTEGRATIONS')) || {
             telegramBotToken: '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4',
             telegramChatId: '8970210109',
-            googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec'
+            googleSheetUrl: 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec',
+            telegramNotificationsEnabled: true
         };
 
         if (!integrationSettings.telegramChatId) integrationSettings.telegramChatId = '8970210109';
         if (!integrationSettings.telegramBotToken) integrationSettings.telegramBotToken = '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
         if (!integrationSettings.googleSheetUrl) integrationSettings.googleSheetUrl = 'https://script.google.com/macros/s/AKfycbxFAqoqIb4MxgWYDv2Cl3MOiKYtifBa8pSstSsOxrUfojIO_ujnQ_IK2Ca6CYQXuTva/exec';
+        if (integrationSettings.telegramNotificationsEnabled === undefined) integrationSettings.telegramNotificationsEnabled = true;
         localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
 
         const categories = [
@@ -3137,6 +3156,9 @@
 
         // ================= TELEGRAM BOT NOTIFICATIONS =================
         async function sendTelegramInvoice(order) {
+            if (integrationSettings.telegramNotificationsEnabled === false) {
+                return;
+            }
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
             if (!token || !chatId) {
@@ -3277,17 +3299,45 @@
         }
 
         // ================= TELEGRAM BOT INTERACTIVE MENU & QUICK SEND =================
+        async function stopTelegramBotLoop() {
+            const token = document.getElementById('telegramBotToken')?.value.trim() || integrationSettings.telegramBotToken;
+            if (!token) {
+                showToast('⚠️ មិនមាន Telegram Bot Token ទេ!', 'warning');
+                return;
+            }
+
+            showToast('⏳ កំពុងបិទសាររំខាន និងលុប Webhook...', 'info');
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${token}/deleteWebhook?drop_pending_updates=true`);
+                const data = await res.json();
+                
+                // Also turn off auto-send notifications if active
+                const notifCb = document.getElementById('settingTelegramNotifications');
+                if (notifCb) notifCb.checked = false;
+                integrationSettings.telegramNotificationsEnabled = false;
+                localStorage.setItem('BAKERY_INTEGRATIONS', JSON.stringify(integrationSettings));
+
+                if (data.ok) {
+                    showToast('🛑 បានបិទសាររំខាន និងលុប Webhook ជោគជ័យ! លែងលោតសារទៀតហើយ។', 'success');
+                } else {
+                    showToast('⚠️ Webhook ត្រូវបានបិទ (ចំណាំ: ' + (data.description || 'ok') + ')', 'info');
+                }
+            } catch(e) {
+                showToast('⚠️ កំហុសបណ្តាញ: ' + e.message, 'error');
+            }
+        }
+
+        // ================= TELEGRAM BOT INTERACTIVE MENU & QUICK SEND =================
         async function setupTelegramMenuAndWebhook() {
             const token = document.getElementById('telegramBotToken').value.trim() || integrationSettings.telegramBotToken;
             const chatId = document.getElementById('telegramChatId').value.trim() || integrationSettings.telegramChatId;
-            const webAppUrl = getEffectiveGoogleSheetUrl();
 
             if (!token) {
                 showToast('⚠️ សូមបញ្ចូល Telegram Bot Token ជាមុនសិន!', 'warning');
                 return;
             }
 
-            showToast('⏳ កំពុងដំឡើង Telegram Menu និង Webhook...', 'info');
+            showToast('⏳ កំពុងដំឡើង Telegram Menu...', 'info');
 
             try {
                 // 1. Set Official Telegram Bot Commands Menu
@@ -3310,18 +3360,11 @@
                     throw new Error('Bot Token មិនត្រឹមត្រូវ: ' + (cmdData.description || ''));
                 }
 
-                // 2. Set Webhook to Google Apps Script if URL exists
-                let webhookNotice = '';
-                if (webAppUrl) {
-                    const whRes = await fetch(`https://api.telegram.org/bot${token}/setWebhook`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ url: webAppUrl })
-                    });
-                    const whData = await whRes.json();
-                    if (whData.ok) {
-                        webhookNotice = ' និងបានភ្ជាប់ Webhook ជាមួយ Google Sheet';
-                    }
+                // 2. Ensure Webhook is CLEARED to prevent 302 redirect loops with Apps Script
+                try {
+                    await fetch(`https://api.telegram.org/bot${token}/deleteWebhook?drop_pending_updates=true`);
+                } catch(e) {
+                    console.warn('deleteWebhook check warning:', e);
                 }
 
                 // 3. Send greeting message with Persistent Reply Keyboard if Chat ID exists
@@ -3345,7 +3388,7 @@
                     });
                 }
 
-                showToast(`🎉 បានដំឡើង Telegram Menu${webhookNotice} ជោគជ័យ!`, 'success');
+                showToast('🎉 បានដំឡើង Telegram Menu ជោគជ័យ និងបិទ Webhook រួចរាល់!', 'success');
                 confetti({ particleCount: 60, spread: 70 });
             } catch (err) {
                 console.error('setupTelegramMenuAndWebhook error:', err);
@@ -6819,6 +6862,9 @@ function sendTelegramApi(method, payload) {
         }
 
         async function sendTelegramNotification(photo, text) {
+            if (integrationSettings.telegramNotificationsEnabled === false) {
+                return;
+            }
             const token = integrationSettings.telegramBotToken;
             const chatId = integrationSettings.telegramChatId;
             if (!token || !chatId) return;
@@ -7293,6 +7339,10 @@ function sendTelegramApi(method, payload) {
             document.getElementById('googleSheetUrl').value = (integrationSettings.googleSheetUrl && integrationSettings.googleSheetUrl.trim()) ? integrationSettings.googleSheetUrl : DEFAULT_GOOGLE_SHEET_URL;
             document.getElementById('telegramBotToken').value = integrationSettings.telegramBotToken || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
             document.getElementById('telegramChatId').value = integrationSettings.telegramChatId || '8970210109';
+            const tgNotifCb = document.getElementById('settingTelegramNotifications');
+            if (tgNotifCb) {
+                tgNotifCb.checked = integrationSettings.telegramNotificationsEnabled !== false;
+            }
             if (document.getElementById('settingExchangeRate')) {
                 document.getElementById('settingExchangeRate').value = KHR_RATE;
             }
@@ -7328,6 +7378,10 @@ function sendTelegramApi(method, payload) {
             integrationSettings.googleSheetUrl = sheetUrlVal || DEFAULT_GOOGLE_SHEET_URL;
             integrationSettings.telegramBotToken = document.getElementById('telegramBotToken').value.trim() || '8544004471:AAFsyBJbtmKR6W46zGtqGhNVWjE2AIvzWC4';
             integrationSettings.telegramChatId = document.getElementById('telegramChatId').value.trim() || '8970210109';
+            const tgNotifCbSave = document.getElementById('settingTelegramNotifications');
+            if (tgNotifCbSave) {
+                integrationSettings.telegramNotificationsEnabled = tgNotifCbSave.checked;
+            }
 
             const rateInput = document.getElementById('settingExchangeRate');
             const newRate = parseInt(rateInput ? rateInput.value : 0);
