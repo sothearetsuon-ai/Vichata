@@ -2881,11 +2881,38 @@
 
             const ingList = prepareProductsForSheet(products.filter(p => p.cat === 'ingredients'));
 
+            // បង្រួម KHQR របស់ហាងសម្រាប់ភ្ជាប់ទៅ Google Sheet
+            let syncKhqr = customKhqrImage || localStorage.getItem('BAKERY_CUSTOM_KHQR') || '';
+            if (syncKhqr && syncKhqr.startsWith('data:image/') && syncKhqr.length > 35000) {
+                syncKhqr = await compressBase64ToThumbnail(syncKhqr, 400, 0.75);
+            }
+
             await sendGoogleSheetPayload({
                 action: 'sync_products',
                 products: preparedList,
-                ingredients: ingList
-            }, true, '🎉 បានបញ្ជូនមុខទំនិញ និងរូបភាពនំទាំងអស់ទៅផ្ទាំងភ្ញៀវ Google Sheet រួចរាល់!');
+                ingredients: ingList,
+                khqr: syncKhqr,
+                merchantName: customMerchantName || storeInfo.name
+            }, true, '🎉 បានបញ្ជូនមុខទំនិញ រូបភាពនំ និង KHQR ទៅផ្ទាំងភ្ញៀវ Google Sheet រួចរាល់!');
+        }
+
+        /* --- 📱 SYNC រូបភាព KHQR ហាងទៅកាន់ Google Sheet សម្រាប់ភ្ញៀវស្កេនបង់ប្រាក់ --- */
+        async function syncKhqrToGoogleSheet(khqrBase64, merchantName) {
+            if (!khqrBase64) return;
+            try {
+                let compressedQr = khqrBase64;
+                if (khqrBase64.startsWith('data:image/') && khqrBase64.length > 35000) {
+                    compressedQr = await compressBase64ToThumbnail(khqrBase64, 400, 0.75);
+                }
+                await sendGoogleSheetPayload({
+                    action: 'sync_khqr',
+                    khqr: compressedQr,
+                    merchantName: merchantName || storeInfo.name
+                }, false);
+                console.log('KHQR synced to Google Sheet successfully');
+            } catch(e) {
+                console.warn('Sync KHQR to sheet warning:', e);
+            }
         }
 
         // Default Store Profile
@@ -5828,7 +5855,7 @@ function sendTelegramApi(method, payload) {
             document.getElementById('khqrSetupPreviewImg').src = compressed;
         }
 
-        function saveKhqrSetup() {
+        async function saveKhqrSetup() {
             customKhqrImage = document.getElementById('khqrSetupPreviewImg').src;
             customMerchantName = document.getElementById('khqrMerchantNameInput').value.trim() || storeInfo.name;
             localStorage.setItem('BAKERY_CUSTOM_KHQR', customKhqrImage);
@@ -5836,7 +5863,8 @@ function sendTelegramApi(method, payload) {
             initKhqrImg();
             closeKhqrSetupModal();
             confetti({ particleCount: 50, spread: 60 });
-            showToast('🎉 បានរក្សាទុក KHQR ហាងដោយជោគជ័យ!', 'success');
+            showToast('🎉 បានរក្សាទុក KHQR ហាងដោយជោគជ័យ! កំពុង Sync ទៅផ្ទាំងភ្ញៀវ...', 'success');
+            await syncKhqrToGoogleSheet(customKhqrImage, customMerchantName);
         }
 
         function resetDefaultKhqr() {

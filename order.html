@@ -453,11 +453,25 @@
             <!-- QR Display Box -->
             <div class="p-3 bg-gradient-to-b from-red-50 to-white rounded-2xl border-2 border-dashed border-red-200 flex flex-col items-center">
                 <div class="text-xs font-bold text-stone-800 mb-1" id="payModalMerchantName">ហាងនំខេកវិជ្ជដា</div>
-                <div class="relative p-2 bg-white rounded-2xl shadow-sm border border-red-100">
+                <div class="relative p-2 bg-white rounded-2xl shadow-sm border border-red-100 min-h-[180px] w-48 flex items-center justify-center">
                     <img id="payModalQrImg" src="" alt="KHQR" class="w-44 h-44 object-contain mx-auto rounded-xl">
+                    <div id="payModalNoQrAlert" class="hidden p-3 text-center space-y-2">
+                        <i class="fa-solid fa-qrcode text-4xl text-amber-500"></i>
+                        <p class="text-xs font-bold text-stone-800 leading-tight">មិនទាន់មានរូបភាព KHQR ហាងនៅឡើយ</p>
+                        <p class="text-[10px] text-stone-500 leading-normal">សូមទាក់ទងហាងដើម្បីទទួល QR Code បង់ប្រាក់</p>
+                    </div>
                 </div>
                 <div class="text-lg sm:text-xl font-black text-red-600 font-en mt-2" id="payModalAmountKHR">0 ៛</div>
                 <div class="text-xs font-bold text-stone-500 font-en" id="payModalAmountUSD">≈ $0.00</div>
+
+                <!-- Setup KHQR Button for Shop Owner -->
+                <div class="pt-2 w-full flex justify-center">
+                    <label class="text-[10px] text-stone-500 hover:text-amber-800 font-bold cursor-pointer inline-flex items-center gap-1.5 bg-white px-2.5 py-1 rounded-full border border-stone-200 hover:border-amber-300 transition shadow-2xs">
+                        <i class="fa-solid fa-camera text-amber-600"></i>
+                        <span>ប្តូរ/ដាក់រូប KHQR ហាង</span>
+                        <input type="file" id="directKhqrUploadInput" accept="image/*" class="hidden" onchange="handleDirectKhqrUpload(event)">
+                    </label>
+                </div>
             </div>
 
             <!-- Upload Payment Slip Box -->
@@ -554,6 +568,8 @@
         const TELEGRAM_CHAT_ID = '8970210109';
         const KHR_RATE = 4100;
         const DEFAULT_KHQR_URL = 'https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://bakong.nbc.gov.kh';
+        let liveStoreKhqr = localStorage.getItem('BAKERY_CUSTOM_KHQR') || null;
+        let liveMerchantName = localStorage.getItem('BAKERY_MERCHANT_NAME') || STORE_INFO.name;
         const FALLBACK_BAKERY_SVG = "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiB2aWV3Qm94PSIwIDAgNDAwIDMwMCI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwJSIgeTE9IjAlIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmZmNWViIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZlZDdhYSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPHJlY3Qgd2lkdGg9IjQwMCIgaGVpZ2h0PSIzMDAiIHJ4PSIxNiIgZmlsbD0idXJsKCNnKSIvPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDIwMCwxMjApIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj4KICAgIDx0ZXh0IGZvbnQtc2l6ZT0iNjQiIHk9IjIwIj7wn46CPC90ZXh0PgogIDwvZz4KICA8dGV4dCB4PSIyMDAiIHk9IjIwMCIgZm9udC1mYW1pbHk9IidLYW50dW1ydXkgUHJvJywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNyIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IiNjODZiMjciIHRleHQtYW5jaG9yPSJtaWRkbGUiPuGeoOGetuGehOGek+GfhuGegeGfgeGegOGenOGet+Geh+GfkuGeh+GeiuGetjwvdGV4dD4KICA8dGV4dCB4PSIyMDAiIHk9IjIyOCIgZm9udC1mYW1pbHk9IidLYW50dW1ydXkgUHJvJywgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMyIgZm9udC13ZWlnaHQ9IjYwMCIgZmlsbD0iIzlhMzQxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSI+4Z6a4Z6P4Z6T4Z+I4Z6C4Z644Z6a4Z64IOGeouGevOGemuGemeGfieGetuGeiuGetuGenDwvdGV4dD4KPC9zdmc+";
 
         // Preloaded Bakery Catalog with High Quality Imagery
@@ -814,12 +830,31 @@
             try {
                 const res = await fetch(GOOGLE_SHEET_URL);
                 const data = await res.json();
-                if (data && data.status === 'success' && Array.isArray(data.products) && data.products.length > 0) {
-                    // Filter out internal ingredients and normalize each product
-                    const live = data.products.filter(p => p.cat !== 'ingredients');
-                    if (live.length > 0) {
-                        products = live.map(p => normalizeProduct(p));
-                        renderProducts();
+                if (data && data.status === 'success') {
+                    // 1. Sync KHQR & Store Info from Google Sheet
+                    if (data.khqr && typeof data.khqr === 'string' && data.khqr.length > 20) {
+                        liveStoreKhqr = data.khqr;
+                        localStorage.setItem('BAKERY_CUSTOM_KHQR', data.khqr);
+                        const qrImg = document.getElementById('payModalQrImg');
+                        if (qrImg) qrImg.src = data.khqr;
+                        const noQrAlert = document.getElementById('payModalNoQrAlert');
+                        if (noQrAlert) noQrAlert.classList.add('hidden');
+                    }
+                    if (data.merchantName && typeof data.merchantName === 'string' && data.merchantName.trim()) {
+                        liveMerchantName = data.merchantName.trim();
+                        localStorage.setItem('BAKERY_MERCHANT_NAME', liveMerchantName);
+                    }
+                    if (data.storeInfo && data.storeInfo.name) {
+                        STORE_INFO.name = data.storeInfo.name;
+                    }
+
+                    // 2. Filter out internal ingredients and normalize each product
+                    if (Array.isArray(data.products) && data.products.length > 0) {
+                        const live = data.products.filter(p => p.cat !== 'ingredients');
+                        if (live.length > 0) {
+                            products = live.map(p => normalizeProduct(p));
+                            renderProducts();
+                        }
                     }
                 }
             } catch (err) {
@@ -1235,11 +1270,23 @@
             // Populate Payment Modal
             document.getElementById('payModalAmountKHR').innerText = `${totalKHR.toLocaleString()} ៛`;
             document.getElementById('payModalAmountUSD').innerText = `≈ $${totalUSD}`;
-            document.getElementById('payModalMerchantName').innerText = STORE_INFO.name;
             
-            // Check for custom KHQR in localStorage from POS or use default
-            const customKhqr = localStorage.getItem('BAKERY_CUSTOM_KHQR');
-            document.getElementById('payModalQrImg').src = customKhqr || DEFAULT_KHQR_URL;
+            const activeMerchant = liveMerchantName || localStorage.getItem('BAKERY_MERCHANT_NAME') || STORE_INFO.name;
+            document.getElementById('payModalMerchantName').innerText = activeMerchant;
+            
+            // Check for custom KHQR in memory, localStorage, or Google Sheet
+            const activeKhqr = liveStoreKhqr || localStorage.getItem('BAKERY_CUSTOM_KHQR');
+            const qrImgEl = document.getElementById('payModalQrImg');
+            const noQrAlertEl = document.getElementById('payModalNoQrAlert');
+
+            if (activeKhqr && isValidProductImage(activeKhqr)) {
+                qrImgEl.src = activeKhqr;
+                qrImgEl.classList.remove('hidden');
+                if (noQrAlertEl) noQrAlertEl.classList.add('hidden');
+            } else {
+                qrImgEl.classList.add('hidden');
+                if (noQrAlertEl) noQrAlertEl.classList.remove('hidden');
+            }
 
             // Reset slip upload
             uploadedSlipBase64 = null;
@@ -1267,6 +1314,64 @@
                 preview.src = uploadedSlipBase64;
                 preview.classList.remove('hidden');
                 placeholder.classList.add('hidden');
+            };
+            reader.readAsDataURL(file);
+        }
+
+        /* --- 📱 ប្តូរ/ដាក់រូប KHQR ហាងផ្ទាល់លើផ្ទាំងភ្ញៀវ និង Sync ទៅ Google Sheet --- */
+        async function handleDirectKhqrUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            showToast('⏳ កំពុងរៀបចំ និងបង្រួមរូបភាព KHQR...', 'info');
+
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const rawBase64 = e.target.result;
+                const img = new Image();
+                img.onload = async () => {
+                    let w = img.width, h = img.height;
+                    const maxDim = 450;
+                    if (w > h) {
+                        if (w > maxDim) { h = Math.round((h * maxDim) / w); w = maxDim; }
+                    } else {
+                        if (h > maxDim) { w = Math.round((w * maxDim) / h); h = maxDim; }
+                    }
+                    const canvas = document.createElement('canvas');
+                    canvas.width = Math.max(w, 1);
+                    canvas.height = Math.max(h, 1);
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    const compressed = canvas.toDataURL('image/jpeg', 0.82);
+
+                    liveStoreKhqr = compressed;
+                    localStorage.setItem('BAKERY_CUSTOM_KHQR', compressed);
+
+                    const qrImgEl = document.getElementById('payModalQrImg');
+                    const noQrAlertEl = document.getElementById('payModalNoQrAlert');
+                    if (qrImgEl) {
+                        qrImgEl.src = compressed;
+                        qrImgEl.classList.remove('hidden');
+                    }
+                    if (noQrAlertEl) noQrAlertEl.classList.add('hidden');
+
+                    showToast('🎉 បានដាក់ KHQR ហាងជោគជ័យ! កំពុង Sync ទៅ Google Sheet...', 'success');
+
+                    try {
+                        await fetch(GOOGLE_SHEET_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                            body: JSON.stringify({
+                                action: 'sync_khqr',
+                                khqr: compressed,
+                                merchantName: liveMerchantName || STORE_INFO.name
+                            })
+                        });
+                        showToast('☁️ បាន Sync KHQR ទៅ Google Sheet រួចរាល់!', 'success');
+                    } catch (err) {
+                        console.warn('Google Sheet KHQR sync note:', err);
+                    }
+                };
+                img.src = rawBase64;
             };
             reader.readAsDataURL(file);
         }
