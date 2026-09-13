@@ -4651,7 +4651,16 @@ function doPost(e) {
         .setMimeType(ContentService.MimeType.JSON);
     }
 
-    // --- ករណី ៥: ស៊ីងទំនិញ ឬកែសម្រួលស្តុក (Sync Products / Update Stock) ---
+    // --- ករណី ៥: កែសម្រួលស្តុកនំមួយមុខៗភ្លាមៗ (Fast Single Product Stock Update) ---
+    if (action === "update_stock" || action === "add_stock" || action === "update_single_stock" || action === "adjust_stock") {
+      if ((data.id !== undefined && data.id !== null) || data.productId || data.name || data.productName) {
+        const res = updateSingleProductStock(ss, data);
+        return ContentService.createTextOutput(JSON.stringify(res))
+          .setMimeType(ContentService.MimeType.JSON);
+      }
+    }
+
+    // --- ករណី ៥.១: ស៊ីងទំនិញ ឬកែសម្រួលស្តុកសរុប (Sync Products / Update Stock) ---
     if (action === "sync_products" || action === "update_stock" || action === "sync_all") {
       // ប្រសិនបើមានផ្ញើ KHQR មកជាមួយ កត់ត្រាទុកក្នុង Settings
       if (data.khqr || data.merchantName) {
@@ -5082,10 +5091,128 @@ function getExpensesData(ss) {
 function getProductsSheet(ss) {
   let sheet = ss.getSheetByName(SHEET_PRODUCTS);
   if (!sheet) {
+    // ស្វែងរកឈ្មោះផ្ទាំងជាភាសាខ្មែរ ឬអក្សរកាត់ដែលម្ចាស់ហាងអាចដាក់
+    sheet = ss.getSheetByName("ទំនិញ") || 
+            ss.getSheetByName("ស្តុក") || 
+            ss.getSheetByName("ស្តុកនំ") || 
+            ss.getSheetByName("មុខទំនិញ") || 
+            ss.getSheetByName("Product") || 
+            ss.getSheetByName("Stock") ||
+            ss.getSheetByName("Products_List");
+  }
+  if (!sheet) {
     initSheetsIfNotExist(ss);
     sheet = ss.getSheetByName(SHEET_PRODUCTS);
   }
   return sheet;
+}
+
+/**
+ * ស្វែងរកទីតាំងជួរឈរ (Column Index) នៃតារាងទំនិញដោយស្វ័យប្រវត្តិ
+ * ដើម្បីធានាថាសរសេរចំប្រអប់ ID, ឈ្មោះ, តម្លៃ, ស្តុក ១០០%
+ */
+function getProductsColumnMapping(sheet) {
+  const lastCol = Math.max(sheet.getLastColumn(), 7);
+  const headerRow = sheet.getRange(1, 1, 1, lastCol).getValues()[0];
+  const map = {
+    id: 0,        // A: ID
+    name: 1,      // B: ឈ្មោះទំនិញ
+    cat: 2,       // C: ប្រភេទ
+    badge: 3,     // D: ស្លាក
+    priceKHR: 4,  // E: តម្លៃលក់ (៛)
+    stock: 5,     // F: ស្តុកនៅសល់
+    img: 6        // G: តំណភ្ជាប់រូបភាព
+  };
+
+  headerRow.forEach((colName, idx) => {
+    if (!colName || typeof colName !== 'string') return;
+    const name = colName.trim().toLowerCase();
+    if (name === 'id' || name.includes('លេខសម្គាល់') || name.includes('កូដ')) {
+      map.id = idx;
+    } else if (name.includes('ឈ្មោះ') || name.includes('name') || name.includes('មុខទំនិញ')) {
+      map.name = idx;
+    } else if (name.includes('ប្រភេទ') || name.includes('category') || name.includes('cat')) {
+      map.cat = idx;
+    } else if (name.includes('ស្លាក') || name.includes('badge') || name.includes('tag')) {
+      map.badge = idx;
+    } else if (name.includes('តម្លៃ') || name.includes('price') || name.includes('រៀល')) {
+      map.priceKHR = idx;
+    } else if (name.includes('ស្តុក') || name.includes('stock') || name.includes('ចំនួន')) {
+      map.stock = idx;
+    } else if (name.includes('រូប') || name.includes('image') || name.includes('photo') || name.includes('img')) {
+      map.img = idx;
+    }
+  });
+
+  return { map, totalCols: lastCol };
+}
+
+/**
+ * កែប្រែ ឬបន្ថែមស្តុកនំមួយមុខៗភ្លាមៗដោយមិនចាំបាច់ជួតលុបតារាងចាស់ (Fast Single Stock Update)
+ * ប្រើពេលចុច +1, +5, +10 ឬវាយបញ្ចូលចំនួនស្តុកថ្មីក្នុង POS
+ */
+function updateSingleProductStock(ss, data) {
+  const sheet = getProductsSheet(ss);
+  if (!sheet) return { status: "error", message: "Products sheet not found" };
+
+  const lastRow = sheet.getLastRow();
+  if (lastRow <= 1) {
+    return { status: "error", message: "មិនទាន់មានទិន្នន័យក្នុង Sheet ទំនិញនៅឡើយទេ" };
+  }
+
+  const mapInfo = getProductsColumnMapping(sheet);
+  const m = mapInfo.map;
+  const colCount = Math.max(sheet.getLastColumn(), 7);
+  const range = sheet.getRange(2, 1, lastRow - 1, colCount);
+  const values = range.getValues();
+
+  const targetId = (data.id !== undefined && data.id !== null) ? String(data.id).trim() : "";
+  const targetName = String(data.name || data.productName || "").trim().toLowerCase();
+
+  let foundRowIdx = -1;
+  let currentStock = 0;
+
+  for (let i = 0; i < values.length; i++) {
+    const rowId = String(values[i][m.id !== undefined ? m.id : 0] || "").trim();
+    const rowName = String(values[i][m.name !== undefined ? m.name : 1] || "").trim().toLowerCase();
+
+    if ((targetId && rowId === targetId) || (targetName && rowName === targetName)) {
+      foundRowIdx = i;
+      const rawStock = values[i][m.stock !== undefined ? m.stock : 5];
+      currentStock = Number(rawStock !== undefined && rawStock !== "" ? rawStock : 0) || 0;
+      break;
+    }
+  }
+
+  if (foundRowIdx === -1) {
+    return { 
+      status: "warning", 
+      message: "រកមិនឃើញទំនិញ ID: " + targetId + " ឬ ឈ្មោះ: " + (data.name || "") + " ក្នុង Sheet ទេ" 
+    };
+  }
+
+  let newStock = currentStock;
+  if (data.stock !== undefined && data.stock !== null) {
+    newStock = Math.max(0, Number(data.stock) || 0);
+  } else if (data.delta !== undefined && data.delta !== null) {
+    newStock = Math.max(0, currentStock + Number(data.delta));
+  } else if (data.qty !== undefined && data.qty !== null) {
+    newStock = Math.max(0, currentStock + Number(data.qty));
+  }
+
+  // Update តែប្រអប់ស្តុកក្នុង Sheet ជាក់ស្តែង (Row ទី foundRowIdx + 2, Column m.stock + 1)
+  const stockCol = (m.stock !== undefined ? m.stock : 5) + 1;
+  sheet.getRange(foundRowIdx + 2, stockCol).setValue(newStock);
+
+  return {
+    status: "success",
+    id: targetId,
+    name: values[foundRowIdx][m.name !== undefined ? m.name : 1],
+    sheetName: sheet.getName(),
+    oldStock: currentStock,
+    newStock: newStock,
+    message: "បានកែប្រែស្តុកជោគជ័យ: " + newStock
+  };
 }
 
 function syncAllProducts(ss, prodList) {
@@ -5116,15 +5243,18 @@ function getProductsData(ss) {
   const lastRow = sheet.getLastRow();
   if (lastRow <= 1) return [];
   
-  const values = sheet.getRange(2, 1, lastRow - 1, 7).getValues();
+  const mapInfo = getProductsColumnMapping(sheet);
+  const m = mapInfo.map;
+  const colCount = Math.max(sheet.getLastColumn(), 7);
+  const values = sheet.getRange(2, 1, lastRow - 1, colCount).getValues();
   return values.map(row => ({
-    id: isNaN(row[0]) ? String(row[0]) : Number(row[0]),
-    name: String(row[1] || ""),
-    cat: String(row[2] || "cakes"),
-    badge: String(row[3] || ""),
-    priceKHR: Number(row[4] || 0),
-    stock: Number(row[5] !== undefined ? row[5] : 0),
-    img: String(row[6] || "")
+    id: isNaN(row[m.id !== undefined ? m.id : 0]) ? String(row[m.id !== undefined ? m.id : 0]) : Number(row[m.id !== undefined ? m.id : 0]),
+    name: String(row[m.name !== undefined ? m.name : 1] || ""),
+    cat: String(row[m.cat !== undefined ? m.cat : 2] || "cakes"),
+    badge: String(row[m.badge !== undefined ? m.badge : 3] || ""),
+    priceKHR: Number(row[m.priceKHR !== undefined ? m.priceKHR : 4] || 0),
+    stock: Number(row[m.stock !== undefined ? m.stock : 5] !== undefined ? row[m.stock !== undefined ? m.stock : 5] : 0),
+    img: String(row[m.img !== undefined ? m.img : 6] || "")
   })).filter(p => p.name !== "");
 }
 
@@ -6791,20 +6921,61 @@ function sendTelegramApi(method, payload) {
             showToast(`🎉 បានរក្សាទុក "${name}" & កំពុង Sync រូបភាពទៅ Google Sheet...`, 'success');
 
             // Sync ទៅ Google Sheet ដោយស្វ័យប្រវត្តិ (ទាំងស្តុក និងរូបភាព)
+            updateProductStockFast(finalId, stock);
             syncStockToGoogleSheet(true);
         }
 
-        function adjustProductStock(id, delta) {
-            const p = products.find(x => x.id == id);
+        // មុខងារកែប្រែស្តុកនំមួយមុខៗលឿនទាន់ចិត្តទៅ Google Sheet (Fast Single Product Stock Sync)
+        async function updateProductStockFast(id, newStock, delta = null) {
+            const p = products.find(x => String(x.id) === String(id));
+            if (!p) return;
+
+            const payload = {
+                action: 'update_stock',
+                id: p.id,
+                name: p.name,
+                stock: newStock
+            };
+            if (delta !== null) payload.delta = delta;
+
+            const res = await sendGoogleSheetPayload(payload, false);
+            if (res && res.success) {
+                showToast(`☁️ បានកែស្តុក "${p.name}" (សល់: ${newStock}) ទៅ Google Sheet ជោគជ័យ!`, 'success');
+            } else {
+                console.warn('Fast stock sync note, trying batch sync:', res);
+                syncStockToGoogleSheet();
+            }
+        }
+
+        async function adjustProductStock(id, delta) {
+            const p = products.find(x => String(x.id) === String(id));
             if (p) {
-                p.stock = Math.max(0, p.stock + delta);
+                p.stock = Math.max(0, (p.stock !== undefined ? p.stock : 0) + delta);
                 saveState();
                 renderInventory();
                 renderProducts();
-
-                syncStockToGoogleSheet();
-                showToast(`បានបន្ថែមស្តុក ${p.name} ចំនួន ${delta}`, 'info');
+                showToast(`📦 បានកែសម្រួលស្តុក ${p.name} (${delta > 0 ? '+' : ''}${delta}) = ${p.stock}`, 'info');
+                await updateProductStockFast(p.id, p.stock, delta);
             }
+        }
+
+        async function promptSetProductStock(id) {
+            const p = products.find(x => String(x.id) === String(id));
+            if (!p) return;
+            const currentStock = (p.stock !== null && p.stock !== undefined) ? p.stock : 0;
+            const inputVal = prompt(`📦 បញ្ចូលចំនួនស្តុកថ្មីសម្រាប់ "${p.name}":\n(ស្តុកបច្ចុប្បន្ន: ${currentStock})`, currentStock);
+            if (inputVal === null) return; // User cancelled
+            const parsedStock = parseInt(inputVal.trim(), 10);
+            if (isNaN(parsedStock) || parsedStock < 0) {
+                showToast('សូមបញ្ចូលចំនួនស្តុកជាលេខវិជ្ជមាន (ឧទាហរណ៍៖ 15, 30...)', 'warning');
+                return;
+            }
+            p.stock = parsedStock;
+            saveState();
+            renderInventory();
+            renderProducts();
+            showToast(`📦 បានកំណត់ស្តុក "${p.name}" ទៅជា ${p.stock}`, 'info');
+            await updateProductStockFast(p.id, p.stock);
         }
 
         function deleteProduct(id) {
@@ -6877,12 +7048,18 @@ function sendTelegramApi(method, payload) {
               <td class="p-3.5 font-black font-en text-bakery-caramel">${(p.priceKHR || 0).toLocaleString()} ៛</td>
               <td class="p-3.5 font-bold font-en text-stone-600">$${((p.priceKHR || 0) / KHR_RATE).toFixed(2)}</td>
               <td class="p-3.5 font-black font-en">
-                  <span class="px-2.5 py-1 rounded-lg font-black text-xs ${stockVal <= 5 ? 'bg-rose-100 text-rose-700' : 'bg-stone-100 text-stone-800'}">${stockVal}</span>
+                  <button onclick="promptSetProductStock('${p.id}')" title="ចុចដើម្បីវាយបញ្ចូលចំនួនស្តុកជាក់ស្តែង" class="px-2.5 py-1 rounded-lg font-black text-xs cursor-pointer hover:ring-2 hover:ring-bakery-caramel transition flex items-center gap-1 ${stockVal <= 5 ? 'bg-rose-100 text-rose-700' : 'bg-stone-100 text-stone-800'}">
+                      <span>${stockVal}</span>
+                      <i class="fa-solid fa-pen text-[9px] opacity-50"></i>
+                  </button>
               </td>
               <td class="p-3.5 text-center whitespace-nowrap">
-                  <button onclick="adjustProductStock('${p.id}', 10)" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">+10</button>
-                  <button onclick="openMultiUploadModal('${p.id}')" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold hover:bg-orange-100 transition ml-1"><i class="fa-solid fa-pen"></i></button>
-                  <button onclick="deleteProduct('${p.id}')" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100 transition ml-1"><i class="fa-solid fa-trash"></i></button>
+                  <button onclick="adjustProductStock('${p.id}', -1)" title="ដក ១" class="px-2 py-1 bg-stone-100 text-stone-700 rounded-lg text-xs font-bold hover:bg-stone-200 transition active:scale-95">-1</button>
+                  <button onclick="adjustProductStock('${p.id}', 1)" title="ថែម ១" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition active:scale-95 ml-1">+1</button>
+                  <button onclick="adjustProductStock('${p.id}', 5)" title="ថែម ៥" class="px-2 py-1 bg-emerald-50 text-emerald-800 rounded-lg text-xs font-bold hover:bg-emerald-100 transition active:scale-95 ml-1">+5</button>
+                  <button onclick="adjustProductStock('${p.id}', 10)" title="ថែម ១០" class="px-2.5 py-1 bg-emerald-100 text-emerald-900 rounded-lg text-xs font-black hover:bg-emerald-200 transition active:scale-95 ml-1">+10</button>
+                  <button onclick="openMultiUploadModal('${p.id}')" title="កែប្រែព័ត៌មានទំនិញ" class="px-2 py-1 bg-orange-50 text-bakery-caramel rounded-lg text-xs font-bold hover:bg-orange-100 transition ml-1.5"><i class="fa-solid fa-pen"></i></button>
+                  <button onclick="deleteProduct('${p.id}')" title="លុបទំនិញ" class="px-2 py-1 bg-rose-50 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100 transition ml-1"><i class="fa-solid fa-trash"></i></button>
               </td>
           </tr>
         `;
